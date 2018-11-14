@@ -1,4 +1,4 @@
-Projects, please list your use cases for ERC725 below!
+Projects, please list your use cases for ERC725 below! You can make a pull request to update the table. :smiley:
 
 | Project | Use case description |
 | --- | --- |
