@@ -1,0 +1,18 @@
+{
+  "name": "erc725",
+  "version": "0.0.0",
+  "description": "ERC725 contract implementation",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npx truffle test"
+  },
+  "author": "Tyler Yasaka",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "eth-gas-reporter": "^0.1.12",
+    "truffle": "^4.1.14",
+    "web3": "^1.0.0-beta.36"
+  }
+}
