@@ -6,12 +6,14 @@
     "test": "test"
   },
   "scripts": {
+    "lint": "solium -d contracts/",
     "test": "npx truffle test"
   },
   "author": "Tyler Yasaka",
   "license": "CC0-1.0",
   "devDependencies": {
     "eth-gas-reporter": "^0.1.12",
+    "solium": "^1.1.8",
     "truffle": "^4.1.14",
     "web3": "^1.0.0-beta.36"
   }
