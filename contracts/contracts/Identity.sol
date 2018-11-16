@@ -17,7 +17,7 @@ contract Identity is ERC725 {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == address(store[KEY_OWNER]));
+        require(msg.sender == address(store[KEY_OWNER]), "Only owner is allowed to call this function");
         _;
     }
 
