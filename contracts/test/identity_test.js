@@ -1,3 +1,4 @@
+const {assertRevert} = require('./helpers');
 var Identity = artifacts.require('Identity')
 var Counter = artifacts.require('Counter')
 var Web3 = require('web3')
@@ -9,15 +10,6 @@ const web3 = new Web3(Web3.givenProvider)
 const getEncodedCall = (web3, instance, method, params = []) => {
   const contract = new web3.eth.Contract(instance.abi)
   return contract.methods[method](...params).encodeABI()
-}
-
-const assertVMExecption = async (fn) => {
-  try {
-    await fn()
-    throw null;
-  } catch (error) {
-    assert.include(String(error), 'VM Exception')
-  }
 }
 
 contract('Identity', function(accounts) {
@@ -47,9 +39,7 @@ contract('Identity', function(accounts) {
 
     // Calling counter.increment from identity should fail
     const encodedCall = getEncodedCall(web3, counter, 'increment')
-    await assertVMExecption(async () => {
-      await identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] })
-    })
+    await assertRevert(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }));
 
     // Check that increment was not called
     assert.equal((await counter.get()).toString(), '0')
