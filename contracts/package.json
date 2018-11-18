@@ -15,6 +15,7 @@
     "eth-gas-reporter": "^0.1.12",
     "solium": "^1.1.8",
     "truffle": "^4.1.14",
-    "web3": "^1.0.0-beta.36"
+    "web3": "^1.0.0-beta.36",
+    "chai":"^4.2.0"
   }
 }
