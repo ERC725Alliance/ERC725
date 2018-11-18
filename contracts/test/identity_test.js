@@ -1,4 +1,4 @@
-const {assertRevert} = require('./helpers');
+const {reverting} = require('./helpers/shouldFail');
 var Identity = artifacts.require('Identity')
 var Counter = artifacts.require('Counter')
 var Web3 = require('web3')
@@ -39,7 +39,7 @@ contract('Identity', function(accounts) {
 
     // Calling counter.increment from identity should fail
     const encodedCall = getEncodedCall(web3, counter, 'increment')
-    await assertRevert(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }));
+    await reverting(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }));
 
     // Check that increment was not called
     assert.equal((await counter.get()).toString(), '0')
