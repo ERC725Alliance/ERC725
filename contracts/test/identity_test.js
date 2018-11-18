@@ -1,4 +1,4 @@
-const {reverting} = require('./helpers/shouldFail');
+const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
 var Identity = artifacts.require('Identity')
 var Counter = artifacts.require('Counter')
 var Web3 = require('web3')
