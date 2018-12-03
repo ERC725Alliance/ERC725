@@ -1,69 +1,60 @@
 pragma solidity ^0.4.24;
 
 contract KeyManager {
-  event KeyAdded(bytes32 indexed key, uint256 indexed keyType);
-  event KeyRemoved(bytes32 indexed key, uint256 indexed keyType);
+  event KeyAdded(bytes32 indexed key, uint256 indexed keyType, uint256 indexed purposes);
+  event KeyRemoved(bytes32 indexed key, uint256 indexed keyType, uint256 indexed purposes);
   event KeyPurposeAdded(bytes32 indexed key, uint256 indexed purpose);
   event KeyPurposeRemoved(bytes32 indexed key, uint256 indexed purpose);
 
   uint256 constant MANAGEMENT_KEY = 1;
   uint256 constant EXECUTION_KEY = 2;
 
+  uint256 constant ECDSA_TYPE = 1;
+  uint256 constant RSA_TYPE = 2;
+
   struct Key {
-    mapping(uint256 => bool) purposes; //e.g., MANAGEMENT_KEY = 1, EXECUTION_KEY = 2, etc.
-    uint256 keyType; // e.g. 1 = ECDSA, 2 = RSA, etc.
+    uint256 purposes;
+    uint256 keyType;
   }
 
   mapping (bytes32 => Key) keys;
 
   modifier onlyManagementKeyOrSelf() {
     if (msg.sender != address(this)) {
-      require(keys[keccak256(abi.encodePacked(msg.sender))].purposes[MANAGEMENT_KEY], "Sender does not have management key");
+      require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 0), "Sender does not have management key");
     }
     _;
   }
 
   constructor() public {
     bytes32 key = keccak256(abi.encodePacked(msg.sender));
-    keys[key].keyType = 1;
-    keys[key].purposes[MANAGEMENT_KEY] = true;
+    keys[key].keyType = ECDSA_TYPE;
+    keys[key].purposes = MANAGEMENT_KEY;
   }
 
-  function getKeyType(bytes32 _key) public view returns (uint256 _keyType) {
-    return keys[_key].keyType;
+  function getKey(bytes32 _key) public view returns (uint256 _keyType, uint256 _purposes) {
+    return (keys[_key].keyType, keys[_key].purposes);
   }
 
-  function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool exists) {
-    return keys[_key].purposes[_purpose];
+  function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
+    if (_purpose > 255) {
+      return false;
+    }
+    uint256 rounded = uint256(2) ** _purpose;
+    return keys[_key].purposes & rounded != 0;
   }
 
-  function addKey(bytes32 _key, uint256 _keyType) public onlyManagementKeyOrSelf {
+  function setKey(bytes32 _key, uint256 _keyType, uint256 _purposes) public onlyManagementKeyOrSelf {
     require(_key != 0x0, "Invalid key");
-    require(_keyType != 0, "Invalid key type");
-    require(keys[_key].keyType == 0, "Key already added");
+    keys[_key].purposes = _purposes;
     keys[_key].keyType = _keyType;
-    emit KeyAdded(_key, _keyType);
-  }
-
-  function addKeyPurpose(bytes32 _key, uint256 _purpose) public onlyManagementKeyOrSelf {
-    require(_purpose > 0, "Invaild key purpose");
-    require(!keys[_key].purposes[_purpose], "Purpose already added");
-    keys[_key].purposes[_purpose] = true;
-    emit KeyPurposeAdded(_key, _purpose);
-  }
-
-  function removeKeyPurpose(bytes32 _key, uint256 _purpose) public onlyManagementKeyOrSelf {
-    require(_purpose > 0, "Invaild key purpose");
-    require(keys[_key].purposes[_purpose], "Purpose does not exist");
-    keys[_key].purposes[_purpose] = false;
-    emit KeyPurposeRemoved(_key, _purpose);
+    emit KeyAdded(_key, _keyType, _purposes);
   }
 
   function removeKey(bytes32 _key) public onlyManagementKeyOrSelf {
     require(_key != 0x0, "Invalid key");
-    Key storage key = keys[_key];
-    require(key.keyType != 0, "Key does not exist");
+    Key memory key = keys[_key];
     delete keys[_key];
-    emit KeyRemoved(_key, key.keyType);
+    emit KeyRemoved(_key, key.keyType, key.purposes);
   }
 }
