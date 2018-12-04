@@ -21,7 +21,7 @@ contract KeyManager {
 
   modifier onlyManagementKeyOrSelf() {
     if (msg.sender != address(this)) {
-      require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 0), "Sender does not have management key");
+      require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), MANAGEMENT_KEY), "Sender does not have management key");
     }
     _;
   }
@@ -37,11 +37,7 @@ contract KeyManager {
   }
 
   function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
-    if (_purpose > 255) {
-      return false;
-    }
-    uint256 rounded = uint256(2) ** _purpose;
-    return keys[_key].purposes & rounded != 0;
+    return (keys[_key].purposes & _purpose) != 0;
   }
 
   function setKey(bytes32 _key, uint256 _keyType, uint256 _purposes) public onlyManagementKeyOrSelf {

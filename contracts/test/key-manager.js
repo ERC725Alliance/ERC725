@@ -17,7 +17,7 @@ contract("KeyManager", async (accounts) => {
   it('should create management key for creator', async function() {
     const key = keccak256(accounts[0]);
     const [type, purposes] = await keyManager.getKey(key);
-    const hasManagementPurpose = await keyManager.keyHasPurpose(key, 0);
+    const hasManagementPurpose = await keyManager.keyHasPurpose(key, MANAGEMENT_PURPOSE);
     assert.equal(type.toNumber(), ECDSA_TYPE);
     assert.equal(purposes.toNumber(), MANAGEMENT_PURPOSE);
     assert.isTrue(hasManagementPurpose);
@@ -27,7 +27,7 @@ contract("KeyManager", async (accounts) => {
     await keyManager.setKey("a", ECDSA_TYPE, EXECUTION_PURPOSE);
 
     const [keyType, purpose] = await keyManager.getKey("a");
-    const hasExecutionPurpose = await keyManager.keyHasPurpose("a", 1);
+    const hasExecutionPurpose = await keyManager.keyHasPurpose("a", EXECUTION_PURPOSE);
     assert.equal(keyType.toNumber(), ECDSA_TYPE);
     assert.isTrue(hasExecutionPurpose);
   });
@@ -52,31 +52,31 @@ contract("KeyManager", async (accounts) => {
     [keyType] = await keyManager.getKey("a");
     assert.equal(keyType.toNumber(), 0);
   });
-
+  //
   it('should be able to set multiple purposes to a key', async () => {
     await keyManager.setKey("a", ECDSA_TYPE, EXECUTION_AND_MANAGEMENT_PURPOSE);
 
-    const hasExecutionPurpose = await keyManager.keyHasPurpose("a", 0);
+    const hasExecutionPurpose = await keyManager.keyHasPurpose("a", EXECUTION_PURPOSE);
     assert.isTrue(hasExecutionPurpose);
 
-    const hasManagementPurpose = await keyManager.keyHasPurpose("a", 1);
+    const hasManagementPurpose = await keyManager.keyHasPurpose("a", MANAGEMENT_PURPOSE);
     assert.isTrue(hasManagementPurpose);
 
-    let otherPurpose = await keyManager.keyHasPurpose("a", 2);
+    let otherPurpose = await keyManager.keyHasPurpose("a", 0);
     assert.isFalse(otherPurpose);
 
-    otherPurpose = await keyManager.keyHasPurpose("a", 3);
+    otherPurpose = await keyManager.keyHasPurpose("a", 4);
     assert.isFalse(otherPurpose);
   });
 
-  it.only('should be able to set purpases with extremely high values', async () => {
-    const highestPurpose = toBN(2).pow(toBN(255));
-    await keyManager.setKey("a", ECDSA_TYPE, highestPurpose.toString());
+  it('should be able to set purpases with extremely high values', async () => {
+    const highestPurpose = 256;
+    await keyManager.setKey("a", ECDSA_TYPE, highestPurpose);
 
-    let hasPurpose = await keyManager.keyHasPurpose("a", 255);
+    let hasPurpose = await keyManager.keyHasPurpose("a", 256);
     assert.isTrue(hasPurpose);
 
-    hasPurpose = await keyManager.keyHasPurpose("a", 256);
+    hasPurpose = await keyManager.keyHasPurpose("a", 255);
     assert.isFalse(hasPurpose);
 
     hasPurpose = await keyManager.keyHasPurpose("a", 254);
