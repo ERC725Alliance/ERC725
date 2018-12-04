@@ -52,7 +52,7 @@ contract("KeyManager", async (accounts) => {
     [keyType] = await keyManager.getKey("a");
     assert.equal(keyType.toNumber(), 0);
   });
-  //
+
   it('should be able to set multiple purposes to a key', async () => {
     await keyManager.setKey("a", ECDSA_TYPE, EXECUTION_AND_MANAGEMENT_PURPOSE);
 
@@ -61,34 +61,39 @@ contract("KeyManager", async (accounts) => {
 
     const hasManagementPurpose = await keyManager.keyHasPurpose("a", MANAGEMENT_PURPOSE);
     assert.isTrue(hasManagementPurpose);
+  });
 
-    let otherPurpose = await keyManager.keyHasPurpose("a", 0);
-    assert.isFalse(otherPurpose);
+  it('should not be able to pass purpose of not power of 2', async () => {
+    await keyManager.setKey("a", ECDSA_TYPE, EXECUTION_PURPOSE);
 
-    otherPurpose = await keyManager.keyHasPurpose("a", 4);
-    assert.isFalse(otherPurpose);
+    await reverting(keyManager.keyHasPurpose("a", 0));
+    await reverting(keyManager.keyHasPurpose("a", 3));
+    await reverting(keyManager.keyHasPurpose("a", 5));
+    await reverting(keyManager.keyHasPurpose("a", 6));
+    await reverting(keyManager.keyHasPurpose("a", 7));
   });
 
   it('should be able to set purpases with extremely high values', async () => {
-    const highestPurpose = 256;
+    const highestPurpose = toBN(2).pow(toBN(255)).toString();
+    const secondHighestPurpose = toBN(2).pow(toBN(254)).toString();
     await keyManager.setKey("a", ECDSA_TYPE, highestPurpose);
 
-    let hasPurpose = await keyManager.keyHasPurpose("a", 256);
+    let hasPurpose = await keyManager.keyHasPurpose("a", highestPurpose);
     assert.isTrue(hasPurpose);
 
-    hasPurpose = await keyManager.keyHasPurpose("a", 255);
-    assert.isFalse(hasPurpose);
-
-    hasPurpose = await keyManager.keyHasPurpose("a", 254);
+    hasPurpose = await keyManager.keyHasPurpose("a", secondHighestPurpose);
     assert.isFalse(hasPurpose);
 
     const allPurposes = toBN(2).pow(toBN(256)).subn(1);
     await keyManager.setKey("a", ECDSA_TYPE, allPurposes.toString());
 
-    hasPurpose = await keyManager.keyHasPurpose("a", 255);
+    hasPurpose = await keyManager.keyHasPurpose("a", highestPurpose);
     assert.isTrue(hasPurpose);
 
-    hasPurpose = await keyManager.keyHasPurpose("a", 25);
+    hasPurpose = await keyManager.keyHasPurpose("a", secondHighestPurpose);
+    assert.isTrue(hasPurpose);
+
+    hasPurpose = await keyManager.keyHasPurpose("a", 1);
     assert.isTrue(hasPurpose);
   });
 });

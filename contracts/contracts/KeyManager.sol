@@ -37,6 +37,7 @@ contract KeyManager {
   }
 
   function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
+    require(_purpose != 0 && (_purpose & (_purpose - uint256(1))) == 0, "Purpose is not power of 2");
     return (keys[_key].purposes & _purpose) != 0;
   }
 
