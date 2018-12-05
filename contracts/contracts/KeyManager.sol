@@ -30,8 +30,8 @@ contract KeyManager {
     keys[key].purposes = MANAGEMENT_KEY;
   }
 
-  function getKey(bytes32 _key) public view returns (uint256 _keyType, uint256 _purposes) {
-    return (keys[_key].keyType, keys[_key].purposes);
+  function getKey(bytes32 _key) public view returns (uint256 _purposes, uint256 _keyType) {
+    return (keys[_key].purposes, keys[_key].keyType);
   }
 
   function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
@@ -39,7 +39,7 @@ contract KeyManager {
     return (keys[_key].purposes & _purpose) != 0;
   }
 
-  function setKey(bytes32 _key, uint256 _keyType, uint256 _purposes) public onlyManagementKeyOrSelf {
+  function setKey(bytes32 _key, uint256 _purposes, uint256 _keyType) public onlyManagementKeyOrSelf {
     require(_key != 0x0, "Invalid key");
     keys[_key].purposes = _purposes;
     keys[_key].keyType = _keyType;
