@@ -3,8 +3,6 @@ pragma solidity ^0.4.24;
 contract KeyManager {
   event KeySet(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
   event KeyRemoved(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
-  event KeyPurposeAdded(bytes32 indexed key, uint256 indexed purpose);
-  event KeyPurposeRemoved(bytes32 indexed key, uint256 indexed purpose);
 
   uint256 constant MANAGEMENT_KEY = 1;
   uint256 constant EXECUTION_KEY = 2;
