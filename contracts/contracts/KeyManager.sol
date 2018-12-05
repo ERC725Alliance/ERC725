@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
 contract KeyManager {
-  event KeySet(bytes32 indexed key, uint256 indexed keyType, uint256 indexed purposes);
-  event KeyRemoved(bytes32 indexed key, uint256 indexed keyType, uint256 indexed purposes);
+  event KeySet(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
+  event KeyRemoved(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
   event KeyPurposeAdded(bytes32 indexed key, uint256 indexed purpose);
   event KeyPurposeRemoved(bytes32 indexed key, uint256 indexed purpose);
 
@@ -45,13 +45,13 @@ contract KeyManager {
     require(_key != 0x0, "Invalid key");
     keys[_key].purposes = _purposes;
     keys[_key].keyType = _keyType;
-    emit KeySet(_key, _keyType, _purposes);
+    emit KeySet(_key, _purposes, _keyType);
   }
 
   function removeKey(bytes32 _key) public onlyManagementKeyOrSelf {
     require(_key != 0x0, "Invalid key");
     Key memory key = keys[_key];
     delete keys[_key];
-    emit KeyRemoved(_key, key.keyType, key.purposes);
+    emit KeyRemoved(_key, key.purposes, key.keyType);
   }
 }
