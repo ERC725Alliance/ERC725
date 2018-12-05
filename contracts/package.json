@@ -12,11 +12,11 @@
   "author": "Tyler Yasaka",
   "license": "CC0-1.0",
   "devDependencies": {
+    "chai": "^4.2.0",
     "eth-gas-reporter": "^0.1.12",
+    "openzeppelin-solidity": "^2.0.0",
     "solium": "^1.1.8",
     "truffle": "^4.1.14",
-    "web3": "^1.0.0-beta.36",
-    "chai": "^4.2.0",
-    "openzeppelin-solidity": "^2.0.0"
+    "web3": "^1.0.0-beta.36"
   }
 }
