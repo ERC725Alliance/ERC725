@@ -44,4 +44,47 @@ contract('Identity', function(accounts) {
     // Check that increment was not called
     assert.equal((await counter.get()).toString(), '0')
   })
+
+  it('should recieve ether correctly', async () => {
+    // Checking that balance of Identity contract is 0.
+    const actualBalance = await web3.eth.getBalance(identity.address);
+    assert.equal(actualBalance.toString(), '0');
+    
+    // Sending ether to the identity contract.
+    await web3.eth.sendTransaction({
+      from: accounts[0],
+      to: identity.address,
+      value: web3.utils.toWei('1', 'ether')
+    });
+    
+    // Check Identity contract has received the ether.
+    var oneEthAmmount =  await web3.utils.toWei('1', 'ether');
+    var identityBalance = await web3.eth.getBalance(identity.address);
+    assert.equal(oneEthAmmount, identityBalance);
+  })
+
+  it('should allow owner to send ether', async() => {
+    await web3.eth.sendTransaction({
+      from: accounts[0],
+      to: identity.address,
+      value: web3.utils.toWei('1', 'ether')
+    });
+
+    // We have 1 ether
+    var oneEthAmmount =  await web3.utils.toWei('1', 'ether');
+    const actualBalance = await web3.eth.getBalance(identity.address);
+    assert.equal(actualBalance, oneEthAmmount)
+    
+    // Sending 1 ether
+    await identity.execute(OPERATION_CALL, counter.address, web3.utils.toWei('1', 'ether'), "0x0")
+    
+    // We have 0 ether 
+    var zeroEthAmmount =  await web3.utils.toWei('0', 'ether');
+    var identityBalance = await web3.eth.getBalance(identity.address);
+    assert.equal(zeroEthAmmount, identityBalance);
+
+    // contract recived 1 ether
+    var counter_balance = await web3.eth.getBalance(counter.address);
+    assert.equal(oneEthAmmount, counter_balance);
+  })
 })

@@ -1,7 +1,6 @@
 pragma solidity ^0.4.24;
 
 import "./ERC725.sol";
-
 contract Identity is ERC725 {
     event ContractCreation(address newContract);
 
@@ -76,4 +75,6 @@ contract Identity is ERC725 {
             newContract := create(0, add(data, 0x20), mload(data))
         }
     }
+    
+    function () external payable {}
 }
