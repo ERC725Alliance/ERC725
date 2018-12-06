@@ -11,9 +11,12 @@ contract Identity is ERC725 {
     bytes32 constant KEY_OWNER = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
     mapping(bytes32 => bytes32) store;
+    bool initialised;
 
-    constructor(address owner) public {
-        store[KEY_OWNER] = bytes32(owner);
+    function initialise(address owner) public {
+      require(!initialised, "Contract already initialised");
+      store[KEY_OWNER] = bytes32(owner);
+      initialised = true;
     }
 
     modifier onlyOwner() {

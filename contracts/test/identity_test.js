@@ -17,7 +17,8 @@ contract('Identity', function(accounts) {
 
   beforeEach(async function() {
     // Deploy contracts
-    identity = await Identity.new(accounts[0])
+    identity = await Identity.new()
+    identity.initialise(accounts[0])
     counter = await Counter.new()
   })
 
