@@ -14,4 +14,5 @@ contract Counter {
     function get() public view returns (uint) {
         return count;
     }
+    function() external payable {}
 }
