@@ -1,7 +1,8 @@
 const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
 const createForwarder = require('../helpers/forwarder');
 
-const web3 = require('web3');
+const Web3 = require('web3');
+const web3 = new Web3(Web3.givenProvider);
 
 const Identity = artifacts.require('Identity');
 const KeyManager = artifacts.require('KeyManager');
@@ -43,5 +44,23 @@ contract('Forwarder', async (accounts) => {
     keyData = await keyManagerForwarder.getKey('a');
     assert.equal(keyData[0].toNumber(), 2);
     assert.equal(keyData[1].toNumber(), 2);
+  });
+
+  it('should not be able to send transaction without function signature', async () => {
+    const keyManager = await KeyManager.new();
+    const Forwarder = await createForwarder(keyManager.address);
+    const forwarder = await Forwarder.new();
+
+    const keyManagerForwarder = await KeyManager.at(forwarder.address);
+    await keyManagerForwarder.initialise();
+
+    // Even if there is not check for function signature in Forwarder contract,
+    // this transaction would fail because there is no payable fallback function on KeyManager contract
+    // Will keep this here until we add support for revert message
+    await reverting(web3.eth.sendTransaction({
+      from: accounts[0],
+      to: forwarder.address,
+      value: 1
+    }));
   });
 });
