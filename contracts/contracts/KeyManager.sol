@@ -16,7 +16,7 @@ contract KeyManager {
   }
 
   mapping (bytes32 => Key) keys;
-  bool initialised;
+  bool initialized;
 
   modifier onlyManagementKeyOrSelf() {
     if (msg.sender != address(this)) {
@@ -26,11 +26,11 @@ contract KeyManager {
   }
 
   function initialise() public {
-    require(!initialised, "Contract already initialised");
+    require(!initialized, "Contract already initialized");
     bytes32 key = keccak256(abi.encodePacked(msg.sender));
     keys[key].keyType = ECDSA_TYPE;
     keys[key].purposes = MANAGEMENT_KEY;
-    initialised = true;
+    initialized = true;
   }
 
   function getKey(bytes32 _key) public view returns (uint256 _purposes, uint256 _keyType) {
