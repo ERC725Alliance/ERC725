@@ -1,40 +1,21 @@
 const fs = require('fs');
 const solc = require('solc');
-const truffleContract = require('truffle-contract');
-const compile = require('truffle-compile');
-
-async function getCoinbase() {
-  return new Promise(function (resolve, reject) {
-    web3.eth.getCoinbase(function (err, res) {
-      if (err) {
-        reject(err);
-      }
-      resolve(res);
-    });
-  });
-}
-
-function compileCode(source, options, coinbase) {
-  return new Promise(function (resolve, reject) {
-    compile(source, options, function (err, val) {
-      if (err) {
-        reject(err)
-      }
-      const Forwarder = truffleContract(val.Forwarder);
-      Forwarder.setProvider(web3.currentProvider);
-      Forwarder.defaults({
-        from: coinbase,
-        gas: 6721975
-      })
-      resolve(Forwarder)
-    });
-  });
-}
+const { getCoinbase, compileCode } = require('./utils');
+const web3 = require('web3');
+const { checkAddressChecksum, toChecksumAddress } = web3.utils;
 
 async function createForwarder(address) {
+  if (!checkAddressChecksum(address)) {
+    address = toChecksumAddress(address);
+  }
   const solidityCode = `
   pragma solidity ^0.4.24;
   contract Forwarder {
+    constructor(bytes _data) public {
+      if (_data.length > 0) {
+        require(address(${address}).delegatecall(_data), "Initialization failed");
+      }
+    }
     function() external payable {
       require(msg.sig != 0x0, "Function signature not specified");
       assembly {

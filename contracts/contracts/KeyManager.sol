@@ -25,12 +25,12 @@ contract KeyManager {
     _;
   }
 
-  function initialise() public {
+  function initialize() public {
     require(!initialized, "Contract already initialized");
+    initialized = true;
     bytes32 key = keccak256(abi.encodePacked(msg.sender));
     keys[key].keyType = ECDSA_TYPE;
     keys[key].purposes = MANAGEMENT_KEY;
-    initialized = true;
   }
 
   function getKey(bytes32 _key) public view returns (uint256 _purposes, uint256 _keyType) {

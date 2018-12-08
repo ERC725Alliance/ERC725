@@ -15,8 +15,8 @@ contract Identity is ERC725 {
 
     function initialize(address owner) public {
       require(!initialized, "Contract already initialized");
-      store[KEY_OWNER] = bytes32(owner);
       initialized = true;
+      store[KEY_OWNER] = bytes32(owner);
     }
 
     modifier onlyOwner() {

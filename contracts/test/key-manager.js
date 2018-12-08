@@ -12,7 +12,7 @@ contract("KeyManager", async (accounts) => {
   let keyManager;
   beforeEach(async () => {
     keyManager = await KeyManager.new();
-    keyManager.initialise();
+    keyManager.initialize();
   });
 
   it('should create management key for creator', async function() {

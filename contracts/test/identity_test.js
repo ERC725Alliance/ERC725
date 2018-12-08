@@ -1,4 +1,5 @@
 const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
+const {getEncodedCall} = require('../helpers/utils');
 var Identity = artifacts.require('Identity')
 var Counter = artifacts.require('Counter')
 var Web3 = require('web3')
@@ -7,18 +8,13 @@ const KEY_OWNER = '0x00000000000000000000000000000000000000000000000000000000000
 const OPERATION_CALL = 0
 const web3 = new Web3(Web3.givenProvider)
 
-const getEncodedCall = (web3, instance, method, params = []) => {
-  const contract = new web3.eth.Contract(instance.abi)
-  return contract.methods[method](...params).encodeABI()
-}
-
 contract('Identity', function(accounts) {
   let identity, counter
 
   beforeEach(async function() {
     // Deploy contracts
     identity = await Identity.new()
-    identity.initialise(accounts[0])
+    identity.initialize(accounts[0])
     counter = await Counter.new()
   })
 
