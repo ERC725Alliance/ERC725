@@ -1,10 +1,8 @@
-const fs = require('fs');
 const solc = require('solc');
 const { getCoinbase, compileCode } = require('./utils');
-const web3 = require('web3');
 const { checkAddressChecksum, toChecksumAddress } = web3.utils;
 
-async function createForwarder(address) {
+async function createForwarder(address, constructorData) {
   if (!checkAddressChecksum(address)) {
     address = toChecksumAddress(address);
   }
@@ -12,9 +10,8 @@ async function createForwarder(address) {
   pragma solidity ^0.4.24;
   contract Forwarder {
     constructor(bytes _data) public {
-      if (_data.length > 0) {
-        require(address(${address}).delegatecall(_data), "Initialization failed");
-      }
+      require(_data.length > 0, "Transaction data not passed");
+      require(address(${address}).delegatecall(_data), "Initialization failed");
     }
     function() external payable {
       require(msg.sig != 0x0, "Function signature not specified");
@@ -29,13 +26,17 @@ async function createForwarder(address) {
     }
   }
   `;
-  const source = { 'Forwarder': solidityCode }
-  const options = {
-    'contracts_directory': 'contracts',
-    solc
-  }
   const coinbase = await getCoinbase();
-  return compileCode(source, options, coinbase);
+  const data = solc.compile(solidityCode, 1).contracts[':Forwarder'];
+  const contract = new web3.eth.Contract(JSON.parse(data.interface));
+  return contract.deploy({
+    data: data.bytecode,
+    arguments: [constructorData]
+  })
+  .send({
+    gas: 6721975,
+    from: coinbase
+  });
 }
 
 module.exports = createForwarder;
