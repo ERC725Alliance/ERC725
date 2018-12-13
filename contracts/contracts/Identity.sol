@@ -13,9 +13,9 @@ contract Identity is ERC725 {
     bool initialized;
 
     function initialize(address owner) public {
-      require(!initialized, "Contract already initialized");
-      initialized = true;
-      store[KEY_OWNER] = bytes32(owner);
+        require(!initialized, "Contract already initialized");
+        initialized = true;
+        store[KEY_OWNER] = bytes32(owner);
     }
 
     modifier onlyOwner() {
@@ -78,6 +78,6 @@ contract Identity is ERC725 {
             newContract := create(0, add(data, 0x20), mload(data))
         }
     }
-    
+
     function () external payable {}
 }
