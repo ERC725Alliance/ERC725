@@ -23,7 +23,7 @@ contract('Identity', function(accounts) {
     assert.equal((await counter.get()).toString(), '0')
 
     // Call counter.increment from identity
-    const encodedCall = getEncodedCall(web3, counter, 'increment')
+    const encodedCall = getEncodedCall(counter, 'increment')
     await identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[0] })
 
     // Check that increment was called
@@ -35,7 +35,7 @@ contract('Identity', function(accounts) {
     assert.equal((await counter.get()).toString(), '0')
 
     // Calling counter.increment from identity should fail
-    const encodedCall = getEncodedCall(web3, counter, 'increment')
+    const encodedCall = getEncodedCall(counter, 'increment')
     await reverting(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }));
 
     // Check that increment was not called
