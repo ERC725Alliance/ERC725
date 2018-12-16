@@ -13,13 +13,13 @@ contract Identity is ERC725 {
     bool initialized;
 
     function initialize(address owner) public {
-        require(!initialized, "Contract already initialized");
+        require(!initialized, "contract-already-initialized");
         initialized = true;
         store[KEY_OWNER] = bytes32(owner);
     }
 
     modifier onlyOwner() {
-        require(msg.sender == address(store[KEY_OWNER]), "Only owner is allowed to call this function");
+        require(msg.sender == address(store[KEY_OWNER]), "only-owner-allowed");
         _;
     }
 

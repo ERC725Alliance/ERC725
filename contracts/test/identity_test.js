@@ -1,5 +1,4 @@
-const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
-const {getEncodedCall} = require('../helpers/utils');
+const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
 var Identity = artifacts.require('Identity')
 var Counter = artifacts.require('Counter')
 var Web3 = require('web3')
@@ -36,7 +35,7 @@ contract('Identity', function(accounts) {
 
     // Calling counter.increment from identity should fail
     const encodedCall = getEncodedCall(counter, 'increment')
-    await reverting(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }));
+    await checkErrorRevert(identity.execute(OPERATION_CALL, counter.address, 0, encodedCall, { from: accounts[1] }), 'only-owner-allowed');
 
     // Check that increment was not called
     assert.equal((await counter.get()).toString(), '0')
@@ -46,14 +45,14 @@ contract('Identity', function(accounts) {
     // Checking that balance of Identity contract is 0.
     const actualBalance = await web3.eth.getBalance(identity.address);
     assert.equal(actualBalance.toString(), '0');
-    
+
     // Sending ether to the identity contract.
     await web3.eth.sendTransaction({
       from: accounts[0],
       to: identity.address,
       value: web3.utils.toWei('1', 'ether')
     });
-    
+
     // Check Identity contract has received the ether.
     var oneEthAmmount =  await web3.utils.toWei('1', 'ether');
     var identityBalance = await web3.eth.getBalance(identity.address);
@@ -71,11 +70,11 @@ contract('Identity', function(accounts) {
     var oneEthAmmount =  await web3.utils.toWei('1', 'ether');
     const actualBalance = await web3.eth.getBalance(identity.address);
     assert.equal(actualBalance, oneEthAmmount)
-    
+
     // Sending 1 ether
     await identity.execute(OPERATION_CALL, counter.address, web3.utils.toWei('1', 'ether'), "0x0")
-    
-    // We have 0 ether 
+
+    // We have 0 ether
     var zeroEthAmmount =  await web3.utils.toWei('0', 'ether');
     var identityBalance = await web3.eth.getBalance(identity.address);
     assert.equal(zeroEthAmmount, identityBalance);

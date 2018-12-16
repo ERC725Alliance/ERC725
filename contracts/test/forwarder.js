@@ -1,6 +1,5 @@
-const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
 const createForwarder = require('../helpers/forwarder');
-const { getEncodedCall } = require('../helpers/utils');
+const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
 const { toBN, keccak256, toUtf8 } = web3.utils;
 
 const Identity = artifacts.require('Identity');
@@ -13,7 +12,7 @@ contract('Forwarder', async (accounts) => {
     const forwarder = await createForwarder(identity.address, encodedData);
 
     const identityForwarder = await Identity.at(forwarder.options.address);
-    await reverting(identityForwarder.initialize(accounts[0]));
+    await checkErrorRevert(identityForwarder.initialize(accounts[0]), 'contract-already-initialized');
 
     const value = `0x${toBN(1).toString(16, 64)}`;
     await identityForwarder.setData('0x0a', value);
@@ -31,7 +30,7 @@ contract('Forwarder', async (accounts) => {
     const forwarder = await createForwarder(keyManager.address, encodedData);
 
     const keyManagerForwarder = await KeyManager.at(forwarder.options.address);
-    await reverting(keyManagerForwarder.initialize());
+    await checkErrorRevert(keyManagerForwarder.initialize(), 'contract-already-initialized');
 
     await keyManagerForwarder.setKey('0x0a', 2, 2);
 
@@ -44,18 +43,20 @@ contract('Forwarder', async (accounts) => {
     assert.equal(keyData[1].toNumber(), 2);
   });
 
+  it('should not be able to create forwarder if initialization transaction data is not passed', async () => {
+    const keyManager = await KeyManager.new();
+    await checkErrorRevert(createForwarder(keyManager.address, '0x00'), 'initialization-failed');
+  });
+
   it('should not be able to send transaction without function signature', async () => {
     const keyManager = await KeyManager.new();
     const encodedData = getEncodedCall(keyManager, 'initialize');
     const forwarder = await createForwarder(keyManager.address, encodedData);
 
-    // Even if there is not check for function signature in Forwarder contract,
-    // this transaction would fail because there is no payable fallback function on KeyManager contract
-    // Will keep this here until we add support for revert message
-    await reverting(web3.eth.sendTransaction({
+    await checkErrorRevert(web3.eth.sendTransaction({
       from: accounts[0],
       to: forwarder.options.address,
       value: 1
-    }));
+    }), 'function-signature-not-specified');
   });
 });

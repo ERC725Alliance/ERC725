@@ -20,13 +20,13 @@ contract KeyManager {
 
     modifier onlyManagementKeyOrSelf() {
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), MANAGEMENT_KEY), "Sender does not have management key");
+            require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), MANAGEMENT_KEY), "sender-must-have-management-key");
         }
         _;
     }
 
     function initialize() public {
-        require(!initialized, "Contract already initialized");
+        require(!initialized, "contract-already-initialized");
         initialized = true;
         bytes32 key = keccak256(abi.encodePacked(msg.sender));
         keys[key].keyType = ECDSA_TYPE;
@@ -38,19 +38,22 @@ contract KeyManager {
     }
 
     function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
-        require(_purpose != 0 && (_purpose & (_purpose - uint256(1))) == 0, "Purpose is not power of 2");
+        // Only purposes that are power of 2 are allowed e.g.:
+        // 1, 2, 4, 8, 16, 32 64 ...
+        // Numbers that represent multiple purposes are not allowed
+        require(_purpose != 0 && (_purpose & (_purpose - uint256(1))) == 0, "purpose-must-be-power-of-2");
         return (keys[_key].purposes & _purpose) != 0;
     }
 
     function setKey(bytes32 _key, uint256 _purposes, uint256 _keyType) public onlyManagementKeyOrSelf {
-        require(_key != 0x0, "Invalid key");
+        require(_key != 0x0, "invalid-key");
         keys[_key].purposes = _purposes;
         keys[_key].keyType = _keyType;
         emit KeySet(_key, _purposes, _keyType);
     }
 
     function removeKey(bytes32 _key) public onlyManagementKeyOrSelf {
-        require(_key != 0x0, "Invalid key");
+        require(_key != 0x0, "invalid-key");
         Key memory key = keys[_key];
         delete keys[_key];
         emit KeyRemoved(_key, key.purposes, key.keyType);

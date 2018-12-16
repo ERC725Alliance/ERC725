@@ -11,10 +11,10 @@ async function createForwarder(address, constructorData) {
   contract Forwarder {
     constructor(bytes _data) public {
       require(_data.length > 0, "Transaction data not passed");
-      require(address(${address}).delegatecall(_data), "Initialization failed");
+      require(address(${address}).delegatecall(_data), "initialization-failed");
     }
     function() external payable {
-      require(msg.sig != 0x0, "Function signature not specified");
+      require(msg.sig != 0x0, "function-signature-not-specified");
       assembly {
         calldatacopy(mload(0x40), 0, calldatasize)
         let result := delegatecall(gas, ${address}, mload(0x40), calldatasize, mload(0x40), 0)
