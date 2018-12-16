@@ -1,6 +1,6 @@
-const {reverting} = require('../node_modules/openzeppelin-solidity/test/helpers/shouldFail');
 const web3 = require('web3');
 const { toBN, keccak256 } = web3.utils;
+const { checkErrorRevert } = require('../helpers/utils');
 
 const KeyManager = artifacts.require('KeyManager');
 
@@ -34,13 +34,13 @@ contract("KeyManager", async (accounts) => {
   });
 
   it('should not be able to create invalid key', async () => {
-    await reverting(keyManager.setKey('0x00', EXECUTION_PURPOSE, ECDSA_TYPE));
+    await checkErrorRevert(keyManager.setKey('0x00', EXECUTION_PURPOSE, ECDSA_TYPE), 'invalid-key');
   });
 
   it('should not be able to create key if caller does not have management key', async () => {
-    await reverting(keyManager.setKey("0x0a", EXECUTION_PURPOSE, ECDSA_TYPE, {
+    await checkErrorRevert(keyManager.setKey("0x0a", EXECUTION_PURPOSE, ECDSA_TYPE, {
       from: accounts[1]
-    }));
+    }), 'sender-must-have-management-key');
   });
 
   it('should be able to remove key', async () => {
@@ -67,11 +67,11 @@ contract("KeyManager", async (accounts) => {
   it('should not be able to pass purpose of not power of 2', async () => {
     await keyManager.setKey("0x0a", EXECUTION_PURPOSE, ECDSA_TYPE);
 
-    await reverting(keyManager.keyHasPurpose("0x0a", 0));
-    await reverting(keyManager.keyHasPurpose("0x0a", 3));
-    await reverting(keyManager.keyHasPurpose("0x0a", 5));
-    await reverting(keyManager.keyHasPurpose("0x0a", 6));
-    await reverting(keyManager.keyHasPurpose("0x0a", 7));
+    await checkErrorRevert(keyManager.keyHasPurpose("0x0a", 0), 'purpose-must-be-power-of-2');
+    await checkErrorRevert(keyManager.keyHasPurpose("0x0a", 3), 'purpose-must-be-power-of-2');
+    await checkErrorRevert(keyManager.keyHasPurpose("0x0a", 5), 'purpose-must-be-power-of-2');
+    await checkErrorRevert(keyManager.keyHasPurpose("0x0a", 6), 'purpose-must-be-power-of-2');
+    await checkErrorRevert(keyManager.keyHasPurpose("0x0a", 7), 'purpose-must-be-power-of-2');
   });
 
   it('should be able to set purpases with extremely high values', async () => {
