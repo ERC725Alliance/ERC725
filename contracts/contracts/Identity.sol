@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.1;
 
 import "./ERC725.sol";
 contract Identity is ERC725 {
@@ -9,30 +9,30 @@ contract Identity is ERC725 {
     uint256 constant OPERATION_CREATE = 2;
     bytes32 constant KEY_OWNER = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
-    mapping(bytes32 => bytes32) store;
+    mapping(bytes32 => address) store;
     bool initialized;
 
     function initialize(address owner) public {
         require(!initialized, "contract-already-initialized");
         initialized = true;
-        store[KEY_OWNER] = bytes32(owner);
+        store[KEY_OWNER] = owner;
     }
 
     modifier onlyOwner() {
-        require(msg.sender == address(store[KEY_OWNER]), "only-owner-allowed");
+        require(msg.sender == store[KEY_OWNER], "only-owner-allowed");
         _;
     }
 
-    function getData(bytes32 _key) external view returns (bytes32 _value) {
+    function getData(bytes32 _key) external view returns (address _value) {
         return store[_key];
     }
 
-    function setData(bytes32 _key, bytes32 _value) external onlyOwner {
+    function setData(bytes32 _key, address _value) external onlyOwner {
         store[_key] = _value;
         emit DataSet(_key, _value);
     }
 
-    function execute(uint256 _operationType, address _to, uint256 _value, bytes _data) external onlyOwner {
+    function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data) external onlyOwner {
         if (_operationType == OPERATION_CALL)
             executeCall(_to, _value, _data);
         else if (_operationType == OPERATION_DELEGATECALL)
@@ -45,7 +45,7 @@ contract Identity is ERC725 {
 
     // copied from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/v0.0.2-alpha/contracts/base/Executor.sol
-    function executeCall(address to, uint256 value, bytes data)
+    function executeCall(address to, uint256 value, bytes memory data)
         internal
         returns (bool success)
     {
@@ -57,7 +57,7 @@ contract Identity is ERC725 {
 
     // copied from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/v0.0.2-alpha/contracts/base/Executor.sol
-    function executeDelegateCall(address to, bytes data)
+    function executeDelegateCall(address to, bytes memory data)
         internal
         returns (bool success)
     {
@@ -69,7 +69,7 @@ contract Identity is ERC725 {
 
     // copied from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/v0.0.2-alpha/contracts/base/Executor.sol
-    function executeCreate(bytes data)
+    function executeCreate(bytes memory data)
         internal
         returns (address newContract)
     {

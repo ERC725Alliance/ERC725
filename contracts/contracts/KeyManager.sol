@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.1;
 
 contract KeyManager {
     event KeySet(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
@@ -11,6 +11,11 @@ contract KeyManager {
     uint256 constant RSA_TYPE = 2;
 
     struct Key {
+        // Purposes are represented via bitmasks
+        // Maximum number of purposes is 256 and must be integers that are power of 2 e.g.:
+        // 1, 2, 4, 8, 16, 32, 64 ...
+        // All other integers represent multiple purposes e.g:
+        // Integer 3 (011) represent both 1 (001) and 2 (010) purpose
         uint256 purposes;
         uint256 keyType;
     }
@@ -39,8 +44,8 @@ contract KeyManager {
 
     function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) {
         // Only purposes that are power of 2 are allowed e.g.:
-        // 1, 2, 4, 8, 16, 32 64 ...
-        // Numbers that represent multiple purposes are not allowed
+        // 1, 2, 4, 8, 16, 32, 64 ...
+        // Integers that represent multiple purposes are not allowed
         require(_purpose != 0 && (_purpose & (_purpose - uint256(1))) == 0, "purpose-must-be-power-of-2");
         return (keys[_key].purposes & _purpose) != 0;
     }
