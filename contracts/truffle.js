@@ -6,10 +6,5 @@ module.exports = {
     reporterOptions : {
       currency: 'USD'
     }
-  },
-  compilers: {
-    solc: {
-      version: "0.4.24"
-    }
   }
 }

@@ -14,14 +14,13 @@ contract('Forwarder', async (accounts) => {
     const identityForwarder = await Identity.at(forwarder.options.address);
     await checkErrorRevert(identityForwarder.initialize(accounts[0]), 'contract-already-initialized');
 
-    const value = `0x${toBN(1).toString(16, 64)}`;
-    await identityForwarder.setData('0x0a', value);
+    await identityForwarder.setData('0x0a', accounts[1]);
 
     const owner = await identityForwarder.getData('0x00');
     const data = await identityForwarder.getData('0x0a');
 
-    assert.equal(owner, `0x${toBN(accounts[0], 16).toString(16, 64)}`);
-    assert.equal(data, value);
+    assert.equal(owner, accounts[0]);
+    assert.equal(data, accounts[1]);
   });
 
   it('should be able to use KeyManager contract with forwarder', async () => {
