@@ -1,6 +1,6 @@
 const createForwarder = require('../helpers/forwarder');
 const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
-const { toBN, keccak256, toUtf8 } = web3.utils;
+const { keccak256 } = web3.utils;
 
 const Identity = artifacts.require('Identity');
 const KeyManager = artifacts.require('KeyManager');
@@ -8,19 +8,19 @@ const KeyManager = artifacts.require('KeyManager');
 contract('Forwarder', async (accounts) => {
   it('should be able to use Identity contract with forwarder', async () => {
     const identity = await Identity.new();
-    const encodedData = getEncodedCall(identity, 'initialize', [accounts[0]]);
+    const encodedData = getEncodedCall(identity, 'initialize', [keccak256(accounts[0])]);
     const forwarder = await createForwarder(identity.address, encodedData);
 
     const identityForwarder = await Identity.at(forwarder.options.address);
     await checkErrorRevert(identityForwarder.initialize(accounts[0]), 'contract-already-initialized');
 
-    await identityForwarder.setData('0x0a', accounts[1]);
+    await identityForwarder.setData('0x0a', keccak256(accounts[1]));
 
     const owner = await identityForwarder.getData('0x00');
     const data = await identityForwarder.getData('0x0a');
 
-    assert.equal(owner, accounts[0]);
-    assert.equal(data, accounts[1]);
+    assert.equal(owner, keccak256(accounts[0]));
+    assert.equal(data, keccak256(accounts[1]));
   });
 
   it('should be able to use KeyManager contract with forwarder', async () => {

@@ -1,4 +1,3 @@
-const web3 = require('web3');
 const { toBN, keccak256 } = web3.utils;
 const { checkErrorRevert } = require('../helpers/utils');
 

@@ -17,7 +17,6 @@
     "openzeppelin-solidity": "^2.0.0",
     "solc": "^0.4.24",
     "solium": "^1.1.8",
-    "truffle": "^5.0.0-beta.2",
-    "web3": "^1.0.0-beta.36"
+    "truffle": "^5.0.0-beta.2"
   }
 }

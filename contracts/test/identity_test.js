@@ -1,11 +1,10 @@
 const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
-var Identity = artifacts.require('Identity')
-var Counter = artifacts.require('Counter')
-var Web3 = require('web3')
+const Identity = artifacts.require('Identity')
+const Counter = artifacts.require('Counter')
+const { keccak256 } = web3.utils;
 
 const KEY_OWNER = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const OPERATION_CALL = 0
-const web3 = new Web3(Web3.givenProvider)
 
 contract('Identity', function(accounts) {
   let identity, counter
@@ -13,7 +12,7 @@ contract('Identity', function(accounts) {
   beforeEach(async function() {
     // Deploy contracts
     identity = await Identity.new()
-    identity.initialize(accounts[0])
+    identity.initialize(keccak256(accounts[0]))
     counter = await Counter.new()
   })
 
