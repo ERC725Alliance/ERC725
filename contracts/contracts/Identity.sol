@@ -5,8 +5,7 @@ contract Identity is ERC725 {
     event ContractCreation(address newContract);
 
     uint256 constant OPERATION_CALL = 0;
-    uint256 constant OPERATION_DELEGATECALL = 1;
-    uint256 constant OPERATION_CREATE = 2;
+    uint256 constant OPERATION_CREATE = 1;
     bytes32 constant KEY_OWNER = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
     mapping(bytes32 => bytes32) store;
@@ -33,13 +32,14 @@ contract Identity is ERC725 {
     }
 
     function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data) external onlyOwner {
-        if (_operationType == OPERATION_CALL)
+        if (_operationType == OPERATION_CALL) {
             executeCall(_to, _value, _data);
-        else if (_operationType == OPERATION_DELEGATECALL)
-            executeDelegateCall(_to, _data);
-        else {
+        } else if (_operationType == OPERATION_CREATE) {
             address newContract = executeCreate(_data);
             emit ContractCreation(newContract);
+        } else {
+            // We don't want to spend users gas if parametar is wrong
+            revert();
         }
     }
 
@@ -52,18 +52,6 @@ contract Identity is ERC725 {
         // solium-disable-next-line security/no-inline-assembly
         assembly {
             success := call(gas, to, value, add(data, 0x20), mload(data), 0, 0)
-        }
-    }
-
-    // copied from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/v0.0.2-alpha/contracts/base/Executor.sol
-    function executeDelegateCall(address to, bytes memory data)
-        internal
-        returns (bool success)
-    {
-        // solium-disable-next-line security/no-inline-assembly
-        assembly {
-            success := delegatecall(gas, to, add(data, 0x20), mload(data), 0, 0)
         }
     }
 
