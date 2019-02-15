@@ -1,26 +1,46 @@
-pragma solidity ^0.5.1;
+pragma solidity ^0.5.4;
 
 import "./ERC725.sol";
-contract Identity is ERC725 {
-    event ContractCreation(address newContract);
 
+contract ProxyAccount is ERC725 {
+    
     uint256 constant OPERATION_CALL = 0;
     uint256 constant OPERATION_CREATE = 1;
     bytes32 constant KEY_OWNER = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
     mapping(bytes32 => bytes32) store;
-    bool initialized;
-
-    function initialize(bytes32 ownerHash) public {
-        require(!initialized, "contract-already-initialized");
-        initialized = true;
-        store[KEY_OWNER] = ownerHash;
+    
+    
+    constructor(address _owner) public {
+        store[KEY_OWNER] = toBytes32(_owner);
     }
+
 
     modifier onlyOwner() {
-        require(keccak256(abi.encodePacked(msg.sender)) == store[KEY_OWNER], "only-owner-allowed");
+        require(toBytes32(msg.sender) == store[KEY_OWNER], "only-owner-allowed");
         _;
     }
+    
+    function toAddress(bytes32 a) internal pure returns (address b){
+       assembly {
+            mstore(0, a)
+            b := mload(0)
+        }
+       return b;
+    }
+    
+    function toBytes32(address a) internal pure returns (bytes32 b){
+       assembly {
+            mstore(0, a)
+            b := mload(0)
+        }
+       return b;
+    }
+    
+    // ----------------
+    // Public functions
+    
+    function () external payable {}
 
     function getData(bytes32 _key) external view returns (bytes32 _value) {
         return store[_key];
@@ -28,7 +48,7 @@ contract Identity is ERC725 {
 
     function setData(bytes32 _key, bytes32 _value) external onlyOwner {
         store[_key] = _value;
-        emit DataSet(_key, _value);
+        emit DataChanged(_key, _value);
     }
 
     function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data) external onlyOwner {
@@ -36,7 +56,7 @@ contract Identity is ERC725 {
             executeCall(_to, _value, _data);
         } else if (_operationType == OPERATION_CREATE) {
             address newContract = executeCreate(_data);
-            emit ContractCreation(newContract);
+            emit ContractCreated(newContract);
         } else {
             // We don't want to spend users gas if parametar is wrong
             revert();
@@ -66,6 +86,4 @@ contract Identity is ERC725 {
             newContract := create(0, add(data, 0x20), mload(data))
         }
     }
-
-    function () external payable {}
 }
