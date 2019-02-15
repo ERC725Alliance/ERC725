@@ -1,7 +1,7 @@
-# erc725
+# ERC 725
 Repository for code and discussion around ERC725 and related standards
 
-## ERC725 Use Cases
+## ERC 725 Use Cases
 
 Projects building on ERC725 are invited to add themselves to the table [here](https://github.com/ERC725Alliance/erc725/blob/master/docs/use-cases.md).
 
