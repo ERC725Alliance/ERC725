@@ -40,7 +40,21 @@ contract ProxyAccount is ERC725 {
     // ----------------
     // Public functions
     
-    function () external payable {}
+    function () external payable {
+      if (msg.sig != bytes4(0)) {
+        address root = toAddress(store[KEY_OWNER]);
+        assembly {
+          let ptr := mload(0x40)
+          calldatacopy(ptr, 0, calldatasize)
+          let result := call(gas, root, 0, ptr, calldatasize, 0, 0) // do we want to forward value ? my guess is no.
+          let size := returndatasize
+          returndatacopy(ptr, 0, size)
+          switch result
+          case 0  { revert (ptr, size) }
+          default { return (ptr, size) }
+        }
+      }
+    }
 
     function getData(bytes32 _key) external view returns (bytes32 _value) {
         return store[_key];
