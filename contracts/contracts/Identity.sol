@@ -6,21 +6,37 @@ contract ProxyAccount is ERC725 {
     
     uint256 constant OPERATION_CALL = 0;
     uint256 constant OPERATION_CREATE = 1;
+    // bytes32 constant KEY_OWNER = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
-    mapping(bytes32 => bytes32) store;
+    mapping(bytes32 => bytes) store;
     
-    // the owner
     address public owner;
-    
     
     constructor(address _owner) public {
         owner = _owner;
     }
 
+
     modifier onlyOwner() {
         require(msg.sender == owner, "only-owner-allowed");
         _;
     }
+    
+    // function toAddress(bytes32 a) internal pure returns (address b){
+    //   assembly {
+    //         mstore(0, a)
+    //         b := mload(0)
+    //     }
+    //   return b;
+    // }
+    
+    // function toBytes32(address a) internal pure returns (bytes32 b){
+    //   assembly {
+    //         mstore(0, a)
+    //         b := mload(0)
+    //     }
+    //   return b;
+    // }
     
     // ----------------
     // Public functions
@@ -38,12 +54,12 @@ contract ProxyAccount is ERC725 {
     function getData(bytes32 _key)
         external
         view
-        returns (bytes32 _value)
+        returns (bytes memory _value)
     {
         return store[_key];
     }
 
-    function setData(bytes32 _key, bytes32 _value)
+    function setData(bytes32 _key, bytes calldata _value)
         external
         onlyOwner
     {
