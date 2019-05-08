@@ -3,16 +3,16 @@ pragma solidity ^0.5.4;
 import "./ERC725.sol";
 
 contract ProxyAccount is ERC725 {
-    
+
     uint256 constant OPERATION_CALL = 0;
     uint256 constant OPERATION_CREATE = 1;
 
     mapping(bytes32 => bytes32) store;
-    
+
     // the owner
     address public owner;
-    
-    
+
+
     constructor(address _owner) public {
         owner = _owner;
     }
@@ -21,12 +21,12 @@ contract ProxyAccount is ERC725 {
         require(msg.sender == owner, "only-owner-allowed");
         _;
     }
-    
+
     // ----------------
     // Public functions
-    
+
     function () external payable {}
-    
+
     function changeOwner(address _owner)
         external
         onlyOwner
@@ -53,6 +53,7 @@ contract ProxyAccount is ERC725 {
 
     function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data)
         external
+        payable
         onlyOwner
     {
         if (_operationType == OPERATION_CALL) {
