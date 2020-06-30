@@ -1,4 +1,7 @@
-Projects, please list your use cases for ERC725 below! You can make a pull request to update the table. :smiley:
+Projects, please list your use cases for ERC725 below!
+You can make a pull request to update the table.
+
+NOTE: some implementation use the old version (ERC25v1)[https://github.com/ethereum/EIPs/blob/ede8c26a77eb1ac8fa2d01d8743a8cf259d8d45b/EIPS/eip-725.md]
 
 | Project | Use case description |
 | --- | --- |
