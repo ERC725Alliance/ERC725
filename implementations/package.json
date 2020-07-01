@@ -1,0 +1,26 @@
+{
+  "name": "erc725",
+  "version": "1.0.0",
+  "description": "ERC725, ERC725X and ERC725Y contract implementations",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "solium -d contracts/",
+    "test": "truffle test"
+  },
+  "author": "Fabian Vogelsteller",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "truffle": "^5.1.31",
+    "chai": "^4.2.0",
+    "solidity-bytes-utils": "0.0.8",
+    "eth-gas-reporter": "^0.2.10",
+    "@openzeppelin/contracts": "^3.0.2",
+    "openzeppelin-test-helpers": "^0.4.2",
+    "solc": "^0.4.24",
+    "solium": "^1.1.8",
+    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-util": "^6.1.0"
+  }
+}
