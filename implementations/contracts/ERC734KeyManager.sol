@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.6.1;
 
-import "./IERC734.sol";
 
 // NOTE: this contract is not fully tested!
 
-contract ERC734KeyManager is IERC734 {
+contract ERC734KeyManager {
     event KeySet(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
     event KeyRemoved(bytes32 indexed key, uint256 indexed purposes, uint256 indexed keyType);
 

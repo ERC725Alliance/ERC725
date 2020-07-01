@@ -35,7 +35,7 @@ contract SimpleKeyManager is ERC165, Ownable { //IERC1271
         allowedExecutor[_account] = true;
         Profile = IERC725X(_account);
 
-        _registerInterface(_INTERFACE_ID_ERC1271);
+//        _registerInterface(_INTERFACE_ID_ERC1271);
     }
 
     function addExecutor(address exec, bool allowed)
@@ -53,13 +53,13 @@ contract SimpleKeyManager is ERC165, Ownable { //IERC1271
         emit Executed(_operationType, _to, _value, _data);
     }
 
-    /**
-    * @notice Checks if an owner signed `_data`.
-    * ERC1271 interface.
-    *
-    * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
-    * @param _signature owner's signature(s) of the data
-    */
+//    /**
+//    * @notice Checks if an owner signed `_data`.
+//    * ERC1271 interface.
+//    *
+//    * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
+//    * @param _signature owner's signature(s) of the data
+//    */
 //    function isValidSignature(bytes32 _hash, bytes memory _signature)
 //    override
 //    public

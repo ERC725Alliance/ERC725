@@ -44,17 +44,17 @@ interface IERC734 /* is ERC165 */ {
     /**
      * @dev Gets the data for a key
      */
-    function getKey(bytes32 _key) constant returns(uint256[] purposes, uint256 keyType, bytes32 key);
+    function getKey(bytes32 _key) external view returns(uint256[] memory purposes, uint256 keyType);
 
     /**
      * @dev Returns TRUE if a key has a certain purpose
      */
-    function keyHasPurpose(bytes32 _key, uint256 purpose) constant returns(bool exists);
+    function keyHasPurpose(bytes32 _key, uint256 purpose) external view returns(bool exists);
 
     /**
      * @dev Return an array of keys that fit a given purpose
      */
-    function getKeysByPurpose(uint256 _purpose) constant returns(bytes32[] keys);
+    function getKeysByPurpose(uint256 _purpose) external view returns(bytes32[] memory keys);
 
 
     /**
