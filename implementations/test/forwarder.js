@@ -2,7 +2,7 @@ const {createAccountForwarder, createInitializeForwarder} = require('../helpers/
 const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
 const { keccak256 } = web3.utils;
 
-const Account = artifacts.require('ERC725');
+const Account = artifacts.require('ERC725Account');
 const KeyManager = artifacts.require('ERC734KeyManager');
 const CounterContract = artifacts.require('Counter');
 

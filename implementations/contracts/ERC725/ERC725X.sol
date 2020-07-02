@@ -5,12 +5,12 @@ pragma solidity ^0.6.0;
 import "./IERC725X.sol";
 
 // modules
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/@openzeppelin/contracts/introspection/ERC165.sol";
+import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../../node_modules/@openzeppelin/contracts/introspection/ERC165.sol";
 
 // libraries
-import "../node_modules/@openzeppelin/contracts/utils/Create2.sol";
-import "../node_modules/solidity-bytes-utils/contracts/BytesLib.sol";
+import "../../node_modules/@openzeppelin/contracts/utils/Create2.sol";
+import "../../node_modules/solidity-bytes-utils/contracts/BytesLib.sol";
 
 /**
  * @title ERC725 X executor

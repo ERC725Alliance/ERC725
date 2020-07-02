@@ -1,0 +1,59 @@
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.6.0;
+
+// modules
+import "./ERC725.sol";
+import "../IERC1271.sol";
+
+// libraries
+import "../../node_modules/@openzeppelin/contracts/cryptography/ECDSA.sol";
+import "../helpers/UtilsLib.sol";
+
+/**
+ * @title ERC725 bundle
+ * @dev Bundles ERC725X and ERC725Y together into one smart contract
+ *
+ *  @author Fabian Vogelsteller <fabian@lukso.network>
+ */
+contract ERC725Account is ERC725, IERC1271  {
+
+    bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
+    bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
+
+    /**
+     * @notice Sets the owner of the contract
+     * @param _newOwner the owner of the contract.
+     */
+    constructor(address _newOwner)
+    ERC725(_newOwner)
+    public {
+        _registerInterface(_INTERFACE_ID_ERC1271);
+    }
+
+    receive() external payable {}
+
+    /**
+    * @notice Checks if an owner signed `_data`.
+    * ERC1271 interface.
+    *
+    * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
+    * @param _signature owner's signature(s) of the data
+    */
+    function isValidSignature(bytes32 _hash, bytes memory _signature)
+    override
+    public
+    view
+    returns (bytes4 magicValue)
+    {
+        if (
+            UtilsLib.isContract(owner()) &&
+            supportsInterface(_INTERFACE_ID_ERC1271)
+        ){
+            return IERC1271(owner()).isValidSignature(_hash, _signature);
+        } else {
+            return owner() == ECDSA.recover(_hash, _signature)
+            ? _INTERFACE_ID_ERC1271
+            : _ERC1271FAILVALUE;
+        }
+    }
+}

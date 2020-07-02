@@ -1,7 +1,7 @@
 const {singletons, BN, ether, expectRevert} = require("openzeppelin-test-helpers");
 const { getEncodedCall, checkErrorRevert } = require('../helpers/utils');
 
-const AccountContract = artifacts.require('ERC725');
+const AccountContract = artifacts.require('ERC725Account');
 const CounterContract = artifacts.require('Counter');
 const KeyManager = artifacts.require("SimpleKeyManager");
 
@@ -145,39 +145,39 @@ contract('ERC725', function(accounts) {
 
         assert.isTrue(result);
       });
-      // it("Supports ERC1271", async () => {
-      //   const owner = accounts[2];
-      //   const account = await AccountContract.new(owner, {from: owner});
-      //   const interfaceID = '0x1626ba7e';
-      //
-      //   const result = await account.supportsInterface.call(interfaceID);
-      //
-      //   assert.isTrue(result);
-      // });
+      it("Supports ERC1271", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(owner, {from: owner});
+        const interfaceID = '0x1626ba7e';
+
+        const result = await account.supportsInterface.call(interfaceID);
+
+        assert.isTrue(result);
+      });
     });
 
-    // context("ERC1271", async () => {
-    //   it("Can verify signature from owner", async () => {
-    //     const owner = accounts[2];
-    //     const account = await AccountContract.new(DUMMY_SIGNER.address, {from: owner});
-    //     const dataToSign = '0xcafecafe';
-    //     const signature = DUMMY_SIGNER.sign(dataToSign);
-    //
-    //     const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
-    //
-    //     assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
-    //   });
-    //   it("Should fail when verifying signature from not-owner", async () => {
-    //     const owner = accounts[2];
-    //     const account = await AccountContract.new(owner, {from: owner});
-    //     const dataToSign = '0xcafecafe';
-    //     const signature = DUMMY_SIGNER.sign(dataToSign);
-    //
-    //     const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
-    //
-    //     assert.equal(result, ERC1271_FAIL_VALUE, "Should define the signature as invalid");
-    //   });
-    // });
+    context("ERC1271", async () => {
+      it("Can verify signature from owner", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(DUMMY_SIGNER.address, {from: owner});
+        const dataToSign = '0xcafecafe';
+        const signature = DUMMY_SIGNER.sign(dataToSign);
+
+        const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
+
+        assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
+      });
+      it("Should fail when verifying signature from not-owner", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(owner, {from: owner});
+        const dataToSign = '0xcafecafe';
+        const signature = DUMMY_SIGNER.sign(dataToSign);
+
+        const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
+
+        assert.equal(result, ERC1271_FAIL_VALUE, "Should define the signature as invalid");
+      });
+    });
 
     context("Storage test", async () => {
       let account;
@@ -357,8 +357,6 @@ contract('ERC725', function(accounts) {
             }
         );
 
-        // console.log(receipt.logs[0].args);
-
         assert.equal(receipt.logs[1].event, 'ContractCreated');
         assert.equal(receipt.logs[1].args.contractAddress, '0x7ffE4e82BD27654D31f392215b6b145655efe659');
       });
@@ -380,40 +378,40 @@ contract('ERC725', function(accounts) {
         assert.equal(idOwner, manager.address, "Addresses should match");
       });
 
-      // context("ERC1271 from KeyManager", async () => {
-      //   it("Can verify signature from executor of keymanager", async () => {
-      //     const dataToSign = '0xcafecafe';
-      //     const signature = DUMMY_SIGNER.sign(dataToSign);
-      //
-      //     // add new owner to keymanager
-      //     await manager.addExecutor(DUMMY_SIGNER.address, true, {from: owner});
-      //
-      //     const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
-      //
-      //     assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
-      //   });
-      //   it("Can verify signature from owner of keymanager", async () => {
-      //
-      //     account = await AccountContract.new(owner, {from: owner});
-      //     manager = await KeyManager.new(account.address, DUMMY_SIGNER.address, {from: owner});
-      //     await account.transferOwnership(manager.address, {from: owner});
-      //
-      //     const dataToSign = '0xcafecafe';
-      //     const signature = DUMMY_SIGNER.sign(dataToSign);
-      //
-      //     const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
-      //
-      //     assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
-      //   });
-      //   it("Should fail when verifying signature from not-owner", async () => {
-      //     const dataToSign = '0xcafecafe';
-      //     const signature = DUMMY_SIGNER.sign(dataToSign);
-      //
-      //     const result = await manager.isValidSignature.call(signature.messageHash, signature.signature);
-      //
-      //     assert.equal(result, ERC1271_FAIL_VALUE, "Should define the signature as invalid");
-      //   });
-      // });
+      context("ERC1271 from KeyManager", async () => {
+        it("Can verify signature from executor of keymanager", async () => {
+          const dataToSign = '0xcafecafe';
+          const signature = DUMMY_SIGNER.sign(dataToSign);
+
+          // add new owner to keymanager
+          await manager.addExecutor(DUMMY_SIGNER.address, true, {from: owner});
+
+          const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
+
+          assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
+        });
+        it("Can verify signature from owner of keymanager", async () => {
+
+          account = await AccountContract.new(owner, {from: owner});
+          manager = await KeyManager.new(account.address, DUMMY_SIGNER.address, {from: owner});
+          await account.transferOwnership(manager.address, {from: owner});
+
+          const dataToSign = '0xcafecafe';
+          const signature = DUMMY_SIGNER.sign(dataToSign);
+
+          const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
+
+          assert.equal(result, ERC1271_MAGIC_VALUE, "Should define the signature as valid");
+        });
+        it("Should fail when verifying signature from not-owner", async () => {
+          const dataToSign = '0xcafecafe';
+          const signature = DUMMY_SIGNER.sign(dataToSign);
+
+          const result = await manager.isValidSignature.call(signature.messageHash, signature.signature);
+
+          assert.equal(result, ERC1271_FAIL_VALUE, "Should define the signature as invalid");
+        });
+      });
 
       it("Key manager can execute on behalf of Idenity", async () => {
         const dest = accounts[1];

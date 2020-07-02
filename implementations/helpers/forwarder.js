@@ -19,6 +19,7 @@ async function createAccountForwarder(address, constructorData) {
       
       // register all interfaces
       _supportedInterfaces[0x01ffc9a7] = true; // ERC165
+      _supportedInterfaces[0x1626ba7e] = true; // ERC1271
       _supportedInterfaces[0x44c028fe] = true; // ERC725X
       _supportedInterfaces[0x2bd57b73] = true; // ERC725Y
     }
