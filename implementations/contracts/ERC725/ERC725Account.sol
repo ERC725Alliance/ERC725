@@ -15,10 +15,15 @@ import "../helpers/UtilsLib.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
+
+// TODO add ERC777, ERC223, ERC721 functions?
+
 contract ERC725Account is ERC725, IERC1271  {
 
     bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
     bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
+
+    event ValueReceived(address indexed sender, uint256 indexed value);
 
     /**
      * @notice Sets the owner of the contract
@@ -34,20 +39,24 @@ contract ERC725Account is ERC725, IERC1271  {
     external
     payable
     {
-//        if (msg.sig != bytes4(0)) {
-//            address root = owner();
-//            assembly {
-//                let ptr := mload(0x40)
-//                calldatacopy(ptr, 0, calldatasize)
-//                let result := call(gas, root, 0, ptr, calldatasize, 0, 0)
-//                let size := returndatasize
-//                returndatacopy(ptr, 0, size)
-//                switch result
-//                case 0  { revert (ptr, size) }
-//                default { return (ptr, size) }
-//            }
-//        }
+        emit ValueReceived(_msgSender(), msg.value);
     }
+
+//    TODO to be discussed
+//    function fallback()
+//    public
+//    {
+//        address to = owner();
+//        assembly {
+//            calldatacopy(0, 0, calldatasize())
+//            let result := staticcall(gas(), to, 0, calldatasize(), 0, 0)
+//            returndatacopy(0, 0, returndatasize())
+//            switch result
+//            case 0  { revert (0, returndatasize()) }
+//            default { return (0, returndatasize()) }
+//        }
+//    }
+
 
     /**
     * @notice Checks if an owner signed `_data`.
