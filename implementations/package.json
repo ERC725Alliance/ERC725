@@ -1,6 +1,6 @@
 {
   "name": "erc725",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.0",
   "description": "ERC725, ERC725X and ERC725Y contract implementations",
   "directories": {
     "test": "test"

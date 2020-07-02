@@ -30,7 +30,24 @@ contract ERC725Account is ERC725, IERC1271  {
         _registerInterface(_INTERFACE_ID_ERC1271);
     }
 
-    receive() external payable {}
+    receive()
+    external
+    payable
+    {
+//        if (msg.sig != bytes4(0)) {
+//            address root = owner();
+//            assembly {
+//                let ptr := mload(0x40)
+//                calldatacopy(ptr, 0, calldatasize)
+//                let result := call(gas, root, 0, ptr, calldatasize, 0, 0)
+//                let size := returndatasize
+//                returndatacopy(ptr, 0, size)
+//                switch result
+//                case 0  { revert (ptr, size) }
+//                default { return (ptr, size) }
+//            }
+//        }
+    }
 
     /**
     * @notice Checks if an owner signed `_data`.
