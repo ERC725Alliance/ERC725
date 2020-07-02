@@ -10,8 +10,8 @@ import "../../node_modules/@openzeppelin/contracts/cryptography/ECDSA.sol";
 import "../helpers/UtilsLib.sol";
 
 /**
- * @title ERC725 bundle
- * @dev Bundles ERC725X and ERC725Y together into one smart contract
+ * @title ERC725Account
+ * @dev Bundles ERC725X and ERC725Y, and ERC1271 and allows receiving native tokens.
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
