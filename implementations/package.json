@@ -1,7 +1,13 @@
 {
   "name": "erc725",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "ERC725 contract implementations",
+  "homepage": "https://erc725alliance.org",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/ERC725Alliance/ERC725.git",
+    "directory": "implementations"
+  },
   "directories": {
     "test": "test"
   },
@@ -9,8 +15,8 @@
     "lint": "solium -d contracts/",
     "test": "truffle test"
   },
-  "author": "Fabian Vogelsteller",
-  "license": "Apache-2.0",
+  "author": "Fabian Vogelsteller <fabian@lukso.network>",
+  "license" : "Apache-2.0",
   "devDependencies": {
     "truffle": "^5.1.31",
     "chai": "^4.2.0",
