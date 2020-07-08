@@ -1,6 +1,6 @@
 {
   "name": "erc725",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -17,6 +17,9 @@
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "eth-gas-reporter": "^0.2.10",
@@ -28,8 +31,5 @@
     "solidity-bytes-utils": "0.0.9",
     "solium": "^1.1.8",
     "truffle": "^5.1.31"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^3.1.0"
   }
 }

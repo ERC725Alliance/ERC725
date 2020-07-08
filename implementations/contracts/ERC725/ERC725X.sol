@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/introspection/ERC165.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
-import "../../node_modules/solidity-bytes-utils/contracts/BytesLib.sol";
+import "solidity-bytes-utils/contracts/BytesLib.sol";
 
 /**
  * @title ERC725 X executor
