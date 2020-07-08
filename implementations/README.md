@@ -16,16 +16,40 @@ The package has the following contracts:
     - Allows to receive native tokens (like ETH) and fires the `event ValueReceived(address indexed sender, uint256 indexed value)`.
     - Sets the key hash `keccak256('ERC725Type'): 0xee97c7dd2e734cf234c2ba0d83a74633e1ac7fc8a9fd779f8497a0109c71b993` to `keccak256('ERC725Account'): 0xafdeb5d6e788fe0ba73c9eb2e30b8a4485e3a18fb31dd13e3b362f62a65c67a0` in the constructor.
 
+## Usage
+
+To use in your project install via npm
+
+```
+npm install
+```
+
+And import in your contracts
+
+```
+import "erc725/contracts/ERC725/ERC725Account.sol";
+
+contract MyContract is ERC725Account {
+    ...
+}
+```
+
 ## Development
 
 Setup:
 
-`npm install`
+```
+npm install
+```
 
 Run tests:
 
-`npm test`
+```
+npm test
+```
 
 Run linter (solium):
 
-`npm run lint`
+```
+npm run lint
+```
