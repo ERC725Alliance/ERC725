@@ -1,0 +1,16 @@
+{
+  "manifestVersion": "2.2",
+  "contracts": {},
+  "dependencies": {},
+  "name": "erc725",
+  "version": "1.0.0-beta.2",
+  "compiler": {
+    "compilerSettings": {
+      "optimizer": {}
+    },
+    "typechain": {
+      "enabled": false
+    }
+  },
+  "telemetryOptIn": false
+}
