@@ -189,6 +189,9 @@ contract('ERC725', function(accounts) {
 
         assert.equal(await account.owner.call(), owner);
       });
+      it("Check for key: keccak256('ERC725Type') value: keccak256('ERC725Account'):", async () => {
+        assert.equal(await account.getData(web3.utils.keccak256('ERC725Type')), web3.utils.keccak256('ERC725Account'));
+      });
       it("Store 32 bytes item 1", async () => {
         let key = web3.utils.numberToHex(count++);
         let value = web3.utils.numberToHex(count++);

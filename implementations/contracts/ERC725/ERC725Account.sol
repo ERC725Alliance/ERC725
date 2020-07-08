@@ -31,7 +31,12 @@ contract ERC725Account is ERC725, IERC1271  {
      */
     constructor(address _newOwner)
     ERC725(_newOwner)
-    public {
+    public
+    {
+        bytes32 key = keccak256('ERC725Type');
+        store[key] = abi.encodePacked(keccak256('ERC725Account'));
+        emit DataChanged(key, store[key]);
+
         _registerInterface(_INTERFACE_ID_ERC1271);
     }
 

@@ -45,7 +45,7 @@ contract SimpleKeyManager is ERC165, Ownable, IERC1271 {
         allowedExecutor[exec] = allowed;
     }
 
-    function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data)
+    function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
     external
     onlyExecutor
     {
@@ -61,9 +61,9 @@ contract SimpleKeyManager is ERC165, Ownable, IERC1271 {
     * @param _signature owner's signature(s) of the data
     */
     function isValidSignature(bytes32 _hash, bytes memory _signature)
-    override
     public
     view
+    override
     returns (bytes4 magicValue)
     {
         address recoveredAddress = ECDSA.recover(_hash, _signature);

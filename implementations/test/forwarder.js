@@ -15,6 +15,10 @@ contract('Forwarder', async (accounts) => {
     LibraryAccount = await Account.new('0xffffffffffffffffffffffffffffffffffffffff');
   });
 
+  it("Check for key: keccak256('ERC725Type') value: keccak256('ERC725Account'):", async () => {
+    assert.equal(await LibraryAccount.getData(web3.utils.keccak256('ERC725Type')), web3.utils.keccak256('ERC725Account'));
+  });
+
   it('should be able to use Account contract with forwarder', async () => {
     const owner =  accounts[0];
     const forwarder = await createAccountForwarder(LibraryAccount.address, owner);
