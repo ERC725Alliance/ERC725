@@ -4,8 +4,8 @@
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/ERC725Alliance/ERC725.git",
+    "type": "git",
+    "url": "https://github.com/ERC725Alliance/ERC725.git",
     "directory": "implementations"
   },
   "directories": {
@@ -16,17 +16,20 @@
     "test": "truffle test"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
-  "license" : "Apache-2.0",
+  "license": "Apache-2.0",
   "devDependencies": {
-    "truffle": "^5.1.31",
     "chai": "^4.2.0",
-    "solidity-bytes-utils": "0.0.9",
     "eth-gas-reporter": "^0.2.10",
-    "@openzeppelin/contracts": "^3.0.2",
+    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-util": "^6.1.0",
+    "@openzeppelin/cli": "^2.8.2",
     "openzeppelin-test-helpers": "^0.4.2",
     "solc": "^0.4.24",
+    "solidity-bytes-utils": "0.0.9",
     "solium": "^1.1.8",
-    "ethereumjs-tx": "^2.1.0",
-    "ethereumjs-util": "^6.1.0"
+    "truffle": "^5.1.31"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0"
   }
 }

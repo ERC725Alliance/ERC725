@@ -6,7 +6,7 @@ import "./ERC725.sol";
 import "../IERC1271.sol";
 
 // libraries
-import "../../node_modules/@openzeppelin/contracts/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/cryptography/ECDSA.sol";
 import "../helpers/UtilsLib.sol";
 
 /**

@@ -26,12 +26,22 @@ async function createAccountForwarder(address, constructorData) {
     
     function() external payable {
       assembly {
-        calldatacopy(mload(0x40), 0, calldatasize)
-        let result := delegatecall(gas, ${address}, mload(0x40), calldatasize, mload(0x40), 0)
-        returndatacopy(mload(0x40), 0, returndatasize)
+        let ptr := mload(0x40)
+      
+        // (1) copy incoming call data
+        calldatacopy(ptr, 0, calldatasize)
+      
+        // (2) forward call to logic contract
+        let result := delegatecall(gas, ${address}, ptr, calldatasize, 0, 0)
+        let size := returndatasize
+      
+        // (3) retrieve return data
+        returndatacopy(ptr, 0, size)
+      
+        // (4) forward return data back to caller
         switch result
-        case 1 { return(mload(0x40), returndatasize) }
-        default { revert(mload(0x40), returndatasize) }
+        case 0 { revert(ptr, size) }
+        default { return(ptr, size) }
       }
     }
   }
@@ -65,12 +75,22 @@ async function createInitializeForwarder(address, constructorData) {
     function() external payable {
       require(msg.sig != 0x0, "function-signature-not-specified");
       assembly {
-        calldatacopy(mload(0x40), 0, calldatasize)
-        let result := delegatecall(gas, ${address}, mload(0x40), calldatasize, mload(0x40), 0)
-        returndatacopy(mload(0x40), 0, returndatasize)
+        let ptr := mload(0x40)
+      
+        // (1) copy incoming call data
+        calldatacopy(ptr, 0, calldatasize)
+      
+        // (2) forward call to logic contract
+        let result := delegatecall(gas, ${address}, ptr, calldatasize, 0, 0)
+        let size := returndatasize
+      
+        // (3) retrieve return data
+        returndatacopy(ptr, 0, size)
+      
+        // (4) forward return data back to caller
         switch result
-        case 1 { return(mload(0x40), returndatasize) }
-        default { revert(mload(0x40), returndatasize) }
+        case 0 { revert(ptr, size) }
+        default { return(ptr, size) }
       }
     }
   }
