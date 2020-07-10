@@ -5,6 +5,8 @@ const AccountContract = artifacts.require('ERC725Account');
 const CounterContract = artifacts.require('Counter');
 const KeyManager = artifacts.require("SimpleKeyManager");
 
+// keccak256("EXECUTOR_ROLE")
+const EXECUTOR_ROLE = "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63";
 const ERC1271_MAGIC_VALUE = '0x1626ba7e';
 const ERC1271_FAIL_VALUE = '0xffffffff';
 const RANDOM_BYTES32 = "0xb281fc8c12954d22544db45de3159a39272895b169a852b314f9cc762e44c53b";
@@ -386,8 +388,8 @@ contract('ERC725', function(accounts) {
           const dataToSign = '0xcafecafe';
           const signature = DUMMY_SIGNER.sign(dataToSign);
 
-          // add new owner to keymanager
-          await manager.addExecutor(DUMMY_SIGNER.address, true, {from: owner});
+          // add new owner to keyManager
+          await manager.grantRole(EXECUTOR_ROLE, DUMMY_SIGNER.address, {from: owner});
 
           const result = await account.isValidSignature.call(signature.messageHash, signature.signature);
 
