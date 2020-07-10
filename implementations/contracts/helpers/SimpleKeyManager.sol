@@ -44,6 +44,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
 
     function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
     external
+    payable
     {
         require(hasRole(EXECUTOR_ROLE, _msgSender()), 'Only executors are allowed');
 
