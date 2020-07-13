@@ -104,10 +104,11 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
     internal
     returns (bool success)
     {
-        // solium-disable-next-line security/no-inline-assembly
-        assembly {
-            success := call(txGas, to, value, add(data, 0x20), mload(data), 0, 0)
-        }
+        // // solium-disable-next-line security/no-inline-assembly
+        // assembly {
+        //     success := call(txGas, to, value, add(data, 0x20), mload(data), 0, 0)
+        // }
+        (success, ) = to.call{value: value, gas: txGas}(data);
     }
 
     // Taken from GnosisSafe
@@ -116,10 +117,11 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
     internal
     returns (bool success)
     {
-        // solium-disable-next-line security/no-inline-assembly
-        assembly {
-            success := delegatecall(txGas, to, add(data, 0x20), mload(data), 0, 0)
-        }
+        // // solium-disable-next-line security/no-inline-assembly
+        // assembly {
+        //     success := delegatecall(txGas, to, add(data, 0x20), mload(data), 0, 0)
+        // }
+        (success, ) = to.delegatecall{gas: txGas}(data);
     }
 
     // Taken from GnosisSafe
