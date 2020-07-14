@@ -124,7 +124,10 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
 
     // Taken from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/development/contracts/libraries/CreateCall.sol
-    function performCreate(uint256 value, bytes memory deploymentData) public returns(address newContract) {
+    function performCreate(uint256 value, bytes memory deploymentData)
+    internal
+    returns (address newContract)
+    {
         // solium-disable-next-line security/no-inline-assembly
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
