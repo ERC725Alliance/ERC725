@@ -25,12 +25,7 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
 contract ERC725X is ERC165, Ownable, IERC725X  {
 
     bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
-
-    uint256 constant OPERATION_CALL = 0;
-    uint256 constant OPERATION_DELEGATECALL = 1;
-    uint256 constant OPERATION_CREATE2 = 2;
-    uint256 constant OPERATION_CREATE = 3;
-
+    
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
@@ -55,7 +50,7 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
      * @param _value the value of ETH to transfer
      * @param _data the call data, or the contract data to deploy
      */
-    function execute(uint256 _operation, address _to, uint256 _value, bytes memory _data)
+    function execute(Operation _operation, address _to, uint256 _value, bytes memory _data)
     external
     payable
     override
@@ -67,23 +62,23 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
         uint256 txGas = gasleft() - 2500;
 
         // CALL
-        if (_operation == OPERATION_CALL) {
+        if (_operation == Operation.CALL) {
             executeCall(_to, _value, _data, txGas);
 
         // DELEGATE CALL
         // TODO: risky as storage slots can be overridden, remove?
-        } else if (_operation == OPERATION_DELEGATECALL) {
+        } else if (_operation == Operation.DELEGATECALL) {
             address currentOwner = owner();
             executeDelegateCall(_to, _data, txGas);
             // Check that the owner was not overridden
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
         // CREATE
-        } else if (_operation == OPERATION_CREATE) {
+        } else if (_operation == Operation.CREATE) {
             performCreate(_value, _data);
 
         // CREATE2
-        } else if (_operation == OPERATION_CREATE2) {
+        } else if (_operation == Operation.CREATE2) {
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
 
@@ -91,9 +86,7 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
 
             emit ContractCreated(contractAddress);
 
-        } else {
-            revert("Wrong operation type");
-        }
+        } 
     }
 
     /* Internal functions */
