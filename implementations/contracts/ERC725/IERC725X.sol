@@ -20,14 +20,7 @@ interface IERC725X  /* is ERC165, ERC173 */ {
     /**
     * @dev Emitted when a contract executed.
     */
-    event Executed(Operation indexed _operation, address indexed _to, uint256 indexed  _value, bytes _data);
-
-    enum Operation {
-        CALL,
-        DELEGATECALL,
-        CREATE2,
-        CREATE
-    }
+    event Executed(uint256 indexed _operation, address indexed _to, uint256 indexed  _value, bytes _data);
 
     /**
      * @dev Executes any other smart contract.
@@ -45,5 +38,5 @@ interface IERC725X  /* is ERC165, ERC173 */ {
      *
      * Emits a {ContractCreated} event, when a contract is created under `operationType` 2 and 3.
      */
-    function execute(Operation operationType, address to, uint256 value, bytes memory data) external payable;
+    function execute(uint256 operationType, address to, uint256 value, bytes memory data) external payable returns (bool success, bytes memory returnData);
 }

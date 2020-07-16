@@ -26,6 +26,12 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
 
     bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
     
+    uint256 constant CALL = 0;
+    uint256 constant DELEGATECALL = 1;
+    uint256 constant CREATE2 = 2;
+    uint256 constant CREATE = 3;
+
+
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
@@ -45,81 +51,79 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
      * @notice Executes any other smart contract. Is only callable by the owner.
      *
      *
-     * @param _operation the operation to execute: CALL = 0; DELEGATECALL = 1; CREATE2 = 2; CREATE = 3;
-     * @param _to the smart contract or address to interact with. `_to` will be unused if a contract is created (operation 2 and 3)
-     * @param _value the value of ETH to transfer
-     * @param _data the call data, or the contract data to deploy
+     * @param operation the operation to execute: CALL = 0; DELEGATECALL = 1; CREATE2 = 2; CREATE = 3;
+     * @param to the smart contract or address to interact with. `_to` will be unused if a contract is created (operation 2 and 3)
+     * @param value the value of ETH to transfer
+     * @param data the call data, or the contract data to deploy
      */
-    function execute(Operation _operation, address _to, uint256 _value, bytes memory _data)
+    function execute(uint256 operation, address to, uint256 value, bytes memory data)
     external
     payable
     override
     onlyOwner
+    returns (bool success, bytes memory returnData)
     {
-        // emit event
-        emit Executed(_operation, _to, _value, _data);
-
-        uint256 txGas = gasleft() - 2500;
-
+        require(operation <= 3,"Wrong Operation type");
         // CALL
-        if (_operation == Operation.CALL) {
-            executeCall(_to, _value, _data, txGas);
-
+        if (operation == CALL)
+            (success, returnData) = executeCall(to, value, data);
+        
         // DELEGATE CALL
         // TODO: risky as storage slots can be overridden, remove?
-        } else if (_operation == Operation.DELEGATECALL) {
-            address currentOwner = owner();
-            executeDelegateCall(_to, _data, txGas);
-            // Check that the owner was not overridden
-            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
-
-        // CREATE
-        } else if (_operation == Operation.CREATE) {
-            performCreate(_value, _data);
-
+        if (operation == DELEGATECALL)
+            (success, returnData) = executeDelegatecall(to, data);
+        
         // CREATE2
-        } else if (_operation == Operation.CREATE2) {
-            bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
-            bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
+        if (operation == CREATE2)
+            (success, returnData) = executeCreate2(value, data);
+        
+        // CREATE
+        if (operation == CREATE)
+           (success, returnData) = executeCreate(value, data);
 
-            address contractAddress = Create2.deploy(_value, salt, data);
-
-            emit ContractCreated(contractAddress);
-
-        } 
+        // emit event
+        emit Executed(operation, to, value, data);
     }
 
     /* Internal functions */
-
-    // Taken from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
-    function executeCall(address to, uint256 value, bytes memory data, uint256 txGas)
+    function executeCall(address _to, uint256 _value, bytes memory _data)
     internal
-    returns (bool success)
+    returns (bool success, bytes memory returnData)
     {
-        (success, ) = to.call{value: value, gas: txGas}(data);
+        (success, returnData) = _to.call{value: _value}(_data);
     }
 
-    // Taken from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
-    function executeDelegateCall(address to, bytes memory data, uint256 txGas)
+    function executeDelegatecall(address _to, bytes memory _data)
     internal
-    returns (bool success)
+    returns (bool success, bytes memory returnData)
     {
-        (success, ) = to.delegatecall{gas: txGas}(data);
+        address currentOwner = owner();
+        (success, returnData) = _to.delegatecall(_data);
+        require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
+    }
+
+    function executeCreate2(uint256 _value, bytes memory _data) internal returns(bool success, bytes memory) {
+        bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
+        bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
+
+        address contractAddress = Create2.deploy(_value, salt, data);
+
+        emit ContractCreated(contractAddress);
+
+        return(true,abi.encodePacked(contractAddress));
+   
     }
 
     // Taken from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/development/contracts/libraries/CreateCall.sol
-    function performCreate(uint256 value, bytes memory deploymentData) public returns(address newContract) {
+    function executeCreate(uint256 _value, bytes memory _data) internal returns(bool success,bytes memory) {
         // solium-disable-next-line security/no-inline-assembly
+        address newContract;
         assembly {
-            newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
+            newContract := create(_value, add(_data, 0x20), mload(_data))
         }
         require(newContract != address(0), "Could not deploy contract");
         emit ContractCreated(newContract);
+        return (true, abi.encodePacked(newContract));
     }
-
-    /* Modifiers */
-
 }

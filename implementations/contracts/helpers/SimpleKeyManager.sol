@@ -42,13 +42,13 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     }
 
 
-    function execute(uint8 _operationType, address _to, uint256 _value, bytes memory _data)
+    function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
     external
     payable
     {
         require(hasRole(EXECUTOR_ROLE, _msgSender()), 'Only executors are allowed');
 
-        Account.execute(IERC725X.Operation(_operationType), _to, _value, _data);
+        Account.execute(_operationType, _to, _value, _data);
         emit Executed(_operationType, _to, _value, _data);
     }
 
