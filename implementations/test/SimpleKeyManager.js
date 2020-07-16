@@ -5,7 +5,7 @@ const KeyManager = artifacts.require('SimpleKeyManager');
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE = "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63";
-const DEFAULT_ADMIN_ROLE = "0x0000000000000000000000000000000000000000000000000000000000000000";
+const DEFAULT_ADMIN_ROLE = "0x00";
 
 contract("SimpleKeyManager", async (accounts) => {
     let keyManager, account;
@@ -73,7 +73,8 @@ contract("SimpleKeyManager", async (accounts) => {
 
         assert.equal(await web3.eth.getBalance(account.address), oneEth);
 
-        await keyManager.execute("0", accounts[2], oneEth, '0x00', {from: owner});
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
+        await keyManager.execute(abi, {from: owner});
 
         assert.equal(await web3.eth.getBalance(account.address), '0');
     });
@@ -90,12 +91,14 @@ contract("SimpleKeyManager", async (accounts) => {
         assert.equal(await web3.eth.getBalance(account.address), oneEth);
 
         // remove executor
-        keyManager.revokeRole(EXECUTOR_ROLE, owner, {from: owner}),
+        keyManager.revokeRole(EXECUTOR_ROLE, owner, {from: owner});
 
-            await expectRevert(
-                keyManager.execute("0", accounts[2], oneEth, '0x00', {from: owner}),
-                "Only executors are allowed"
-            );
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
+
+        await expectRevert(
+            keyManager.execute(abi, {from: owner}),
+            "Only executors are allowed"
+        );
 
         assert.equal(await web3.eth.getBalance(account.address), oneEth);
     });
@@ -118,12 +121,14 @@ contract("SimpleKeyManager", async (accounts) => {
 
         // sign execution
         let nonce = await keyManager.getNonce(emptyAccount.address);
+
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3(0, {t: 'address', v: accounts[2]}, oneEth, {t: 'bytes', v:'0x00'}, nonce)
+            web3.utils.soliditySha3({t: 'bytes', v: abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
-        await keyManager.executeRelayedCall("0", accounts[2], oneEth, '0x00', nonce, signature.signature, {from: accounts[4]});
+        await keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]});
 
         assert.equal(await web3.eth.getBalance(account.address), '0');
     });
@@ -146,13 +151,14 @@ contract("SimpleKeyManager", async (accounts) => {
 
         // sign execution
         let nonce = await keyManager.getNonce(emptyAccount.address) + 2; // increase to much
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3(0, {t: 'address', v: accounts[2]}, oneEth, {t: 'bytes', v:'0x00'}, nonce)
+            web3.utils.soliditySha3({t: 'bytes', v:abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
         await expectRevert(
-            keyManager.executeRelayedCall("0", accounts[2], oneEth, '0x00', nonce, signature.signature, {from: accounts[4]}),
+            keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]}),
             "Incorrect nonce"
         );
 
@@ -172,17 +178,18 @@ contract("SimpleKeyManager", async (accounts) => {
 
         assert.equal(await web3.eth.getBalance(account.address), oneEth);
 
-        // add non new executor
+        // dont add new executor
 
         // sign execution
         let nonce = await keyManager.getNonce(emptyAccount.address);
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3(0, {t: 'address', v: accounts[2]}, oneEth, {t: 'bytes', v:'0x00'}, nonce)
+            web3.utils.soliditySha3({t: 'bytes', v: abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
         await expectRevert(
-            keyManager.executeRelayedCall("0", accounts[2], oneEth, '0x00', 1, signature.signature, {from: accounts[4]}),
+            keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]}),
             "Only executors are allowed"
         );
 
