@@ -124,16 +124,16 @@ contract("SimpleKeyManager", async (accounts) => {
 
         let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3({t: 'bytes', v: abi}, nonce)
+            web3.utils.soliditySha3(keyManager.address, {t: 'bytes', v: abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
-        await keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]});
+        await keyManager.executeRelayedCall(keyManager.address, abi, nonce, signature.signature, {from: accounts[4]});
 
         assert.equal(await web3.eth.getBalance(account.address), '0');
     });
 
-    it('using a signed relayExecution, should fail wrong nonce send value if not executor', async function() {
+    it('using a signed relayExecution, should fail wrong nonce', async function() {
         let oneEth = web3.utils.toWei("1", 'ether');
         web3.eth.accounts.wallet.create(1);
         let emptyAccount = web3.eth.accounts.wallet[0];
@@ -153,12 +153,12 @@ contract("SimpleKeyManager", async (accounts) => {
         let nonce = await keyManager.getNonce(emptyAccount.address) + 2; // increase to much
         let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3({t: 'bytes', v:abi}, nonce)
+            web3.utils.soliditySha3(keyManager.address, {t: 'bytes', v:abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
         await expectRevert(
-            keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]}),
+            keyManager.executeRelayedCall(keyManager.address, abi, nonce, signature.signature, {from: accounts[4]}),
             "Incorrect nonce"
         );
 
@@ -184,13 +184,45 @@ contract("SimpleKeyManager", async (accounts) => {
         let nonce = await keyManager.getNonce(emptyAccount.address);
         let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
         let signature = emptyAccount.sign(
-            web3.utils.soliditySha3({t: 'bytes', v: abi}, nonce)
+            web3.utils.soliditySha3(keyManager.address, {t: 'bytes', v: abi}, nonce)
         );
 
         // send from non-executor account, adding signed data
         await expectRevert(
-            keyManager.executeRelayedCall(abi, nonce, signature.signature, {from: accounts[4]}),
+            keyManager.executeRelayedCall(keyManager.address, abi, nonce, signature.signature, {from: accounts[4]}),
             "Only executors are allowed"
+        );
+
+        assert.equal(await web3.eth.getBalance(account.address), oneEth);
+    });
+
+    it('using a signed relayExecution, should fail to send value if not signedFor keyManager is wrong', async function() {
+        let oneEth = web3.utils.toWei("1", 'ether');
+        web3.eth.accounts.wallet.create(1);
+        let emptyAccount = web3.eth.accounts.wallet[0];
+
+        await web3.eth.sendTransaction({
+            from: accounts[2],
+            to: account.address,
+            value: oneEth
+        });
+
+        assert.equal(await web3.eth.getBalance(account.address), oneEth);
+
+        // add a new executor
+        await keyManager.grantRole(EXECUTOR_ROLE, emptyAccount.address, {from: owner});
+
+        // sign execution
+        let nonce = await keyManager.getNonce(emptyAccount.address);
+        let abi = account.contract.methods.execute("0", accounts[2], oneEth, '0x00').encodeABI();
+        let signature = emptyAccount.sign(
+            web3.utils.soliditySha3(accounts[5], {t: 'bytes', v: abi}, nonce) // accounts[5] is not the keyManager address
+        );
+
+        // send from non-executor account, adding signed data
+        await expectRevert(
+            keyManager.executeRelayedCall(accounts[5], abi, nonce, signature.signature, {from: accounts[4]}),
+            "Message not signed for this keyManager"
         );
 
         assert.equal(await web3.eth.getBalance(account.address), oneEth);

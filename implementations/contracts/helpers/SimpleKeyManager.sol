@@ -36,6 +36,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, _newOwner);
         _setupRole(EXECUTOR_ROLE, _newOwner);
 
+
         // Link account
         Account = IERC725X(_account);
 
@@ -64,13 +65,17 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
 
     // allows anybody to execute given they have a signed messaged from an executor
     function executeRelayedCall(
+        address signedFor,
         bytes memory _data,
         uint256 _nonce,
         bytes memory _signature
     )
     external
     {
+        require(signedFor == address(this), 'Message not signed for this keyManager');
+
         bytes memory blob = abi.encodePacked(
+            address(this), // needs to be signed for this keyManager
             _data,
             _nonce // Prevents replays
         );
@@ -108,4 +113,5 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         : _ERC1271FAILVALUE;
     }
 }
+
 
