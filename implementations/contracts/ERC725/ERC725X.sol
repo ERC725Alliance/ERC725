@@ -72,11 +72,11 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
 
         // DELEGATE CALL
         // TODO: risky as storage slots can be overridden, remove?
-        } else if (_operation == OPERATION_DELEGATECALL) {
-            address currentOwner = owner();
-            executeDelegateCall(_to, _data, txGas);
-            // Check that the owner was not overridden
-            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
+//        } else if (_operation == OPERATION_DELEGATECALL) {
+//            address currentOwner = owner();
+//            executeDelegateCall(_to, _data, txGas);
+//            // Check that the owner was not overridden
+//            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
         // CREATE
         } else if (_operation == OPERATION_CREATE) {
