@@ -55,7 +55,7 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
      * @param _value the value of ETH to transfer
      * @param _data the call data, or the contract data to deploy
      */
-    function execute(uint256 _operation, address _to, uint256 _value, bytes memory _data)
+    function execute(uint256 _operation, address _to, uint256 _value, bytes calldata _data)
     external
     payable
     override
