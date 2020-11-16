@@ -29,5 +29,5 @@ interface IERC725Y /* is ERC165, ERC173 */ {
      *
      * Emits a {DataChanged} event.
      */
-    function setData(bytes32 key, bytes memory value) external;
+    function setData(bytes32 key, bytes calldata value) external;
 }

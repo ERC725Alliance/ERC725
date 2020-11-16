@@ -59,7 +59,7 @@ contract ERC725Y is ERC165, Ownable, IERC725Y {
      * @param _key the key which value to retrieve
      * @param _value the bytes to set.
      */
-    function setData(bytes32 _key, bytes memory _value)
+    function setData(bytes32 _key, bytes calldata _value)
     external
     override
     virtual
