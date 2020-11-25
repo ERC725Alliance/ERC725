@@ -8,6 +8,10 @@ const CounterContract = artifacts.require('Counter');
 
 const OPERATION_CALL = 0;
 
+let ERC725AccountIdentifier = web3.utils.keccak256('ERC725Account').substr(0, 10);
+let supportStandardsKey = web3.utils.keccak256('SupportedStandards').substr(0, 34) + '0'.repeat(24) + ERC725AccountIdentifier.replace('0x','')
+
+
 contract('Forwarder', async (accounts) => {
   let LibraryAccount;
 
@@ -15,8 +19,8 @@ contract('Forwarder', async (accounts) => {
     LibraryAccount = await Account.new('0xffffffffffffffffffffffffffffffffffffffff');
   });
 
-  it("Check for key: keccak256('ERC725Type') value: keccak256('ERC725Account'):", async () => {
-    assert.equal(await LibraryAccount.getData(web3.utils.keccak256('ERC725Type')), web3.utils.keccak256('ERC725Account'));
+  it("Check for key: SupportedStandards > ERC725Account value: bytes4(keccak256('ERC725Account')):", async () => {
+    assert.equal(await LibraryAccount.getData(supportStandardsKey), ERC725AccountIdentifier);
   });
 
   it('should be able to use Account contract with forwarder', async () => {

@@ -18,18 +18,18 @@
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^3.1.0"
+    "@openzeppelin/contracts": "^3.2.0",
+    "truffle": "^5.1.54"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eth-gas-reporter": "^0.2.10",
-    "ethereumjs-tx": "^2.1.0",
-    "ethereumjs-util": "^6.1.0",
     "@openzeppelin/cli": "^2.8.2",
+    "chai": "^4.2.0",
+    "eth-gas-reporter": "^0.2.19",
+    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-util": "^6.2.1",
     "openzeppelin-test-helpers": "^0.4.2",
-    "solc": "^0.4.24",
+    "solc": "^0.4.26",
     "solidity-bytes-utils": "0.0.9",
-    "solium": "^1.1.8",
-    "truffle": "^5.1.31"
+    "solium": "^1.2.5"
   }
 }

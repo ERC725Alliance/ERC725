@@ -16,6 +16,9 @@ const DUMMY_SIGNER = web3.eth.accounts.wallet.add(DUMMY_PRIVATEKEY);
 
 const OPERATION_CALL = 0;
 
+let ERC725AccountIdentifier = web3.utils.keccak256('ERC725Account').substr(0, 10);
+let supportStandardsKey = web3.utils.keccak256('SupportedStandards').substr(0, 34) + '0'.repeat(24) + ERC725AccountIdentifier.replace('0x','')
+
 contract('ERC725', function(accounts) {
   let Account, Counter;
 
@@ -191,8 +194,8 @@ contract('ERC725', function(accounts) {
 
         assert.equal(await account.owner.call(), owner);
       });
-      it("Check for key: keccak256('ERC725Type') value: keccak256('ERC725Account'):", async () => {
-        assert.equal(await account.getData(web3.utils.keccak256('ERC725Type')), web3.utils.keccak256('ERC725Account'));
+      it("Check for key: SupportedStandards > ERC725Account value: bytes4(keccak256('ERC725Account')):", async () => {
+        assert.equal(await account.getData(supportStandardsKey), ERC725AccountIdentifier);
       });
       it("Store 32 bytes item 1", async () => {
         let key = web3.utils.numberToHex(count++);
