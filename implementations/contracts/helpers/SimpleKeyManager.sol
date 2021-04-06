@@ -6,14 +6,14 @@ import "../IERC1271.sol";
 import "../ERC725/IERC725X.sol";
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract SimpleKeyManager is ERC165Storage, IERC1271, AccessControl {
+contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     using ECDSA for bytes32;
     using SafeMath for uint256;
 
@@ -37,8 +37,6 @@ contract SimpleKeyManager is ERC165Storage, IERC1271, AccessControl {
 
         // Link account
         Account = IERC725X(_account);
-
-        _registerInterface(_INTERFACE_ID_ERC1271);
     }
 
 
@@ -109,6 +107,14 @@ contract SimpleKeyManager is ERC165Storage, IERC1271, AccessControl {
         return (hasRole(EXECUTOR_ROLE, recoveredAddress) || hasRole(DEFAULT_ADMIN_ROLE, recoveredAddress))
         ? _INTERFACE_ID_ERC1271
         : _ERC1271FAILVALUE;
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, AccessControl) returns (bool) {
+        return interfaceId == _INTERFACE_ID_ERC1271
+        || super.supportsInterface(interfaceId);
     }
 }
 
