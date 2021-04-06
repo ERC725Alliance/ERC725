@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 // modules
 import "./ERC725X.sol";
@@ -20,7 +20,7 @@ contract ERC725 is ERC725X, ERC725Y  {
     constructor(address _newOwner)
     ERC725X(_newOwner)
     ERC725Y(_newOwner)
-    public {}
+    {}
 
     // NOTE this implementation has not by default: receive() external payable {}
 }

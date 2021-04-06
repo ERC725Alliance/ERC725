@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 // interfaces
 import "./IERC725X.sol";
 
 // modules
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
@@ -22,7 +22,7 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725X is ERC165, Ownable, IERC725X  {
+contract ERC725X is ERC165Storage, Ownable, IERC725X  {
 
     bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
 
@@ -35,7 +35,7 @@ contract ERC725X is ERC165, Ownable, IERC725X  {
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
      */
-    constructor(address _newOwner) public {
+    constructor(address _newOwner) {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if(_newOwner != owner()) {
             transferOwnership(_newOwner);

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 // interfaces
 import "../IERC1271.sol";
 import "../ERC725/IERC725X.sol";
 
 // modules
-import "@openzeppelin/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 // libraries
-import "@openzeppelin/contracts/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
+contract SimpleKeyManager is ERC165Storage, IERC1271, AccessControl {
     using ECDSA for bytes32;
     using SafeMath for uint256;
 
@@ -29,9 +29,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     // EVENTS
     event Executed(uint256 indexed  _value, bytes _data);
 
-    constructor(address _account, address _newOwner)
-    public
-    {
+    constructor(address _account, address _newOwner) {
         // make owner an executor
         _setupRole(DEFAULT_ADMIN_ROLE, _newOwner);
         _setupRole(EXECUTOR_ROLE, _newOwner);

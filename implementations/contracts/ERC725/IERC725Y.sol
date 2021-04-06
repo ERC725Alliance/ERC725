@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity >=0.5.0 <0.7.0;
+pragma solidity >=0.5.0 <0.9.0;
 
 /**
  * @title ERC725 Y data store

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 // modules
 import "./ERC725.sol";
 import "../IERC1271.sol";
 
 // libraries
-import "@openzeppelin/contracts/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "../helpers/UtilsLib.sol";
 
 /**
@@ -31,7 +31,6 @@ contract ERC725Account is ERC725, IERC1271  {
      */
     constructor(address _newOwner)
     ERC725(_newOwner)
-    public
     {
         // set SupportedStandards > ERC725Account
         bytes32 key = bytes32(0xeafec4d89fa9619884b6b89135626455000000000000000000000000afdeb5d6); // SupportedStandards > ERC725Account
