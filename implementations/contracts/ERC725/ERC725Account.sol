@@ -76,11 +76,13 @@ contract ERC725Account is ERC725, IERC1271  {
     view
     returns (bytes4 magicValue)
     {
-        if (
-            UtilsLib.isContract(owner()) &&
-            supportsInterface(_INTERFACE_ID_ERC1271)
-        ){
-            return IERC1271(owner()).isValidSignature(_hash, _signature);
+        // if OWNER is a contract
+        if (UtilsLib.isContract(owner())) {
+            return supportsInterface(_INTERFACE_ID_ERC1271)
+            ? IERC1271(owner()).isValidSignature(_hash, _signature)
+            : _ERC1271FAILVALUE;
+
+        // if OWNER is a key
         } else {
             return owner() == ECDSA.recover(_hash, _signature)
             ? _INTERFACE_ID_ERC1271
