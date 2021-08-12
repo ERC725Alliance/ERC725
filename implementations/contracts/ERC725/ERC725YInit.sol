@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "./IERC725Y.sol";
 
 // modules
-import "../../node_modules/@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 /**
@@ -18,16 +18,17 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725YInit is Ownable, ERC165Storage, IERC725Y {
+contract ERC725YInit is OwnableUpgradeable, ERC165Storage, IERC725Y {
 
     bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x2bd57b73;
 
     mapping(bytes32 => bytes) internal store;
 
-    function initialize(address _newOwner) virtual override public initializer {
+    function initialize(address _newOwner) virtual public initializer {
+        __Ownable_init_unchained();
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
-            Ownable.initialize(_newOwner);
+            transferOwnership(_newOwner);
         }
         
         _registerInterface(_INTERFACE_ID_ERC725Y);

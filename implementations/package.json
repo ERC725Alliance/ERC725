@@ -19,7 +19,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.0.0",
-    "@openzeppelin/contracts-ethereum-package": "^2.2.3",
     "@openzeppelin/contracts-upgradeable": "^4.2.0",
     "truffle": "^5.2.5"
   },
