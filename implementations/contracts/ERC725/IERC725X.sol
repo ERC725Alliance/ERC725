@@ -10,18 +10,22 @@ pragma solidity >=0.5.0 <0.9.0;
  *
  * `execute` should only be callable by the owner of the contract set via ERC173.
  */
-interface IERC725X  /* is ERC165, ERC173 */ {
-
+/* is ERC165, ERC173 */
+interface IERC725X {
     /**
-    * @dev Emitted when a contract is created.
-    */
+     * @dev Emitted when a contract is created.
+     */
     event ContractCreated(address indexed contractAddress);
 
     /**
-    * @dev Emitted when a contract executed.
-    */
-    event Executed(uint256 indexed _operation, address indexed _to, uint256 indexed  _value, bytes _data);
-
+     * @dev Emitted when a contract executed.
+     */
+    event Executed(
+        uint256 indexed _operation,
+        address indexed _to,
+        uint256 indexed _value,
+        bytes _data
+    );
 
     /**
      * @dev Executes any other smart contract.
@@ -39,5 +43,10 @@ interface IERC725X  /* is ERC165, ERC173 */ {
      *
      * Emits a {ContractCreated} event, when a contract is created under `operationType` 2 and 3.
      */
-    function execute(uint256 operationType, address to, uint256 value, bytes calldata data) external payable;
+    function execute(
+        uint256 operationType,
+        address to,
+        uint256 value,
+        bytes calldata data
+    ) external payable;
 }
