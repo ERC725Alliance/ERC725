@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "./ERC725YCore.sol";
 
 // modules
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 /**
  * @title ERC725 Y data store
@@ -16,12 +16,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725Y is ERC725YCore, Ownable {
-    /**
-     * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract.
-     */
-    constructor(address _newOwner) {
+contract ERC725YInit is ERC725YCore, OwnableUpgradeable {
+    function initialize(address _newOwner) public virtual initializer {
+        // Do not call Ownable constructor, so to prevent address(0) to be owner
+        __Ownable_init_unchained();
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             transferOwnership(_newOwner);
