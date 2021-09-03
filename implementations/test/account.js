@@ -319,10 +319,8 @@ contract('ERC725', function(accounts) {
   
           result = await dummy2.CallGetData(account.address,key) 
           assert.deepEqual(result, value); 
+         })
       })
-  
-      })
-  
     });
 
 
