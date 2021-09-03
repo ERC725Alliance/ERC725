@@ -30,4 +30,16 @@ interface IERC725Y /* is ERC165, ERC173 */ {
      * Emits a {DataChanged} event.
      */
     function setData(bytes32 key, bytes calldata value) external;
+
+    /**
+     * @dev Gets array of data at multiple given `key`
+     */
+
+    function getDataMultiple(bytes32[] calldata _keys) external view returns(bytes[] memory);
+
+    /**
+     * @dev Sets array of data at multiple given `key`.
+     * SHOULD only be callable by the owner of the contract set via ERC173.
+     */
+    function setDataMultiple(bytes32[] calldata _keys, bytes[] calldata _values) external ;
 }

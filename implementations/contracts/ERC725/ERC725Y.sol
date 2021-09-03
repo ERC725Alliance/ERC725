@@ -38,4 +38,13 @@ contract ERC725Y is ERC725YCore, Ownable {
     {
         super.setData(_key, _value);
     }
+
+    function setDataMultiple(bytes32[] calldata _keys, bytes[] calldata _values)
+        public
+        virtual
+        override
+        onlyOwner
+    {
+        super.setDataMultiple(_keys, _values);
+    }
 }

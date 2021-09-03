@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725YCore is ERC165Storage, IERC725Y {
-    bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x2bd57b73;
+    bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x37e619de;
 
     mapping(bytes32 => bytes) internal store;
 
@@ -28,7 +28,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
     /**
      * @notice Gets data at a given `key`
      * @param _key the key which value to retrieve
-     * @return _value The date stored at the key
+     * @return _value The data stored at the key
      */
     function getData(bytes32 _key)
         public
@@ -54,5 +54,42 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
         emit DataChanged(_key, _value);
     }
 
+    /**
+     * @notice Gets array of data at multiple given `key`
+     * @param _keys the keys which values to retrieve
+     * @return values The array of data stored at multiple keys
+     */
+    function getDataMultiple(bytes32[] calldata _keys)
+        public
+        view
+        virtual 
+        override
+        returns(bytes[] memory)
+    {
+        uint256 length = _keys.length;
+        bytes[] memory values = new bytes[](length);
+
+        for (uint256 i=0; i < length; i++) {
+            values[i] = getData(_keys[i]);
+        }
+
+        return values;
+    }
+
+    /**
+     * @notice Sets array of data at multiple given `key`
+     * @param _keys the keys which values to retrieve
+     * @param _values the array of bytes to set.
+     */
+    function setDataMultiple(bytes32[] calldata _keys, bytes[] calldata _values)
+        public
+        virtual
+        override
+    {
+        for (uint256 i = 0; i < _keys.length; i++) {
+            setData(_keys[i], _values[i]);
+        }
+    }
+    
     /* Modifiers */
 }

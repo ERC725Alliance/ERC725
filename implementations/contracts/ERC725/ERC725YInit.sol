@@ -36,4 +36,13 @@ contract ERC725YInit is ERC725YCore, OwnableUpgradeable {
     {
         super.setData(_key, _value);
     }
+
+    function setDataMultiple(bytes32[] calldata _keys, bytes[] calldata _values)
+        public
+        virtual
+        override
+        onlyOwner
+    {
+        super.setDataMultiple(_keys, _values);
+    }
 }
