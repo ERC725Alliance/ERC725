@@ -17,7 +17,7 @@ contract Calculate165Selectors {
     function calculateSelectorERC725Y() public pure returns (bytes4) {
         IERC725Y i;
 
-        return i.getData.selector ^ i.setData.selector ^ i.getDataMultiple.selector ^ i.setDataMultiple.selector;
+        return i.getData.selector ^ i.setData.selector;
     }
 
 //    function calculateSelectorLSP1() public pure returns (bytes4) {
