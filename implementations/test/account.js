@@ -18,8 +18,8 @@ const DUMMY_SIGNER = web3.eth.accounts.wallet.add(DUMMY_PRIVATEKEY);
 
 const OPERATION_CALL = 0;
 
-let ERC725AccountIdentifier = web3.utils.keccak256('ERC725Account').substr(0, 10);
-let supportStandardsKey = web3.utils.keccak256('SupportedStandards').substr(0, 34) + '0'.repeat(24) + ERC725AccountIdentifier.replace('0x','')
+let ERC725AccountIdentifier = [web3.utils.keccak256('ERC725Account').substr(0, 10)];
+let supportStandardsKey = [web3.utils.keccak256('SupportedStandards').substr(0, 34) + '0'.repeat(24) + ERC725AccountIdentifier[0].replace('0x','')]
 
 contract('ERC725', function(accounts) {
   let Account, Counter;
@@ -146,7 +146,7 @@ contract('ERC725', function(accounts) {
       it("Supports ERC725Y", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, {from: owner});
-        const interfaceID = '0x37e619de';
+        const interfaceID = '0x5a988c0f';
 
         const result = await account.supportsInterface.call(interfaceID);
 
@@ -202,99 +202,78 @@ contract('ERC725', function(accounts) {
         assert.equal(await account.owner.call(), owner);
       });
       it("Check for key: SupportedStandards > ERC725Account value: bytes4(keccak256('ERC725Account')):", async () => {
-        assert.equal(await account.getData(supportStandardsKey), ERC725AccountIdentifier);
+        assert.deepEqual(await account.getData(supportStandardsKey), ERC725AccountIdentifier);
       });
-
-      context("Showing the gas difference between setDataMultiple and setData for 1 item", async()=>{
-
-        it ("Should set 1 item with setDataMultiple", async()=>{
-            let key = [web3.utils.numberToHex(count++)]
-            let value = [web3.utils.numberToHex(count + 10)];
-
-            await account.setDataMultiple(key,value, {from: owner});
-
-            assert.deepEqual(await account.getDataMultiple(key),value);
-        })
-
-        it ("Should set 1 item with setData", async()=>{
-            let key = web3.utils.numberToHex(count++)
-            let value = web3.utils.numberToHex(count + 23);
-
-            await account.setData(key,value, {from: owner});
-
-            assert.deepEqual(await account.getData(key),value);
-        })
-    })
 
       context("Interacting from a EOA",async()=>{
 
         it("Store 32 bytes item 1", async () => {
-          let key = web3.utils.numberToHex(count++);
-          let value = web3.utils.numberToHex(count++);
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.numberToHex(count++)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Store 32 bytes item 2", async () => {
-          let key = web3.utils.numberToHex(count++);
-          let value = web3.utils.numberToHex(count++);
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.numberToHex(count++)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Store 32 bytes item 3", async () => {
-          let key = web3.utils.numberToHex(count++);
-          let value = web3.utils.numberToHex(count++);
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.numberToHex(count++)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Store 32 bytes item 4", async () => {
-          let key = web3.utils.numberToHex(count++);
-          let value = web3.utils.numberToHex(count++);
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.numberToHex(count++)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Store a long URL as bytes item 5: https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Ffeindura&psig=AOvVaw21YL9Wg3jSaEXMHyITcWDe&ust=1593272505347000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD-guDon-oCFQAAAAAdAAAAABAD", async () => {
-          let key = web3.utils.numberToHex(count++);
-          let value = web3.utils.utf8ToHex('https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Ffeindura&psig=AOvVaw21YL9Wg3jSaEXMHyITcWDe&ust=1593272505347000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD-guDon-oCFQAAAAAdAAAAABAD');
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.utf8ToHex('https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Ffeindura&psig=AOvVaw21YL9Wg3jSaEXMHyITcWDe&ust=1593272505347000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD-guDon-oCFQAAAAAdAAAAABAD')];
           await account.setData(key, value, {from: owner});
   
           // console.log(value.length, value);
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Store 32 bytes item 6", async () => {
-          let key = web3.utils.numberToHex(count);
-          let value = web3.utils.numberToHex(count);
+          let key = [web3.utils.numberToHex(count)];
+          let value = [web3.utils.numberToHex(count)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
         it("Update 32 bytes item 6", async () => {
-          let key = web3.utils.numberToHex(count);
-          let value = web3.utils.numberToHex(count);
+          let key = [web3.utils.numberToHex(count)];
+          let value = [web3.utils.numberToHex(count)];
           await account.setData(key, value, {from: owner});
   
-          assert.equal(await account.getData(key), value);
+          assert.deepEqual(await account.getData(key), value);
         });
       })
       context("Interacting from Smart contracts",async()=>{
-        it ("Should be able to setMultipleData and getMultipleData from Smart contracts",async()=>{
+        it ("Should be able to setData and getData of 3 assets from Smart contracts",async()=>{
           await account.transferOwnership(dummy1.address, {from: owner});
   
           for (let i = 8; i <= 10; i++) {
               keys.push(web3.utils.numberToHex(count++));
               values.push(web3.utils.numberToHex(count + 1000));
           }
-          await dummy1.CallSetDataMultiple(account.address,keys, values); 
+          await dummy1.CallSetData(account.address,keys, values); 
   
-          result = await dummy2.CallGetDataMultiple(account.address,keys) 
+          result = await dummy2.CallGetData(account.address,keys) 
           assert.deepEqual(result, values); 
       })
   
-      it("Should be able to setMultipleData (Array of 3 assets of different lengths) from Smart contracts", async () => {
+      it("Should be able to setData (Array of 3 assets of different lengths) from Smart contracts", async () => {
         let multipleKeys = [
             "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -305,15 +284,15 @@ contract('ERC725', function(accounts) {
             "0x0123456789abcdef",
             "0xabcdefabcdefabcdef123456789123456789"
         ]
-        await dummy1.CallSetDataMultiple(account.address, multipleKeys, multipleValues); 
+        await dummy1.CallSetData(account.address, multipleKeys, multipleValues); 
   
-        let fetchedResult = await dummy2.CallGetDataMultiple(account.address, multipleKeys) 
+        let fetchedResult = await dummy2.CallGetData(account.address, multipleKeys) 
         assert.deepEqual(fetchedResult, multipleValues); 
     })
   
-        it ("Should be able to setData and getData from Smart contracts",async()=>{
-          let key = web3.utils.numberToHex(count++)
-          let value = web3.utils.numberToHex(count + 11)
+        it ("Should be able to setData and getData of 1 asset from Smart contracts",async()=>{
+          let key = [web3.utils.numberToHex(count++)];
+          let value = [web3.utils.numberToHex(count + 11)]
   
           await dummy1.CallSetData(account.address,key, value); 
   
@@ -348,19 +327,19 @@ contract('ERC725', function(accounts) {
       });
 
       it("Owner can set data", async () => {
-        const key = web3.utils.asciiToHex("Important Data");
-        const data = web3.utils.asciiToHex("Important Data");
+        const key = [web3.utils.asciiToHex("Important Data")];
+        const data = [web3.utils.asciiToHex("Important Data")];
 
         await account.setData(key, data, {from: owner});
 
         let fetchedData = await account.getData(key);
 
-        assert.equal(data, fetchedData);
+        assert.deepEqual(data, fetchedData);
       });
 
       it("Fails when non-owner sets data", async () => {
-        const key = web3.utils.asciiToHex("Important Data");
-        const data = web3.utils.asciiToHex("Important Data");
+        const key = [web3.utils.asciiToHex("Important Data")];
+        const data = [web3.utils.asciiToHex("Important Data")];
 
         await expectRevert(
             account.setData(key, data, {from: newOwner}),
