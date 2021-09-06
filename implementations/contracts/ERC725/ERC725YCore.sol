@@ -35,12 +35,11 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
         view
         virtual 
         override
-        returns(bytes[] memory)
+        returns(bytes[] memory values)
     {
-        uint256 length = _keys.length;
-        bytes[] memory values = new bytes[](length);
+        values = new bytes[](_keys.length);
 
-        for (uint256 i=0; i < length; i++) {
+        for (uint256 i=0; i < _keys.length; i++) {
             values[i] = getData(_keys[i]);
         }
 
@@ -57,6 +56,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
         virtual
         override
     {
+        require(_keys.length == _values.length, "Keys length not equal to values length");
         for (uint256 i = 0; i < _keys.length; i++) {
             setData(_keys[i], _values[i]);
         }
