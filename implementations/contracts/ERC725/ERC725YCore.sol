@@ -19,22 +19,60 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725YCore is ERC165Storage, IERC725Y {
-    bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x2bd57b73;
+    bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x5a988c0f;
 
     mapping(bytes32 => bytes) internal store;
 
     /* Public functions */
 
     /**
-     * @notice Gets data at a given `key`
-     * @param _key the key which value to retrieve
-     * @return _value The date stored at the key
+     * @notice Gets array of data at multiple given `key`
+     * @param _keys the keys which values to retrieve
+     * @return values The array of data stored at multiple keys
      */
-    function getData(bytes32 _key)
+    function getData(bytes32[] calldata _keys)
         public
         view
+        virtual 
+        override
+        returns(bytes[] memory values)
+    {
+        values = new bytes[](_keys.length);
+
+        for (uint256 i=0; i < _keys.length; i++) {
+            values[i] = getData(_keys[i]);
+        }
+
+        return values;
+    }
+
+    /**
+     * @notice Sets array of data at multiple given `key`
+     * @param _keys the keys which values to retrieve
+     * @param _values the array of bytes to set.
+     */
+    function setData(bytes32[] calldata _keys, bytes[] calldata _values)
+        public
         virtual
         override
+    {
+        require(_keys.length == _values.length, "Keys length not equal to values length");
+        for (uint256 i = 0; i < _keys.length; i++) {
+            setData(_keys[i], _values[i]);
+        }
+    }
+    
+    /* Internal functions */
+
+    /**
+     * @notice Gets data at a given `key`
+     * @param _key the key which value to retrieve
+     * @return _value The data stored at the key
+     */
+    function getData(bytes32 _key)
+        internal
+        view
+        virtual
         returns (bytes memory _value)
     {
         return store[_key];
@@ -46,9 +84,8 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
      * @param _value the bytes to set.
      */
     function setData(bytes32 _key, bytes calldata _value)
-        public
+        internal
         virtual
-        override
     {
         store[_key] = _value;
         emit DataChanged(_key, _value);

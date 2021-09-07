@@ -30,12 +30,12 @@ contract ERC725Y is ERC725YCore, Ownable {
         _registerInterface(_INTERFACE_ID_ERC725Y);
     }
 
-    function setData(bytes32 _key, bytes calldata _value)
+    function setData(bytes32[] calldata _keys, bytes[] calldata _values)
         public
         virtual
         override
         onlyOwner
     {
-        super.setData(_key, _value);
+        super.setData(_keys, _values);
     }
 }
