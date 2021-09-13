@@ -40,7 +40,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
         values = new bytes[](_keys.length);
 
         for (uint256 i=0; i < _keys.length; i++) {
-            values[i] = getData(_keys[i]);
+            values[i] = _getData(_keys[i]);
         }
 
         return values;
@@ -58,7 +58,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
     {
         require(_keys.length == _values.length, "Keys length not equal to values length");
         for (uint256 i = 0; i < _keys.length; i++) {
-            setData(_keys[i], _values[i]);
+            _setData(_keys[i], _values[i]);
         }
     }
     
@@ -69,7 +69,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
      * @param _key the key which value to retrieve
      * @return _value The data stored at the key
      */
-    function getData(bytes32 _key)
+    function _getData(bytes32 _key)
         internal
         view
         virtual
@@ -83,7 +83,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
      * @param _key the key which value to retrieve
      * @param _value the bytes to set.
      */
-    function setData(bytes32 _key, bytes calldata _value)
+    function _setData(bytes32 _key, bytes calldata _value)
         internal
         virtual
     {
