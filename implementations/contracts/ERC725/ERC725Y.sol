@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725Y is ERC725YCore, Ownable {
+contract ERC725Y is Ownable, ERC725YCore {
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
