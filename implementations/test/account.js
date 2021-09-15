@@ -9,8 +9,8 @@ const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 const AccountContract = artifacts.require("ERC725Account");
 const CounterContract = artifacts.require("Counter");
 const KeyManager = artifacts.require("SimpleKeyManager");
-const Dummy1 = artifacts.require("Dummy1");
-const Dummy2 = artifacts.require("Dummy2");
+const ERC725YOwner = artifacts.require("ERC725YOwner");
+const ERC725YReader = artifacts.require("ERC725YReader");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -225,21 +225,12 @@ contract("ERC725", function(accounts) {
     });
 
     context("Storage test", async () => {
-      let account;
       let owner = accounts[2];
       let count = 1000000000;
-      let keys = [];
-      let values = [];
 
-      it("Create account", async () => {
-        dummy1 = await Dummy1.new();
-        dummy2 = await Dummy2.new();
-
-        account = await AccountContract.new(owner, { from: owner });
-
-        assert.equal(await account.owner.call(), owner);
-      });
       it("Check for key: SupportedStandards > ERC725Account value: bytes4(keccak256('ERC725Account')):", async () => {
+        const account = await AccountContract.new(owner, { from: owner });
+
         assert.deepEqual(
           await account.getData(supportStandardsKey),
           ERC725AccountIdentifier
@@ -247,6 +238,13 @@ contract("ERC725", function(accounts) {
       });
 
       context("Interacting from a EOA", async () => {
+        let account;
+
+        beforeEach(async () => {
+          account = await AccountContract.new(owner, { from: owner });
+          assert.equal(await account.owner.call(), owner);
+        });
+
         it("Store 32 bytes item 1", async () => {
           let key = [web3.utils.numberToHex(count++)];
           let value = [web3.utils.numberToHex(count++)];
@@ -349,16 +347,30 @@ contract("ERC725", function(accounts) {
       });
 
       context("Interacting from Smart contracts", async () => {
-        it("Should be able to setData and getData of 3 assets from Smart contracts", async () => {
-          await account.transferOwnership(dummy1.address, { from: owner });
+        let account;
+        let erc725YOwner;
+        let erc725YReader;
 
+        beforeEach(async () => {
+          erc725YOwner = await ERC725YOwner.new();
+          erc725YReader = await ERC725YReader.new();
+
+          account = await AccountContract.new(erc725YOwner.address, {
+            from: owner,
+          });
+          assert.equal(await account.owner.call(), erc725YOwner.address);
+        });
+
+        it("Should be able to setData and getData of 3 assets from Smart contracts", async () => {
+          let keys = [];
+          let values = [];
           for (let i = 8; i <= 10; i++) {
             keys.push(web3.utils.numberToHex(count++));
             values.push(web3.utils.numberToHex(count + 1000));
           }
-          await dummy1.CallSetData(account.address, keys, values);
+          await erc725YOwner.CallSetData(account.address, keys, values);
 
-          result = await dummy2.CallGetData(account.address, keys);
+          result = await erc725YReader.CallGetData(account.address, keys);
           assert.deepEqual(result, values);
         });
 
@@ -373,13 +385,13 @@ contract("ERC725", function(accounts) {
             "0x0123456789abcdef",
             "0xabcdefabcdefabcdef123456789123456789",
           ];
-          await dummy1.CallSetData(
+          await erc725YOwner.CallSetData(
             account.address,
             multipleKeys,
             multipleValues
           );
 
-          let fetchedResult = await dummy2.CallGetData(
+          let fetchedResult = await erc725YReader.CallGetData(
             account.address,
             multipleKeys
           );
@@ -390,9 +402,9 @@ contract("ERC725", function(accounts) {
           let key = [web3.utils.numberToHex(count++)];
           let value = [web3.utils.numberToHex(count + 11)];
 
-          await dummy1.CallSetData(account.address, key, value);
+          await erc725YOwner.CallSetData(account.address, key, value);
 
-          result = await dummy2.CallGetData(account.address, key);
+          result = await erc725YReader.CallGetData(account.address, key);
           assert.deepEqual(result, value);
         });
       });
@@ -401,7 +413,7 @@ contract("ERC725", function(accounts) {
     context("Interactions with Account contracts", async () => {
       const owner = accounts[3];
       const newOwner = accounts[5];
-      let account = {};
+      let account;
 
       beforeEach(async () => {
         account = await AccountContract.new(owner, { from: owner });
@@ -532,8 +544,8 @@ contract("ERC725", function(accounts) {
     }); //Context interactions
 
     context("Using key manager as owner", async () => {
-      let manager,
-        account = {};
+      let manager;
+      let account;
       const owner = accounts[6];
 
       beforeEach(async () => {
