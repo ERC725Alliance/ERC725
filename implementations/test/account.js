@@ -9,7 +9,7 @@ const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 const AccountContract = artifacts.require("ERC725Account");
 const CounterContract = artifacts.require("Counter");
 const KeyManager = artifacts.require("SimpleKeyManager");
-const ERC725YOwner = artifacts.require("ERC725YOwner");
+const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 
 // keccak256("EXECUTOR_ROLE")
@@ -348,17 +348,17 @@ contract("ERC725", function(accounts) {
 
       context("Interacting from Smart contracts", async () => {
         let account;
-        let erc725YOwner;
+        let erc725YWriter;
         let erc725YReader;
 
         beforeEach(async () => {
-          erc725YOwner = await ERC725YOwner.new();
+          erc725YWriter = await ERC725YWriter.new();
           erc725YReader = await ERC725YReader.new();
 
-          account = await AccountContract.new(erc725YOwner.address, {
+          account = await AccountContract.new(erc725YWriter.address, {
             from: owner,
           });
-          assert.equal(await account.owner.call(), erc725YOwner.address);
+          assert.equal(await account.owner.call(), erc725YWriter.address);
         });
 
         it("Should be able to setData and getData of 3 assets from Smart contracts", async () => {
@@ -368,9 +368,9 @@ contract("ERC725", function(accounts) {
             keys.push(web3.utils.numberToHex(count++));
             values.push(web3.utils.numberToHex(count + 1000));
           }
-          await erc725YOwner.CallSetData(account.address, keys, values);
+          await erc725YWriter.CallSetData(account.address, keys, values);
 
-          result = await erc725YReader.CallGetData(account.address, keys);
+          const result = await erc725YReader.CallGetData(account.address, keys);
           assert.deepEqual(result, values);
         });
 
@@ -385,7 +385,7 @@ contract("ERC725", function(accounts) {
             "0x0123456789abcdef",
             "0xabcdefabcdefabcdef123456789123456789",
           ];
-          await erc725YOwner.CallSetData(
+          await erc725YWriter.CallSetData(
             account.address,
             multipleKeys,
             multipleValues
@@ -402,10 +402,41 @@ contract("ERC725", function(accounts) {
           let key = [web3.utils.numberToHex(count++)];
           let value = [web3.utils.numberToHex(count + 11)];
 
-          await erc725YOwner.CallSetData(account.address, key, value);
+          await erc725YWriter.CallSetData(account.address, key, value);
 
-          result = await erc725YReader.CallGetData(account.address, key);
+          const result = await erc725YReader.CallGetData(account.address, key);
           assert.deepEqual(result, value);
+        });
+
+        it("Should be able to setDataFromMemory and getDataFromMemory", async () => {
+          const expectedKeys = [
+            "0x6b65790000000000000000000000000000000000000000000000000000000000",
+            "0x6b65790000000000000000000000000000000000000000000000000000000001",
+            "0x6b65790000000000000000000000000000000000000000000000000000000002",
+          ];
+          const expectedValues = [
+            "0x76616c756500",
+            "0x76616c756501",
+            "0x76616c756502",
+          ];
+
+          await erc725YWriter.CallSetDataFromMemory(
+            account.address,
+            expectedKeys.length
+          );
+
+          assert.deepEqual(
+            await erc725YReader.CallGetDataFromMemory(
+              account.address,
+              expectedKeys.length
+            ),
+            expectedValues
+          );
+
+          assert.deepEqual(
+            await erc725YReader.CallGetData(account.address, expectedKeys),
+            expectedValues
+          );
         });
       });
     });

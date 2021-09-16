@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "./ERC725YCore.sol";
-
 // modules
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ERC725YCore.sol";
 
 /**
  * @title ERC725 Y data store
@@ -30,6 +29,17 @@ contract ERC725Y is Ownable, ERC725YCore {
         _registerInterface(_INTERFACE_ID_ERC725Y);
     }
 
+    /**
+     * @notice Sets data for each entry in `keys` and `values`.
+     * @dev The function params are `calldata` and must be sent as transaction data. See
+     * `setDataFromMemory` if keys or values are built during a transaction.
+     * @param _keys the array of keys to set data for.
+     * @param _values the array of bytes to set at each key.
+     *
+     * Requirements:
+     * - caller is owner
+     * - keys and values array length are the same
+     */
     function setData(bytes32[] calldata _keys, bytes[] calldata _values)
         public
         virtual
@@ -37,5 +47,25 @@ contract ERC725Y is Ownable, ERC725YCore {
         onlyOwner
     {
         super.setData(_keys, _values);
+    }
+
+    /**
+     * @notice Sets data for each entry in `keys` and `values`
+     * @dev It is not possible to allocate as `calldata`. The function params are `memory` to allow
+     * keys or values built during a transaction.
+     * @param _keys the array of keys to set data for.
+     * @param _values the array of bytes to set at each key.
+     *
+     * Requirements:
+     * - caller is owner
+     * - keys and values array length are the same
+     */
+    function setDataFromMemory(bytes32[] memory _keys, bytes[] memory _values)
+        public
+        virtual
+        override
+        onlyOwner
+    {
+        super.setDataFromMemory(_keys, _values);
     }
 }
