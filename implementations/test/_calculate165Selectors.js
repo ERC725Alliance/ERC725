@@ -14,6 +14,10 @@ contract("Calculate Selectors", accounts => {
         const result = await contract.calculateSelectorERC725Y.call();
         console.log('ERC725Y:', result);
     });
+    it("ERC725Account", async () => {
+        const result = await contract.calculateSelectorERC725Account.call();
+        console.log('ERC725Account:', result);
+    });
     // it("LSP1", async () => {
     //     const result = await contract.calculateSelectorLSP1.call();
     //     console.log('LSP1:', result);
