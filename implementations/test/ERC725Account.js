@@ -11,6 +11,7 @@ const CounterContract = artifacts.require("Counter");
 const KeyManager = artifacts.require("SimpleKeyManager");
 const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
+const ERC725Utils = artifacts.require("ERC725Utils");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -41,6 +42,9 @@ contract("ERC725", function(accounts) {
   context("Simple tests", async () => {
     beforeEach(async function() {
       // Deploy contracts
+      erc725utils = await ERC725Utils.new();
+      await AccountContract.detectNetwork();
+      await AccountContract.link('ERC725Utils', erc725utils.address);
       Account = await AccountContract.new(accounts[0]);
       Counter = await CounterContract.new();
     });

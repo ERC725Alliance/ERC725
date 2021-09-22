@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import "../ILSP1/ILSP1_UniversalReceiver.sol";
+import "../ILSP1/ILSP1_UniversalReceiverDelegate.sol";
+import "../ERC725/ERC725YInit.sol";
+
+
 // modules
 import "./ERC725Init.sol";
 import "../IERC1271.sol";
@@ -8,6 +14,7 @@ import "../IERC1271.sol";
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "../helpers/UtilsLib.sol";
+import "../Utils/ERC725Utils.sol";
 
 /**
  * @title ERC725Account
@@ -18,10 +25,18 @@ import "../helpers/UtilsLib.sol";
 
 // TODO add ERC777, ERC223, ERC721 functions?
 
-contract ERC725AccountInit is Initializable, ERC725Init, IERC1271  {
+contract ERC725AccountInit is Initializable, ERC725Init, IERC1271 , ILSP1  {
+    using ERC725Utils for ERC725YInit;
+
 
     bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
     bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
+
+    bytes4 constant _INTERFACE_ID_LSP1 = 0x6bb56a14;
+    bytes4 constant _INTERFACE_ID_LSP1DELEGATE = 0xc2d7bcc1;
+
+    bytes32 constant private _UNIVERSAL_RECEIVER_DELEGATE_KEY =
+    0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47; // keccak256("LSP1UniversalReceiverDelegate")
 
     event ValueReceived(address indexed sender, uint256 indexed value);
 
@@ -33,6 +48,7 @@ contract ERC725AccountInit is Initializable, ERC725Init, IERC1271  {
         emit DataChanged(key, store[key]);
 
         _registerInterface(_INTERFACE_ID_ERC1271);
+        _registerInterface(_INTERFACE_ID_LSP1);
     }
 
     // /**
@@ -93,5 +109,32 @@ contract ERC725AccountInit is Initializable, ERC725Init, IERC1271  {
             ? _INTERFACE_ID_ERC1271
             : _ERC1271FAILVALUE;
         }
+    }
+
+        function universalReceiver(bytes32 _typeId, bytes calldata _data)
+        external
+        override
+        virtual
+        returns (bytes32 returnValue)
+    {
+        bytes memory receiverData = ERC725YInit(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
+        returnValue = "";
+
+        // call external contract
+        if (receiverData.length == 20) {
+            address universalReceiverAddress = BytesLib.toAddress(receiverData, 0);
+
+            if(ERC165(universalReceiverAddress).supportsInterface(_INTERFACE_ID_LSP1DELEGATE)) {
+                returnValue = ILSP1Delegate(universalReceiverAddress).universalReceiverDelegate(
+                    _msgSender(), 
+                    _typeId, 
+                    _data
+                );
+            }
+        }
+
+        emit UniversalReceiver(_msgSender(), _typeId, returnValue, _data);
+
+        return returnValue;
     }
 }
