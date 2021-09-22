@@ -7,7 +7,7 @@ const CounterContract = artifacts.require('Counter');
 const ReturnTest = artifacts.require('ReturnTest');
 
 
-contract("Account", accounts => {
+contract("ERC725X", accounts => {
     let erc1820;
     beforeEach(async function () {
       erc1820 = await singletons.ERC1820Registry(accounts[1]);
@@ -44,8 +44,6 @@ contract("Account", accounts => {
         assert.isTrue(result);
       });
     });
-
-
 
     context("Interactions with Account contracts", async () => {
       const owner = accounts[3];
@@ -108,6 +106,8 @@ contract("Account", accounts => {
         let Result = web3.eth.abi.decodeParameters([{"Civiliens[]" : {"name": 'string',"age": 'uint256'}},{"Warriors[]": {"dead":'bool',"num": 'uint256'}}], result)
         // console.log(Result);
       })
+
+
 
       // TODO test delegateCall
 

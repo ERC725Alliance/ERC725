@@ -129,7 +129,7 @@ contract("ERC725", function(accounts) {
     });
   }); // context simple test
 
-  contract("Account", (accounts) => {
+  contract("ERC725Account", (accounts) => {
     let erc1820;
     beforeEach(async function() {
       erc1820 = await singletons.ERC1820Registry(accounts[1]);
