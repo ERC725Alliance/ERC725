@@ -107,7 +107,7 @@ contract ERC725Account is ERC725, IERC1271 , ILSP1 {
         external
         override
         virtual
-        returns (bytes32 returnValue)
+        returns (bytes memory returnValue)
     {
         bytes memory receiverData = ERC725Y(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
         returnValue = "";

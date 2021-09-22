@@ -115,7 +115,7 @@ contract ERC725AccountInit is Initializable, ERC725Init, IERC1271 , ILSP1  {
         external
         override
         virtual
-        returns (bytes32 returnValue)
+        returns (bytes memory returnValue)
     {
         bytes memory receiverData = ERC725YInit(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
         returnValue = "";
