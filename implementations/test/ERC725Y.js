@@ -7,7 +7,7 @@ const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 
 
-contract("Account", accounts => {
+contract("ERC725Y", accounts => {
       let erc1820;
       beforeEach(async function () {
         erc1820 = await singletons.ERC1820Registry(accounts[1]);
