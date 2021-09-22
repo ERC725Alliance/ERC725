@@ -46,7 +46,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override {
+    ) public payable virtual override returns(bytes memory result) {
         // emit event
         emit Executed(_operation, _to, _value, _data);
 
@@ -54,7 +54,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
 
         // CALL
         if (_operation == OPERATION_CALL) {
-            executeCall(_to, _value, _data, txGas);
+           result = executeCall(_to, _value, _data, txGas);
 
             // DELEGATE CALL
             // TODO: risky as storage slots can be overridden, remove?
@@ -90,19 +90,19 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
         uint256 value,
         bytes memory data,
         uint256 txGas
-    ) internal returns (bool success) {
-        // solium-disable-next-line security/no-inline-assembly
-        assembly {
-            success := call(
-                txGas,
-                to,
-                value,
-                add(data, 0x20),
-                mload(data),
-                0,
-                0
-            )
-        }
+    ) internal returns (bytes memory) {
+
+        (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
+
+          if (!success) {
+          if (result.length < 68) revert();
+            assembly {
+                result := add(result, 0x04)
+            }
+            revert(abi.decode(result, (string)));
+         }
+
+         return result;
     }
 
     // Taken from GnosisSafe

@@ -35,7 +35,7 @@ contract ERC725X is Ownable, ERC725XCore {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override onlyOwner {
-        super.execute(_operation, _to, _value, _data);
+    ) public payable virtual override onlyOwner returns(bytes memory result) {
+        result = super.execute(_operation, _to, _value, _data);
     }
 }
