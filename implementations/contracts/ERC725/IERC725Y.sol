@@ -22,7 +22,7 @@ interface IERC725Y /* is ERC165, ERC173 */ {
      * @dev Gets array of data at multiple given `key`
      */
 
-    function getData(bytes32[] calldata _keys) external view returns(bytes[] memory);
+    function getData(bytes32[] memory _keys) external view returns(bytes[] memory);
 
     /**
      * @dev Sets array of data at multiple given `key`.
@@ -30,5 +30,5 @@ interface IERC725Y /* is ERC165, ERC173 */ {
      *
      * Emits a {DataChanged} event.
      */
-    function setData(bytes32[] calldata _keys, bytes[] calldata _values) external ;
+    function setData(bytes32[] memory _keys, bytes[] memory _values) external ;
 }

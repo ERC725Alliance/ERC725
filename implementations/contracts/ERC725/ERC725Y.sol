@@ -30,7 +30,7 @@ contract ERC725Y is Ownable, ERC725YCore {
         _registerInterface(_INTERFACE_ID_ERC725Y);
     }
 
-    function setData(bytes32[] calldata _keys, bytes[] calldata _values)
+    function setData(bytes32[] memory _keys, bytes[] memory _values)
         public
         virtual
         override
