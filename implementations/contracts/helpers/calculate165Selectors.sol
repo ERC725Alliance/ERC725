@@ -27,7 +27,7 @@ contract Calculate165Selectors {
         return i.getData.selector
         ^ i.setData.selector
         ^ i.execute.selector
-        // ^ i.universalReceiver.selector
+        ^ i.universalReceiver.selector
         ^ i.isValidSignature.selector;
     }
 
