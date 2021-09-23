@@ -1,3 +1,4 @@
+const { assert } = require("chai");
 const {
   singletons,
   BN,
@@ -12,6 +13,7 @@ const KeyManager = artifacts.require("SimpleKeyManager");
 const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 const ERC725Utils = artifacts.require("ERC725Utils");
+const UniversalReceiverTest = artifacts.require("UniversalReceiverDelegateTest");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -22,6 +24,9 @@ const RANDOM_BYTES32 =
   "0xb281fc8c12954d22544db45de3159a39272895b169a852b314f9cc762e44c53b";
 const DUMMY_PRIVATEKEY =
   "0xcafecafe7D0F0EBcafeC2D7cafe84cafe3248DDcafe8B80C421CE4C55A26cafe";
+const UniversalReceiverDelegateKey = 
+  "0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47";
+
 // generate an account
 const DUMMY_SIGNER = web3.eth.accounts.wallet.add(DUMMY_PRIVATEKEY);
 
@@ -37,7 +42,7 @@ let supportStandardsKey = [
 ];
 
 contract("ERC725", function(accounts) {
-  let Account, Counter;
+  let Account, Counter, UniversalRTest;
 
   context("Simple tests", async () => {
     beforeEach(async function() {
@@ -47,6 +52,7 @@ contract("ERC725", function(accounts) {
       await AccountContract.link('ERC725Utils', erc725utils.address);
       Account = await AccountContract.new(accounts[0]);
       Counter = await CounterContract.new();
+      UniversalRTest = await UniversalReceiverTest.new()
     });
 
     it("should allow the owner to call execute", async function() {
@@ -546,6 +552,28 @@ contract("ERC725", function(accounts) {
         );
       });
     }); //Context interactions
+
+    context("Testing UniversalReceiver",async()=>{
+
+      beforeEach(async()=>{
+        erc725utils = await ERC725Utils.new();
+        await AccountContract.detectNetwork();
+        await AccountContract.link('ERC725Utils', erc725utils.address);
+        account = await AccountContract.new(accounts[0]);
+        UniversalRTest = await UniversalReceiverTest.new()
+      })
+
+      it("Call the Fake universal receiver after storing the key in storage and returning data", async () => {
+        let owner = accounts[0];
+        let key = [UniversalReceiverDelegateKey];
+        let value = [UniversalRTest.address];
+        await account.setData(key, value, { from: owner });
+        let [data] = await account.getData(key);
+
+        let result = await account.universalReceiver.call(UniversalReceiverDelegateKey,"0x0",{from : owner});
+        assert(result != "0x0");
+      });
+    })
 
     context("Using key manager as owner", async () => {
       let manager;

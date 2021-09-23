@@ -115,7 +115,7 @@ contract ERC725Account is ERC725, IERC1271 , ILSP1 {
         // call external contract
         if (receiverData.length == 20) {
             address universalReceiverAddress = BytesLib.toAddress(receiverData, 0);
-
+            
             if(ERC165(universalReceiverAddress).supportsInterface(_INTERFACE_ID_LSP1DELEGATE)) {
                 returnValue = ILSP1Delegate(universalReceiverAddress).universalReceiverDelegate(
                     _msgSender(), 
@@ -126,7 +126,7 @@ contract ERC725Account is ERC725, IERC1271 , ILSP1 {
         }
 
         emit UniversalReceiver(_msgSender(), _typeId, returnValue, _data);
-
+        
         return returnValue;
     }
 }

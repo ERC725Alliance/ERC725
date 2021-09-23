@@ -107,6 +107,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
 
     // Taken from GnosisSafe
     // https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
+    
     function executeDelegateCall(
         address to,
         bytes memory data,
