@@ -28,7 +28,7 @@ contract ERC725YInit is ERC725YCore, OwnableUpgradeable {
         _registerInterface(_INTERFACE_ID_ERC725Y);
     }
 
-    function setData(bytes32[] calldata _keys, bytes[] calldata _values)
+    function setData(bytes32[] memory _keys, bytes[] memory _values)
         public
         virtual
         override

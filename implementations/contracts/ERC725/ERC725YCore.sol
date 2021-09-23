@@ -51,7 +51,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
      * @param _keys the keys which values to retrieve
      * @param _values the array of bytes to set.
      */
-    function setData(bytes32[] calldata _keys, bytes[] calldata _values)
+    function setData(bytes32[] memory _keys, bytes[] memory _values)
         public
         virtual
         override
@@ -83,7 +83,7 @@ abstract contract ERC725YCore is ERC165Storage, IERC725Y {
      * @param _key the key which value to retrieve
      * @param _value the bytes to set.
      */
-    function _setData(bytes32 _key, bytes calldata _value)
+    function _setData(bytes32 _key, bytes memory _value)
         internal
         virtual
     {
