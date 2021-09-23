@@ -17,6 +17,10 @@ contract ReturnTest {
         revert(error);
     }
 
+    function returnSomeStrings(string[] memory _s1, string[] memory _s2) public pure returns(string[] memory, string[] memory){
+        return (_s1,_s2);
+    }
+
     function returnSomeBytes(bytes[] memory _someData,bytes[] memory _someData1,bytes[] memory _someData2) public pure returns(bytes[] memory,bytes[] memory,bytes[] memory) {
         return (_someData,_someData1,_someData2);
     }
