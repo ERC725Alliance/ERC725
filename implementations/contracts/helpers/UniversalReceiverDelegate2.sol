@@ -5,7 +5,7 @@ import "../ILSP1/ILSP1_UniversalReceiverDelegate.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 
-contract UniversalReceiverDelegateTest is ILSP1Delegate , ERC165Storage /* is ERC165 */ {
+contract UniversalReceiverDelegate2 is ILSP1Delegate , ERC165Storage {
 
     bytes4 constant _INTERFACE_ID_LSP1DELEGATE = 0xc2d7bcc1;
 
@@ -14,7 +14,7 @@ contract UniversalReceiverDelegateTest is ILSP1Delegate , ERC165Storage /* is ER
     }
 
     function universalReceiverDelegate(address sender, bytes32 typeId, bytes memory data) external override returns (bytes memory){
-        return "0x33ddddddddddddddd333333333333jjjjjjjjjjjjfffffff";
+        revert("This Contract reverts");
     }
 
 }

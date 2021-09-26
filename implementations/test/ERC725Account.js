@@ -14,7 +14,8 @@ const KeyManager = artifacts.require("SimpleKeyManager");
 const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 const ERC725Utils = artifacts.require("ERC725Utils");
-const UniversalReceiverTest = artifacts.require("UniversalReceiverDelegateTest");
+const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
+const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -53,7 +54,8 @@ contract("ERC725", function(accounts) {
       await AccountContract.link('ERC725Utils', erc725utils.address);
       Account = await AccountContract.new(accounts[0]);
       Counter = await CounterContract.new();
-      UniversalRTest = await UniversalReceiverTest.new()
+      UniversalR1 = await UniversalReceiver1.new()
+      UniversalR2 = await UniversalReceiver2.new()
     });
 
     it("should allow the owner to call execute", async function() {
@@ -554,18 +556,32 @@ contract("ERC725", function(accounts) {
         await AccountContract.detectNetwork();
         await AccountContract.link('ERC725Utils', erc725utils.address);
         account = await AccountContract.new(accounts[0]);
-        UniversalRTest = await UniversalReceiverTest.new()
+        UniversalR1 = await UniversalReceiver1.new()
+        UniversalR2 = await UniversalReceiver2.new()
       })
 
-      it("Call the Fake universal receiver after storing the key in storage and returning data", async () => {
+      it("Call the universal receiver and return data", async () => {
         let owner = accounts[0];
         let key = [UniversalReceiverDelegateKey];
-        let value = [UniversalRTest.address];
+        let value = [UniversalR1.address];
         await account.setData(key, value, { from: owner });
         let [data] = await account.getData(key);
 
         let result = await account.universalReceiver.call(UniversalReceiverDelegateKey,"0x0",{from : owner});
         assert(result != "0x0");
+      });
+
+      it("Call the universal receiver and revert", async () => {
+        let owner = accounts[0];
+        let key = [UniversalReceiverDelegateKey];
+        let value = [UniversalR2.address];
+        await account.setData(key, value, { from: owner });
+        let [data] = await account.getData(key);
+
+        await expectRevert( account.universalReceiver.call(UniversalReceiverDelegateKey,"0x0",{from : owner}),
+        "This Contract reverts"
+        );
+
       });
     })
 
