@@ -25,10 +25,10 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
 abstract contract ERC725XCore is ERC165Storage, IERC725X {
     bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
 
-    uint256 constant OPERATION_CALL = 0;
-    uint256 constant OPERATION_DELEGATECALL = 1;
-    uint256 constant OPERATION_CREATE2 = 2;
-    uint256 constant OPERATION_CREATE = 3;
+    uint256 internal constant OPERATION_CALL = 0;
+    uint256 internal constant OPERATION_DELEGATECALL = 1;
+    uint256 internal constant OPERATION_CREATE2 = 2;
+    uint256 internal constant OPERATION_CREATE = 3;
 
     /* Public functions */
 
@@ -56,13 +56,8 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
         if (_operation == OPERATION_CALL) {
            result = executeCall(_to, _value, _data, txGas);
 
-            // DELEGATE CALL
-            // TODO: risky as storage slots can be overridden, remove?
-            // } else if (_operation == OPERATION_DELEGATECALL) {
-            //     address currentOwner = owner();
-            //     executeDelegateCall(_to, _data, txGas);
-            //     // Check that the owner was not overridden
-            //     require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
+        } else if (_operation == OPERATION_DELEGATECALL) {
+            result = executeDelegateCall(_to, _data, txGas);
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {
@@ -78,6 +73,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
             result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(contractAddress);
+    
         } else {
             revert("Wrong operation type");
         }
@@ -85,8 +81,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
 
     /* Internal functions */
 
-    // Taken from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
+    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
     function executeCall(
         address to,
         uint256 value,
@@ -107,44 +102,40 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
          return result;
     }
 
-    // Taken from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
+    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/development/contracts/base/Executor.sol
     
     function executeDelegateCall(
         address to,
         bytes memory data,
         uint256 txGas
-    ) internal returns (bool success) {
-        // solium-disable-next-line security/no-inline-assembly
-        assembly {
-            success := delegatecall(
-                txGas,
-                to,
-                add(data, 0x20),
-                mload(data),
-                0,
-                0
-            )
-        }
+    ) internal returns (bytes memory) {
+
+        (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
+
+          if (!success) {
+          if (result.length < 68) revert();
+            assembly {
+                result := add(result, 0x04)
+            }
+            revert(abi.decode(result, (string)));
+         }
+
+         return result;
     }
 
-    // Taken from GnosisSafe
-    // https://github.com/gnosis/safe-contracts/blob/development/contracts/libraries/CreateCall.sol
-    function performCreate(uint256 value, bytes memory deploymentData)
-        internal
-        returns (address newContract)
-    {
-        // solium-disable-next-line security/no-inline-assembly
+    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/development/contracts/libraries/CreateCall.sol
+
+    function performCreate(
+        uint256 value,
+        bytes memory deploymentData
+        ) internal returns (address newContract) {
+
         assembly {
-            newContract := create(
-                value,
-                add(deploymentData, 0x20),
-                mload(deploymentData)
-            )
+            newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }
+
         require(newContract != address(0), "Could not deploy contract");
         emit ContractCreated(newContract);
     }
 
-    /* Modifiers */
 }
