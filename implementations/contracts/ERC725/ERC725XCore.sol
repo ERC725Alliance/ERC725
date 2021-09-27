@@ -66,7 +66,8 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {
-            performCreate(_value, _data);
+            address contractAddress = performCreate(_value, _data);
+            result = abi.encodePacked(contractAddress);
 
             // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
@@ -74,6 +75,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
 
             address contractAddress = Create2.deploy(_value, salt, data);
+            result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(contractAddress);
         } else {
