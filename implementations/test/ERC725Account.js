@@ -1,18 +1,12 @@
 const { assert } = require("chai");
-const {
-  singletons,
-  BN,
-  ether,
-  expectRevert,
-} = require("openzeppelin-test-helpers");
+const {singletons,BN,ether,expectRevert} = require("openzeppelin-test-helpers");
 const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 const {calculateCreate2} = require('eth-create2-calculator')
 
 const AccountContract = artifacts.require("ERC725Account");
+
 const CounterContract = artifacts.require("Counter");
 const KeyManager = artifacts.require("SimpleKeyManager");
-const ERC725YWriter = artifacts.require("ERC725YWriter");
-const ERC725YReader = artifacts.require("ERC725YReader");
 const ERC725Utils = artifacts.require("ERC725Utils");
 const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
@@ -22,8 +16,6 @@ const EXECUTOR_ROLE =
   "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63";
 const ERC1271_MAGIC_VALUE = "0x1626ba7e";
 const ERC1271_FAIL_VALUE = "0xffffffff";
-const RANDOM_BYTES32 =
-  "0xb281fc8c12954d22544db45de3159a39272895b169a852b314f9cc762e44c53b";
 const DUMMY_PRIVATEKEY =
   "0xcafecafe7D0F0EBcafeC2D7cafe84cafe3248DDcafe8B80C421CE4C55A26cafe";
 const UniversalReceiverDelegateKey = 
@@ -337,8 +329,6 @@ contract("ERC725", function(accounts) {
           "Ownable: caller is not the owner"
         );
       });
-
-      // TODO test delegateCall
 
       it("Allows owner to execute create", async () => {
         const dest = accounts[6];

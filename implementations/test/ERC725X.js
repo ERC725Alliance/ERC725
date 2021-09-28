@@ -47,7 +47,7 @@ contract("ERC725X", accounts => {
       });
     });
 
-    context("Interactions with Account contracts", async () => {
+    context("Testing contract functions", async () => {
       const owner = accounts[3];
       const newOwner = accounts[5];
       let account = {};
@@ -89,7 +89,7 @@ contract("ERC725X", accounts => {
           from: owner
         });
         secondResult = await counter.get();
-        assert(secondResult > result );
+        assert.isTrue(new BN(result).add(new BN(1)).eq(new BN(secondResult)));
       });
 
       it("Allows owner to execute delegatecall",async()=>{
@@ -159,7 +159,7 @@ contract("ERC725X", accounts => {
       })
 
     
-      context("Testing Added Features : Revert on failed low level call and return bytes",async()=>{
+      context("Revert on failed low level call and return bytes",async()=>{
         
         it("Should revert with a reason while calling Revertable Function (using the new way)",async()=>{
         
@@ -172,19 +172,19 @@ contract("ERC725X", accounts => {
             ) 
          })
   
-         it("Should returns Civilians and a Warriors",async()=>{
+         it("Should return an array of struct {Girl} and {Boy} (decoded)",async()=>{
   
           const OPERATION_CALL = 0x0;
-          abi = returnTest.contract.methods.functionThatReturnsCiviliensAndWarriors([{"name":"Yamen","age" :19}],[{"dead":true,"num":54},{"dead":false,"num":22}]).encodeABI();
+          abi = returnTest.contract.methods.functionThatReturnsCiviliensAndWarriors([{"name":"Yamen","age" :19}],[{"single":true,"age":54},{"single":false,"age":22}]).encodeABI();
           result = await account.execute.call(OPERATION_CALL,returnTest.address,"0x0",abi,{from: owner});
   
           await account.execute(OPERATION_CALL,returnTest.address,"0x0",abi,{from: owner});  
           // console.log(result)
-          let Result = web3.eth.abi.decodeParameters([{"Civiliens[]" : {"name": 'string',"age": 'uint256'}},{"Warriors[]": {"dead":'bool',"num": 'uint256'}}], result)
+          let Result = web3.eth.abi.decodeParameters([{"Boy[]" : {"name": 'string',"age": 'uint256'}},{"Girl[]": {"single":'bool',"age": 'uint256'}}], result)
           // console.log(Result);
         })
   
-        it("Should return some array of strings",async()=>{
+        it("Should return some array of strings (decoded)",async()=>{
           const OPERATION_CALL = 0x0;
           let names1 = ["Yamen","Jean","Fabian"];
           let names2 = ["Yamen"];

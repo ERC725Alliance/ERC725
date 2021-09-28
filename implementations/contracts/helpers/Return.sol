@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 contract ReturnTest {
 
-    struct Civiliens{
+    struct Boy{
         string name;
         uint256 age;
     }
 
-    struct Warriors{
-        bool dead;
-        uint256 num;
+    struct Girl{
+        bool single;
+        uint256 age;
     }
 
     function functionThatRevertsWithError(string memory error) external pure {
@@ -25,7 +25,7 @@ contract ReturnTest {
         return (_someData,_someData1,_someData2);
     }
 
-    function functionThatReturnsCiviliensAndWarriors(Civiliens[] memory _someData,Warriors[] memory _someData1) public pure returns(Civiliens[] memory, Warriors[] memory) {
+    function functionThatReturnsCiviliensAndWarriors(Boy[] memory _someData,Girl[] memory _someData1) public pure returns(Boy[] memory, Girl[] memory) {
         return (_someData,_someData1);
     }
     
