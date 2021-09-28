@@ -6,6 +6,7 @@ const {calculateCreate2} = require('eth-create2-calculator')
 const AccountContract = artifacts.require('ERC725X');
 const CounterContract = artifacts.require('Counter');
 const ReturnTest = artifacts.require('ReturnTest');
+const DelegateTest = artifacts.require('DelegateTest');
 
 
 contract("ERC725X", accounts => {
@@ -58,6 +59,8 @@ contract("ERC725X", accounts => {
       beforeEach(async () => {
         account = await AccountContract.new(owner, {from: owner});
         returnTest = await ReturnTest.new({from: owner});
+        delegateTest = await DelegateTest.new(owner,{from: owner});
+        delegateTestsecond = await DelegateTest.new(owner,{from: owner});
       });
 
       it("Uprade ownership correctly", async () => {
@@ -89,7 +92,20 @@ contract("ERC725X", accounts => {
         assert(secondResult > result );
       });
 
-      // TODO test delegateCall
+      it("Allows owner to execute delegatecall",async()=>{
+        const OPERATION_DELEGATECALL = 1;
+        let result, abi, secondResult,num;
+        num = 3;
+        result = await delegateTest.count();
+        abi = delegateTestsecond.contract.methods.countChange(num).encodeABI();
+        
+        await delegateTest.execute(OPERATION_DELEGATECALL, delegateTestsecond.address , "0x0", abi, {
+          from: owner
+        });
+
+        secondResult = await delegateTest.count();
+        assert(secondResult.toNumber() == num);
+      })
 
       it("Allows owner to execute create", async () => {
         const dest = accounts[6];
@@ -112,7 +128,7 @@ contract("ERC725X", accounts => {
           from: owner
         });
 
-        assert(receipt ==  "0x71e72efae1644147364b24c49960d36697bc92ed"); // address returned
+        assert(receipt != "" );     // return address
       })
 
       it("Allows owner to execute create2", async () => {
