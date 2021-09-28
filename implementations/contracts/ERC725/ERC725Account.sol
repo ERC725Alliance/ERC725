@@ -54,6 +54,7 @@ contract ERC725Account is ERC725, IERC1271 , ILSP1 {
         emit ValueReceived(_msgSender(), msg.value);
     }
 
+// Should we forward all uncatched calls to the owner?
 //    TODO to be discussed
 //    function fallback()
 //    public
