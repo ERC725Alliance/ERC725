@@ -21,10 +21,6 @@ contract ERC725Init is Initializable, ERC725XInit, ERC725YInit {
         ERC725XInit.initialize(_newOwner);
         ERC725YInit.initialize(_newOwner);
     }
-    // constructor(address _newOwner)
-    // ERC725X(_newOwner)
-    // ERC725Y(_newOwner)
-    // {}
 
     // NOTE this implementation has not by default: receive() external payable {}
 }

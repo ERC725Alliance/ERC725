@@ -30,16 +30,4 @@ contract Calculate165Selectors {
         ^ i.universalReceiver.selector
         ^ i.isValidSignature.selector;
     }
-
-//    function calculateSelectorLSP1() public pure returns (bytes4) {
-//        ILSP1 i;
-//
-//        return i.universalReceiver.selector;
-//    }
-
-//    function calculateSelectorERC1271() public pure returns (bytes4) {
-//        IERC1271 i;
-//
-//        return i.isValidSignature.selector;
-//    }
 }

@@ -51,21 +51,6 @@ contract ERC725AccountInit is Initializable, ERC725Init, IERC1271 , ILSP1  {
         _registerInterface(_INTERFACE_ID_LSP1);
     }
 
-    // /**
-    //  * @notice Sets the owner of the contract
-    //  * @param _newOwner the owner of the contract.
-    //  */
-    // constructor(address _newOwner)
-    // ERC725(_newOwner)
-    // {
-    //     // // set SupportedStandards > ERC725Account
-    //     // bytes32 key = bytes32(0xeafec4d89fa9619884b6b89135626455000000000000000000000000afdeb5d6); // SupportedStandards > ERC725Account
-    //     // store[key] = abi.encodePacked(bytes4(0xafdeb5d6)); // bytes4(keccak256('ERC725Account')
-    //     // emit DataChanged(key, store[key]);
-
-    //     // _registerInterface(_INTERFACE_ID_ERC1271);
-    // }
-
     receive() external payable {
         emit ValueReceived(_msgSender(), msg.value);
     }

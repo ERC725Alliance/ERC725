@@ -42,7 +42,8 @@ contract ERC725XInit is ERC725XCore, OwnableUpgradeable {
         // CALL
         if (_operation == OPERATION_CALL) {
            result = executeCall(_to, _value, _data, txGas);
-
+           
+            // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);

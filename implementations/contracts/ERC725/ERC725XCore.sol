@@ -56,6 +56,7 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
         if (_operation == OPERATION_CALL) {
            result = executeCall(_to, _value, _data, txGas);
 
+            // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
             result = executeDelegateCall(_to, _data, txGas);
 
