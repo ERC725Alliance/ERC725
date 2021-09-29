@@ -3,9 +3,6 @@ pragma solidity ^0.8.0;
 import "../ERC725/IERC725X.sol";
 import "../ERC725/IERC725Y.sol";
 import "../ERC725/ERC725Account.sol";
-//import "../IERC1271.sol";
-//import "../ILSP1_UniversalReceiver.sol";
-
 
 contract Calculate165Selectors {
 

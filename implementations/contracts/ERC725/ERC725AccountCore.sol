@@ -5,7 +5,6 @@ pragma solidity ^0.8.0;
 import "./ERC725XCore.sol";
 import "./ERC725YCore.sol";
 import "../IERC1271.sol";
-import "./ERC725Y.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";

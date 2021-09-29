@@ -3,16 +3,6 @@ pragma solidity ^0.8.0;
 
 // modules
 import "./ERC725.sol";
-import "../IERC1271.sol";
-
-// libraries
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "../helpers/UtilsLib.sol";
-import "../Utils/ERC725Utils.sol";
-
-// interfaces
-import "../Interfaces/ILSP1_UniversalReceiver.sol";
-import "../Interfaces/ILSP1_UniversalReceiverDelegate.sol";
 import "./ERC725AccountCore.sol";
 
 /**
@@ -21,8 +11,6 @@ import "./ERC725AccountCore.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-
-// TODO add ERC777, ERC223, ERC721 functions?
 
 contract ERC725Account is ERC725, ERC725AccountCore  {
 
