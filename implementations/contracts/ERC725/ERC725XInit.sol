@@ -33,7 +33,39 @@ contract ERC725XInit is ERC725XCore, OwnableUpgradeable {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override onlyOwner {
-        super.execute(_operation, _to, _value, _data);
+    ) public payable virtual override onlyOwner returns(bytes memory result) {
+         // emit event
+        emit Executed(_operation, _to, _value, _data);
+
+        uint256 txGas = gasleft() - 2500;
+
+        // CALL
+        if (_operation == OPERATION_CALL) {
+           result = executeCall(_to, _value, _data, txGas);
+           
+            // DELEGATECALL
+        } else if (_operation == OPERATION_DELEGATECALL) {
+            address currentOwner = owner();
+            result = executeDelegateCall(_to, _data, txGas);
+
+            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
+
+            // CREATE
+        } else if (_operation == OPERATION_CREATE) {
+            address contractAddress = performCreate(_value, _data);
+            result = abi.encodePacked(contractAddress);
+
+            // CREATE2
+        } else if (_operation == OPERATION_CREATE2) {
+            bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
+            bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
+
+            address contractAddress = Create2.deploy(_value, salt, data);
+            result = abi.encodePacked(contractAddress);
+
+            emit ContractCreated(contractAddress);
+        } else {
+            revert("Wrong operation type");
+        }
     }
 }

@@ -48,5 +48,5 @@ interface IERC725X {
         address to,
         uint256 value,
         bytes calldata data
-    ) external payable;
+    ) external payable returns(bytes memory);
 }

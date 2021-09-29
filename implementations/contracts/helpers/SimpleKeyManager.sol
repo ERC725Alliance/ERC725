@@ -117,5 +117,3 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         || super.supportsInterface(interfaceId);
     }
 }
-
-
