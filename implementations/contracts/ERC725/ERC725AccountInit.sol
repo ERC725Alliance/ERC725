@@ -29,10 +29,7 @@ import "./ERC725AccountCore.sol";
 contract ERC725AccountInit is ERC725Init, ERC725AccountCore  {
 
     function initialize(address _newOwner) virtual override(ERC725Init) public initializer {
-        // set SupportedStandards > ERC725Account
-        bytes32 key = bytes32(0xeafec4d89fa9619884b6b89135626455000000000000000000000000afdeb5d6); // SupportedStandards > ERC725Account
-        store[key] = abi.encodePacked(bytes4(0xafdeb5d6)); // bytes4(keccak256('ERC725Account')
-        emit DataChanged(key, store[key]);
+
         ERC725Init.initialize(_newOwner);
 
         _registerInterface(_INTERFACE_ID_ERC1271);

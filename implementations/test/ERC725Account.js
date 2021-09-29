@@ -229,20 +229,6 @@ contract("ERC725", function(accounts) {
       });
     });
 
-    context("Storage test", async () => {
-      let owner = accounts[2];
-      let count = 1000000000;
-
-      it("Check for key: SupportedStandards > ERC725Account value: bytes4(keccak256('ERC725Account')):", async () => {
-        const account = await AccountContract.new(owner, { from: owner });
-
-        assert.deepEqual(
-          await account.getData(supportStandardsKey),
-          ERC725AccountIdentifier
-        );
-      });
-    });
-
     context("Interactions with Account contracts", async () => {
       const owner = accounts[3];
       const newOwner = accounts[5];
