@@ -20,7 +20,7 @@ contract ERC725XInit is ERC725XCore, Initializable {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         
         if (_newOwner != owner()) {
-            initOwner(_newOwner);
+            Ownable.initOwner(_newOwner);
         }
 
         _registerInterface(_INTERFACE_ID_ERC725X);
