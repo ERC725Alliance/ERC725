@@ -26,6 +26,7 @@ import "../Interfaces/ILSP1_UniversalReceiverDelegate.sol";
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271 {
     using ERC725Utils for ERC725YCore;
 
+    bytes4 internal constant _INTERFACE_ID_ERC725Account = 0x63cb749b;
     bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
     bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
     bytes4 internal constant _INTERFACE_ID_LSP1 = 0x6bb56a14;

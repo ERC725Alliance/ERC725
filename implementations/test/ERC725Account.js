@@ -188,6 +188,16 @@ contract("ERC725", function(accounts) {
 
         assert.isTrue(result);
       });
+
+      it("Supports ERC725Account", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(owner, { from: owner });
+        const interfaceID = "0x63cb749b";
+
+        const result = await account.supportsInterface.call(interfaceID);
+
+        assert.isTrue(result);
+      });
     });
 
     context("ERC1271", async () => {
