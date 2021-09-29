@@ -30,7 +30,7 @@ abstract contract ERC725YCore is Ownable, ERC165Storage, IERC725Y {
      * @param _keys the keys which values to retrieve
      * @return values The array of data stored at multiple keys
      */
-    function getData(bytes32[] calldata _keys)
+    function getData(bytes32[] memory _keys)
         public
         view
         virtual 
