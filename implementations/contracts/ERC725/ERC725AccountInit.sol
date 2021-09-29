@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "../ILSP1/ILSP1_UniversalReceiver.sol";
-import "../ILSP1/ILSP1_UniversalReceiverDelegate.sol";
+import "../Interfaces/ILSP1_UniversalReceiver.sol";
+import "../Interfaces/ILSP1_UniversalReceiverDelegate.sol";
 import "../ERC725/ERC725YInit.sol";
 
 
