@@ -13,7 +13,8 @@
   },
   "scripts": {
     "lint": "solium -d contracts/",
-    "test": "truffle test"
+    "test": "truffle test",
+    "solc": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
@@ -32,6 +33,7 @@
     "openzeppelin-test-helpers": "^0.4.2",
     "solc": "^0.4.26",
     "solidity-bytes-utils": "0.8.0",
-    "solium": "^1.2.5"
+    "solium": "^1.2.5",
+    "truffle-assertions": "^0.9.2"
   }
 }
