@@ -23,7 +23,7 @@ import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
  */
 
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271 {
-    using ERC725Utils for ERC725YCore;
+    using ERC725Utils for IERC725Y;
 
     bytes4 internal constant _INTERFACE_ID_ERC725Account = 0x63cb749b;
     bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
@@ -89,7 +89,7 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
         virtual
         returns (bytes memory returnValue)
     {
-        bytes memory receiverData = ERC725YCore(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
+        bytes memory receiverData = IERC725Y(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
         returnValue = "";
 
         // call external contract
