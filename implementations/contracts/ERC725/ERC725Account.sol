@@ -25,7 +25,7 @@ contract ERC725Account is ERC725, ERC725AccountCore  {
         _registerInterface(_INTERFACE_ID_LSP1);
     }
 
-        function execute(
+    function execute(
         uint256 _operation,
         address _to,
         uint256 _value,
@@ -34,10 +34,8 @@ contract ERC725Account is ERC725, ERC725AccountCore  {
         result = ERC725X.execute(_operation,_to,_value,_data);
     }
 
-        function setData(bytes32[] memory _keys, bytes[] memory _values)
-        public
-        virtual override(ERC725Y,ERC725YCore) onlyOwner {
-         ERC725Y.setData(_keys, _values);
+    function setData(bytes32[] memory _keys, bytes[] memory _values) public virtual override(ERC725Y,ERC725YCore) onlyOwner {
+        ERC725Y.setData(_keys, _values);
     }
 
 }

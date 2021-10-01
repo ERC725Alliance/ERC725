@@ -12,8 +12,8 @@ import "../helpers/UtilsLib.sol";
 import "../Utils/ERC725Utils.sol";
 
 // interfaces
-import "../Interfaces/ILSP1_UniversalReceiver.sol";
-import "../Interfaces/ILSP1_UniversalReceiverDelegate.sol";
+import "../interfaces/ILSP1_UniversalReceiver.sol";
+import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
 
 /**
  * @title Abstract (Core) implementation of ERC725Account
