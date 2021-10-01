@@ -6,7 +6,7 @@ import "./IERC725X.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
-import "../Utils/Ownable.sol";
+import "../Utils/OwnableUnset.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
@@ -22,7 +22,7 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-abstract contract ERC725XCore is Ownable, ERC165Storage, IERC725X {
+abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
 
     uint256 internal constant OPERATION_CALL = 0;

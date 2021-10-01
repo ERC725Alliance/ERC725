@@ -21,7 +21,7 @@ contract ERC725YInit is ERC725YCore, Initializable {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         
         if (_newOwner != owner()) {
-            Ownable.initOwner(_newOwner);
+            OwnableUnset.initOwner(_newOwner);
         }
 
         _registerInterface(_INTERFACE_ID_ERC725Y);

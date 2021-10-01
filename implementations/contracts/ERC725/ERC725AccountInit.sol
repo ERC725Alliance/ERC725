@@ -22,7 +22,7 @@ contract ERC725AccountInit is ERC725Init, ERC725AccountCore  {
         _registerInterface(_INTERFACE_ID_LSP1);
     }
 
-        function execute(
+    function execute(
         uint256 _operation,
         address _to,
         uint256 _value,
@@ -31,9 +31,7 @@ contract ERC725AccountInit is ERC725Init, ERC725AccountCore  {
         result = ERC725XInit.execute(_operation,_to,_value,_data);
     }
 
-        function setData(bytes32[] memory _keys, bytes[] memory _values)
-        public
-        virtual override(ERC725YInit,ERC725YCore) onlyOwner {
-         ERC725YInit.setData(_keys, _values);
+    function setData(bytes32[] memory _keys, bytes[] memory _values) public virtual override(ERC725YInit,ERC725YCore) onlyOwner {
+        ERC725YInit.setData(_keys, _values);
     }
 }

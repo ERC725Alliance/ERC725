@@ -6,7 +6,7 @@ import "./IERC725Y.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
-import "../Utils/Ownable.sol";
+import "../Utils/OwnableUnset.sol";
 
 /**
  * @title ERC725 Y data store
@@ -18,7 +18,7 @@ import "../Utils/Ownable.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-abstract contract ERC725YCore is Ownable, ERC165Storage, IERC725Y {
+abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x5a988c0f;
 
     mapping(bytes32 => bytes) internal store;
