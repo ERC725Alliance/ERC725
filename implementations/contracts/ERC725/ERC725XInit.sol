@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./ERC725XCore.sol";
-import "../Utils/Initializable.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 /**
  * @title ERC725 X executor
