@@ -2,9 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./ERC725XCore.sol";
-
-// modules
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 /**
  * @title ERC725 X executor
@@ -16,13 +14,13 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725XInit is ERC725XCore, OwnableUpgradeable {
+contract ERC725XInit is ERC725XCore, Initializable {
     function initialize(address _newOwner) public virtual initializer {
         // Do not call Ownable constructor, so to prevent address(0) to be owner
-        __Ownable_init_unchained();
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
+        
         if (_newOwner != owner()) {
-            transferOwnership(_newOwner);
+            OwnableUnset.initOwner(_newOwner);
         }
 
         _registerInterface(_INTERFACE_ID_ERC725X);
@@ -34,38 +32,6 @@ contract ERC725XInit is ERC725XCore, OwnableUpgradeable {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns(bytes memory result) {
-         // emit event
-        emit Executed(_operation, _to, _value, _data);
-
-        uint256 txGas = gasleft() - 2500;
-
-        // CALL
-        if (_operation == OPERATION_CALL) {
-           result = executeCall(_to, _value, _data, txGas);
-           
-            // DELEGATECALL
-        } else if (_operation == OPERATION_DELEGATECALL) {
-            address currentOwner = owner();
-            result = executeDelegateCall(_to, _data, txGas);
-
-            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
-
-            // CREATE
-        } else if (_operation == OPERATION_CREATE) {
-            address contractAddress = performCreate(_value, _data);
-            result = abi.encodePacked(contractAddress);
-
-            // CREATE2
-        } else if (_operation == OPERATION_CREATE2) {
-            bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
-            bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
-
-            address contractAddress = Create2.deploy(_value, salt, data);
-            result = abi.encodePacked(contractAddress);
-
-            emit ContractCreated(contractAddress);
-        } else {
-            revert("Wrong operation type");
-        }
+        result = super.execute(_operation,_to,_value,_data);
     }
 }

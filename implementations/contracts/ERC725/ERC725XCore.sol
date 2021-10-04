@@ -6,7 +6,7 @@ import "./IERC725X.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../Utils/OwnableUnset.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
@@ -22,8 +22,8 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-abstract contract ERC725XCore is ERC165Storage, IERC725X {
-    bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
+abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
+    bytes4 internal constant _INTERFACE_ID_ERC725X = type(IERC725X).interfaceId;
 
     uint256 internal constant OPERATION_CALL = 0;
     uint256 internal constant OPERATION_DELEGATECALL = 1;
@@ -58,7 +58,10 @@ abstract contract ERC725XCore is ERC165Storage, IERC725X {
 
             // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+            address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
+
+            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {

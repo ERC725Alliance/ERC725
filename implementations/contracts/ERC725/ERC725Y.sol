@@ -3,9 +3,6 @@ pragma solidity ^0.8.0;
 
 import "./ERC725YCore.sol";
 
-// modules
-import "@openzeppelin/contracts/access/Ownable.sol";
-
 /**
  * @title ERC725 Y data store
  * @dev Contract module which provides the ability to set arbitrary key value sets that can be changed over time.
@@ -16,15 +13,16 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725Y is Ownable, ERC725YCore {
+contract ERC725Y is ERC725YCore {
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
      */
     constructor(address _newOwner) {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
+        
         if (_newOwner != owner()) {
-            transferOwnership(_newOwner);
+            OwnableUnset.initOwner(_newOwner);
         }
 
         _registerInterface(_INTERFACE_ID_ERC725Y);

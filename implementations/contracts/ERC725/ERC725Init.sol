@@ -11,7 +11,7 @@ import "./ERC725YInit.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725Init is Initializable, ERC725XInit, ERC725YInit {
+contract ERC725Init is ERC725XInit, ERC725YInit {
 
     /**
      * // @notice Sets the owner of the contract
