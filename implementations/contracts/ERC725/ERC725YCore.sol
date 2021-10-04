@@ -19,7 +19,7 @@ import "../Utils/OwnableUnset.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
-    bytes4 internal constant _INTERFACE_ID_ERC725Y = 0x5a988c0f;
+    bytes4 internal constant _INTERFACE_ID_ERC725Y = type(IERC725Y).interfaceId;
 
     mapping(bytes32 => bytes) internal store;
 

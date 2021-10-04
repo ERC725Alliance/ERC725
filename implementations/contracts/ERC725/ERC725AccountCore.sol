@@ -26,10 +26,10 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
     using ERC725Utils for IERC725Y;
 
     bytes4 internal constant _INTERFACE_ID_ERC725Account = 0x63cb749b;
-    bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
+    bytes4 internal constant _INTERFACE_ID_ERC1271 = type(IERC1271).interfaceId;
     bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
-    bytes4 internal constant _INTERFACE_ID_LSP1 = 0x6bb56a14;
-    bytes4 internal constant _INTERFACE_ID_LSP1DELEGATE = 0xc2d7bcc1;
+    bytes4 internal constant _INTERFACE_ID_LSP1 = type(ILSP1).interfaceId;
+    bytes4 internal constant _INTERFACE_ID_LSP1DELEGATE = type(ILSP1Delegate).interfaceId;
 
     bytes32 internal constant _UNIVERSAL_RECEIVER_DELEGATE_KEY =
     0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47; // keccak256("LSP1UniversalReceiverDelegate")

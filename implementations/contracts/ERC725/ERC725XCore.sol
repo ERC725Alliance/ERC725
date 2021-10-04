@@ -23,7 +23,7 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
-    bytes4 internal constant _INTERFACE_ID_ERC725X = 0x44c028fe;
+    bytes4 internal constant _INTERFACE_ID_ERC725X = type(IERC725X).interfaceId;
 
     uint256 internal constant OPERATION_CALL = 0;
     uint256 internal constant OPERATION_DELEGATECALL = 1;
