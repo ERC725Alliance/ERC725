@@ -15,6 +15,7 @@ const KeyManager = artifacts.require("SimpleKeyManager");
 const ERC725Utils = artifacts.require("ERC725Utils");
 const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
+const ReturnTest = artifacts.require("ReturnTest");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -308,6 +309,21 @@ contract("ERC725", function(accounts) {
         const finalBalance = await web3.eth.getBalance(dest);
 
         assert.isTrue(new BN(destBalance).add(amount).eq(new BN(finalBalance)));
+      });
+
+      it("Should revert when calling a function that reverts", async () => {
+        const OPERATION_CALL = 0x0;
+        returnTest = await ReturnTest.new({ from: owner });
+        abi = returnTest.contract.methods
+          .functionThatRevertsWithError("Yamen")
+          .encodeABI();
+
+        await expectRevert(
+          account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+            from: owner,
+          }),
+          "Yamen"
+        );
       });
 
       it("Fails with non-owner executing", async () => {
