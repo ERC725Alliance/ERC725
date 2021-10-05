@@ -25,7 +25,7 @@ contract ReturnTest {
         return (_someData,_someData1,_someData2);
     }
 
-    function functionThatReturnsCiviliensAndWarriors(Boy[] memory _someData,Girl[] memory _someData1) public pure returns(Boy[] memory, Girl[] memory) {
+    function functionThatReturnsBoysAndGirls(Boy[] memory _someData,Girl[] memory _someData1) public pure returns(Boy[] memory, Girl[] memory) {
         return (_someData,_someData1);
     }
     

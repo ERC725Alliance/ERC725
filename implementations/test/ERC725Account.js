@@ -204,6 +204,16 @@ contract("ERC725", function(accounts) {
 
         assert.isTrue(result);
       });
+
+      it("Supports ISLP1", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(owner, { from: owner });
+        const interfaceID = "0x6bb56a14";
+
+        const result = await account.supportsInterface.call(interfaceID);
+
+        assert.isTrue(result);
+      });
     });
 
     context("ERC1271", async () => {
@@ -350,7 +360,7 @@ contract("ERC725", function(accounts) {
       it("Allows owner to execute create", async () => {
         const dest = accounts[6];
         const amount = ether("10");
-        const OPERATION_CREATE = 3;
+        const OPERATION_CREATE = 1;
 
         let receipt = await account.execute(
           OPERATION_CREATE,
@@ -408,7 +418,6 @@ contract("ERC725", function(accounts) {
         let key = [UniversalReceiverDelegateKey];
         let value = [UniversalR1.address];
         await account.setData(key, value, { from: owner });
-        let [data] = await account.getData(key);
 
         let result = await account.universalReceiver.call(
           UniversalReceiverDelegateKey,
@@ -423,7 +432,6 @@ contract("ERC725", function(accounts) {
         let key = [UniversalReceiverDelegateKey];
         let value = [UniversalR2.address];
         await account.setData(key, value, { from: owner });
-        let [data] = await account.getData(key);
 
         await expectRevert(
           account.universalReceiver.call(UniversalReceiverDelegateKey, "0x0", {
