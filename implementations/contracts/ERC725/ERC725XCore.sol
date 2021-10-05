@@ -29,6 +29,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     uint256 internal constant OPERATION_DELEGATECALL = 1;
     uint256 internal constant OPERATION_CREATE2 = 2;
     uint256 internal constant OPERATION_CREATE = 3;
+    uint256 internal constant OPERATION_STATICCALL = 4;
+
 
     /* Public functions */
 
@@ -78,6 +80,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
             emit ContractCreated(contractAddress);
     
+        } else if (_operation == OPERATION_STATICCALL) {
+           result = executeStaticCall(_to, _data, txGas);
         } else {
             revert("Wrong operation type");
         }
@@ -94,6 +98,25 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     ) internal returns (bytes memory) {
 
         (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
+
+          if (!success) {
+          if (result.length < 68) revert();
+            assembly {
+                result := add(result, 0x04)
+            }
+            revert(abi.decode(result, (string)));
+         }
+
+         return result;
+    }
+
+    function executeStaticCall(
+        address to,
+        bytes memory data,
+        uint256 txGas
+    ) internal returns (bytes memory) {
+
+        (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
           if (!success) {
           if (result.length < 68) revert();

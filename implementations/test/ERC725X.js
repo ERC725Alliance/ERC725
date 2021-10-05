@@ -214,6 +214,20 @@ contract("ERC725X", (accounts) => {
         );
       });
 
+      it("Should revert with a reason while calling static call", async () => {
+        const OPERATION_CALL = 4;
+        abi = returnTest.contract.methods
+          .functionThatRevertsWithError("Yamen")
+          .encodeABI();
+
+        await expectRevert(
+          account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+            from: owner,
+          }),
+          "Yamen"
+        );
+      });
+
       it("Should return an array of struct {Girl} and {Boy} (decoded)", async () => {
         const OPERATION_CALL = 0x0;
         abi = returnTest.contract.methods
