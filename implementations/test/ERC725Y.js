@@ -1,3 +1,4 @@
+const { assert } = require("chai");
 const {
   singletons,
   BN,
@@ -226,6 +227,15 @@ contract("ERC725Y", (accounts) => {
         const result = await erc725YReader.CallGetData(account.address, key);
         assert.deepEqual(result, value);
       });
+
+      it("Should be able to setData constructed in a smart contract",async()=>{
+        const Key = [web3.utils.keccak256("MyName")];
+        const value = [web3.utils.utf8ToHex("LUKSO")];
+
+        await erc725YWriter.setDataComputed(account.address);
+        const result = await erc725YReader.CallGetData(account.address,Key);
+        assert.deepEqual(result,value);
+      })
     });
   });
 
