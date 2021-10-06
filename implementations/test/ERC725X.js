@@ -85,18 +85,18 @@ contract("ERC725X", (accounts) => {
 
     it("Allows owner to execute calls", async () => {
       const OPERATION_CALL = 0x0;
-      let InitialValue, abi, SecondValue;
+      let initialValue, abi, secondValue;
       counter = await CounterContract.new();
 
-      InitialValue = await counter.get();
+      initialValue = await counter.get();
       abi = counter.contract.methods.increment().encodeABI();
 
       await account.execute(OPERATION_CALL, counter.address, "0x0", abi, {
         from: owner,
       });
-      SecondValue = await counter.get();
+      secondValue = await counter.get();
       assert.isTrue(
-        new BN(InitialValue).add(new BN(1)).eq(new BN(SecondValue))
+        new BN(initialValue).add(new BN(1)).eq(new BN(secondValue))
       );
     });
 
