@@ -173,6 +173,47 @@ contract("ERC725X", (accounts) => {
       // console.log(Result);
     });
 
+    it("Allows owner to execute static call and return data", async () => {
+      const OPERATION_STATICCALL = 3;
+      let nums1 = ["10", "22", "1"];
+      let nums2 = ["3"];
+
+      abi = returnTest.contract.methods
+        .returnSomeUints(nums1, nums2)
+        .encodeABI();
+
+      result = await account.execute.call(
+        OPERATION_STATICCALL,
+        returnTest.address,
+        "0x0",
+        abi,
+        {
+          from: owner,
+        }
+      );
+
+      let Result = web3.eth.abi.decodeParameters(
+        ["uint256[]", "uint256[]"],
+        result
+      );
+      assert.deepEqual(Result[0], nums1);
+      assert.deepEqual(Result[1], nums2);
+    });
+
+    it("Should revert while executing a staticcall on a function that modify the state", async () => {
+      const OPERATION_STATICCALL = 3;
+      let abi;
+      counter = await CounterContract.new();
+      abi = counter.contract.methods.increment().encodeABI();
+
+      await expectRevert(
+        account.execute(OPERATION_STATICCALL, counter.address, "0x0", abi, {
+          from: owner,
+        }),
+        "revert"
+      );
+    });
+
     it("Should revert with a reason while executing a staticcall on a revertable function", async () => {
       const OPERATION_CALL = 3;
       abi = returnTest.contract.methods

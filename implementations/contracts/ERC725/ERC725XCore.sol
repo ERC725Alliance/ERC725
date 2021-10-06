@@ -116,18 +116,17 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         address to,
         bytes memory data,
         uint256 txGas
-    ) internal returns (bytes memory) {
+    ) internal view returns (bytes memory) {
 
         (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
-          if (!success) {
-          if (result.length < 68) revert();
+        if (!success) {
+        if (result.length < 68) revert();
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
          }
-
          return result;
     }
 

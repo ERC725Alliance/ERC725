@@ -17,6 +17,10 @@ contract ReturnTest {
         revert(error);
     }
 
+    function returnSomeUints(uint256[] memory _arr1,uint256[] memory _arr2) public pure returns(uint256[] memory,uint256[] memory){
+        return (_arr1,_arr2);
+    }
+
     function returnSomeStrings(string[] memory _s1, string[] memory _s2) public pure returns(string[] memory, string[] memory){
         return (_s1,_s2);
     }
