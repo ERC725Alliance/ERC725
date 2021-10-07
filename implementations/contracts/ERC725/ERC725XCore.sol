@@ -49,23 +49,30 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override returns(bytes memory result) {
-        // emit event
-        emit Executed(_operation, _to, _value, _data);
-
-        uint256 txGas = gasleft() - 2500;
+        
+        uint256 txGas = gasleft();
 
             // CALL
         if (_operation == OPERATION_CALL) {
            result = executeCall(_to, _value, _data, txGas);
 
+           // emit event
+             emit Executed(_operation, _to, _value, _data);
+
             // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
            result = executeStaticCall(_to, _data, txGas);
+
+           // emit event
+              emit Executed(_operation, _to, _value, _data);
 
             // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
+            
+            // emit event
+             emit Executed(_operation, _to, _value, _data);
 
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 

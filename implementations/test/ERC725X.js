@@ -143,13 +143,13 @@ contract("ERC725X", (accounts) => {
 
     it("Should return an array of struct {Girl} and {Boy} (decoded)", async () => {
       const OPERATION_CALL = 0x0;
-      const Boys = [{ name: "Yamen", age: 19 }];
-      const Girls = [
+      let boys = [{ name: "Yamen", age: 19 }];
+      let girls = [
         { single: true, age: 54 },
         { single: false, age: 22 },
       ];
       abi = returnTest.contract.methods
-        .functionThatReturnsBoysAndGirls(Boys, Girls)
+        .functionThatReturnsBoysAndGirls(boys, girls)
         .encodeABI();
       result = await account.execute.call(
         OPERATION_CALL,
@@ -262,7 +262,7 @@ contract("ERC725X", (accounts) => {
         }
       );
 
-      assert.equal(receipt.logs[1].event, "ContractCreated");
+      assert.equal(receipt.logs[0].event, "ContractCreated");
     });
 
     it("Should return contract address when using create1", async () => {
@@ -294,8 +294,8 @@ contract("ERC725X", (accounts) => {
         "0x" + salt,
         bytecode
       );
-      assert.equal(receipt.logs[1].event, "ContractCreated");
-      assert.equal(receipt.logs[1].args.contractAddress, precomputed);
+      assert.equal(receipt.logs[0].event, "ContractCreated");
+      assert.equal(receipt.logs[0].args.contractAddress, precomputed);
     });
 
     it("Should return contract address when using create2", async () => {
