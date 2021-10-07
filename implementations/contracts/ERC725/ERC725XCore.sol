@@ -81,6 +81,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
+            emit ContractCreated(_operation, contractAddress, _value);
+
             // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
@@ -89,7 +91,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
             address contractAddress = Create2.deploy(_value, salt, data);
             result = abi.encodePacked(contractAddress);
 
-            emit ContractCreated(contractAddress);
+            emit ContractCreated(_operation, contractAddress, _value);
     
         } else {
             revert("Wrong operation type");
@@ -170,7 +172,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         }
 
         require(newContract != address(0), "Could not deploy contract");
-        emit ContractCreated(newContract);
     }
 
 }

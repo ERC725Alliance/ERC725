@@ -15,7 +15,11 @@ interface IERC725X {
     /**
      * @dev Emitted when a contract is created.
      */
-    event ContractCreated(address indexed contractAddress);
+    event ContractCreated(
+        uint256 indexed _operation,
+        address indexed _contractAddress,
+        uint256 indexed _value
+    );
 
     /**
      * @dev Emitted when a contract executed.

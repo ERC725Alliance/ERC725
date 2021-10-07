@@ -373,6 +373,8 @@ contract("ERC725", function(accounts) {
         );
 
         assert.equal(receipt.logs[0].event, "ContractCreated");
+        assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+        assert.equal(receipt.logs[0].args._value, "0");
       });
 
       it("Allows owner to execute create2", async () => {
@@ -399,7 +401,9 @@ contract("ERC725", function(accounts) {
           bytecode
         );
         assert.equal(receipt.logs[0].event, "ContractCreated");
-        assert.equal(receipt.logs[0].args.contractAddress, precomputed);
+        assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+        assert.equal(receipt.logs[0].args._contractAddress, precomputed);
+        assert.equal(receipt.logs[0].args._value, "0");
       });
     }); //Context interactions
 

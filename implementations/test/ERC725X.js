@@ -263,6 +263,8 @@ contract("ERC725X", (accounts) => {
       );
 
       assert.equal(receipt.logs[0].event, "ContractCreated");
+      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+      assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create1", async () => {
@@ -295,7 +297,9 @@ contract("ERC725X", (accounts) => {
         bytecode
       );
       assert.equal(receipt.logs[0].event, "ContractCreated");
-      assert.equal(receipt.logs[0].args.contractAddress, precomputed);
+      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+      assert.equal(receipt.logs[0].args._contractAddress, precomputed);
+      assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create2", async () => {
