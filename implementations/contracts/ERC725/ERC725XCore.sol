@@ -48,7 +48,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override returns(bytes memory result) {
+    ) public payable virtual override onlyOwner returns(bytes memory result) {
         
         uint256 txGas = gasleft();
 

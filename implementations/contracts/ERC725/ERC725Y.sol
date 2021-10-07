@@ -27,13 +27,4 @@ contract ERC725Y is ERC725YCore {
 
         _registerInterface(_INTERFACE_ID_ERC725Y);
     }
-
-    function setData(bytes32[] memory _keys, bytes[] memory _values)
-        public
-        virtual
-        override
-        onlyOwner
-    {
-        super.setData(_keys, _values);
-    }
 }

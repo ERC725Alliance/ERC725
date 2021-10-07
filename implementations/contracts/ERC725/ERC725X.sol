@@ -25,14 +25,5 @@ contract ERC725X is ERC725XCore {
         }
         _registerInterface(_INTERFACE_ID_ERC725X);
     }
-
-    function execute(
-        uint256 _operation,
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) public payable virtual override onlyOwner returns(bytes memory result) {
-        result = super.execute(_operation,_to,_value,_data);
-    }
     
 }

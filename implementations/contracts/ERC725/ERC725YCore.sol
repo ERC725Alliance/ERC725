@@ -55,6 +55,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
         public
         virtual
         override
+        onlyOwner
     {
         require(_keys.length == _values.length, "Keys length not equal to values length");
         for (uint256 i = 0; i < _keys.length; i++) {
