@@ -59,8 +59,7 @@ The repository offers a shell utility tool that uses `solc` to generate details 
 These details can be shown using the following command.
 
 ```bash
-cd implementations
-sh solc.sh
+npm run solc
 ```
 
 This will generate files and folders under `/solc`
