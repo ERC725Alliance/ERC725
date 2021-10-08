@@ -3,7 +3,7 @@ pragma solidity >=0.5.0 <0.9.0;
 
 /**
  * @dev Contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- * including using `delegatecall`, as well creating contracts using `create` and `create2`.
+ * including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  *
  * ERC 165 interface id: 0x44c028fe
@@ -15,7 +15,11 @@ interface IERC725X {
     /**
      * @dev Emitted when a contract is created.
      */
-    event ContractCreated(address indexed contractAddress);
+    event ContractCreated(
+        uint256 indexed _operation,
+        address indexed _contractAddress,
+        uint256 indexed _value
+    );
 
     /**
      * @dev Emitted when a contract executed.
@@ -35,13 +39,14 @@ interface IERC725X {
      *
      * - `operationType`, the operation to execute. So far defined is:
      *     CALL = 0;
-     *     DELEGATECALL = 1;
+     *     CREATE = 1;
      *     CREATE2 = 2;
-     *     CREATE = 3;
+     *     STATICCALL = 3;
+     *     DELEGATECALL = 4;
      *
      * - `data` the call data that will be used with the contract at `to`
      *
-     * Emits a {ContractCreated} event, when a contract is created under `operationType` 2 and 3.
+     * Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2.
      */
     function execute(
         uint256 operationType,

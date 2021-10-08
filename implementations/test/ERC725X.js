@@ -5,7 +5,6 @@ const {
   ether,
   expectRevert,
 } = require("openzeppelin-test-helpers");
-const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 const { calculateCreate2 } = require("eth-create2-calculator");
 
 const AccountContract = artifacts.require("ERC725X");
@@ -86,31 +85,154 @@ contract("ERC725X", (accounts) => {
 
     it("Allows owner to execute calls", async () => {
       const OPERATION_CALL = 0x0;
-      let result, abi, secondResult, CallResult;
+      let initialValue, abi, secondValue;
       counter = await CounterContract.new();
 
-      result = await counter.get();
+      initialValue = await counter.get();
       abi = counter.contract.methods.increment().encodeABI();
 
-      CallResult = await account.execute(
+      await account.execute(OPERATION_CALL, counter.address, "0x0", abi, {
+        from: owner,
+      });
+      secondValue = await counter.get();
+      assert.isTrue(
+        new BN(initialValue).add(new BN(1)).eq(new BN(secondValue))
+      );
+    });
+
+    it("Should revert with a reason while executing a call on a revertable function", async () => {
+      const OPERATION_CALL = 0x0;
+      abi = returnTest.contract.methods
+        .functionThatRevertsWithError("Yamen")
+        .encodeABI();
+
+      await expectRevert(
+        account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+          from: owner,
+        }),
+        "Yamen"
+      );
+    });
+
+    it("Should return data when executing calls", async () => {
+      const OPERATION_CALL = 0x0;
+      let names1 = ["Yamen", "Jean", "Fabian"];
+      let names2 = ["Yamen"];
+
+      abi = returnTest.contract.methods
+        .returnSomeStrings(names1, names2)
+        .encodeABI();
+
+      result = await account.execute.call(
         OPERATION_CALL,
-        counter.address,
+        returnTest.address,
         "0x0",
         abi,
         {
           from: owner,
         }
       );
-      secondResult = await counter.get();
-      assert.isTrue(new BN(result).add(new BN(1)).eq(new BN(secondResult)));
+
+      let Result = web3.eth.abi.decodeParameters(
+        ["string[]", "string[]"],
+        result
+      );
+      assert.deepEqual(Result[0], names1);
+      assert.deepEqual(Result[1], names2);
+    });
+
+    it("Should return an array of struct {Girl} and {Boy} (decoded)", async () => {
+      const OPERATION_CALL = 0x0;
+      let boys = [{ name: "Yamen", age: 19 }];
+      let girls = [
+        { single: true, age: 54 },
+        { single: false, age: 22 },
+      ];
+      abi = returnTest.contract.methods
+        .functionThatReturnsBoysAndGirls(boys, girls)
+        .encodeABI();
+      result = await account.execute.call(
+        OPERATION_CALL,
+        returnTest.address,
+        "0x0",
+        abi,
+        { from: owner }
+      );
+
+      await account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+        from: owner,
+      });
+      // console.log(result)
+      let Result = web3.eth.abi.decodeParameters(
+        [
+          { "Boy[]": { name: "string", age: "uint256" } },
+          { "Girl[]": { single: "bool", age: "uint256" } },
+        ],
+        result
+      );
+      // console.log(Result);
+    });
+
+    it("Allows owner to execute static call and return data", async () => {
+      const OPERATION_STATICCALL = 3;
+      let nums1 = ["10", "22", "1"];
+      let nums2 = ["3"];
+
+      abi = returnTest.contract.methods
+        .returnSomeUints(nums1, nums2)
+        .encodeABI();
+
+      result = await account.execute.call(
+        OPERATION_STATICCALL,
+        returnTest.address,
+        "0x0",
+        abi,
+        {
+          from: owner,
+        }
+      );
+
+      let Result = web3.eth.abi.decodeParameters(
+        ["uint256[]", "uint256[]"],
+        result
+      );
+      assert.deepEqual(Result[0], nums1);
+      assert.deepEqual(Result[1], nums2);
+    });
+
+    it("Should revert while executing a staticcall on a function that modify the state", async () => {
+      const OPERATION_STATICCALL = 3;
+      let abi;
+      counter = await CounterContract.new();
+      abi = counter.contract.methods.increment().encodeABI();
+
+      await expectRevert(
+        account.execute(OPERATION_STATICCALL, counter.address, "0x0", abi, {
+          from: owner,
+        }),
+        "revert"
+      );
+    });
+
+    it("Should revert with a reason while executing a staticcall on a revertable function", async () => {
+      const OPERATION_CALL = 3;
+      abi = returnTest.contract.methods
+        .functionThatRevertsWithError("Yamen")
+        .encodeABI();
+
+      await expectRevert(
+        account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+          from: owner,
+        }),
+        "Yamen"
+      );
     });
 
     it("Allows owner to execute delegatecall", async () => {
-      const OPERATION_DELEGATECALL = 1;
-      let result, abi, secondResult, num;
-      num = 3;
-      result = await delegateTest.count();
-      abi = delegateTestsecond.contract.methods.countChange(num).encodeABI();
+      const OPERATION_DELEGATECALL = 4;
+      let abi, Value, Number;
+      Number = 3;
+      abi = delegateTestsecond.contract.methods.countChange(Number).encodeABI();
 
       await delegateTest.execute(
         OPERATION_DELEGATECALL,
@@ -122,14 +244,13 @@ contract("ERC725X", (accounts) => {
         }
       );
 
-      secondResult = await delegateTest.count();
-      assert(secondResult.toNumber() == num);
+      Value = await delegateTest.count();
+      assert(Value.toNumber() == Number);
     });
 
     it("Allows owner to execute create", async () => {
       const dest = accounts[6];
-      const amount = ether("10");
-      const OPERATION_CREATE = 3;
+      const OPERATION_CREATE = 1;
 
       let receipt = await account.execute(
         OPERATION_CREATE,
@@ -141,13 +262,14 @@ contract("ERC725X", (accounts) => {
         }
       );
 
-      assert.equal(receipt.logs[1].event, "ContractCreated");
+      assert.equal(receipt.logs[0].event, "ContractCreated");
+      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+      assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create1", async () => {
       const dest = accounts[6];
-      const amount = ether("10");
-      const OPERATION_CREATE = 3;
+      const OPERATION_CREATE = 1;
 
       let receipt = await account.execute.call(
         OPERATION_CREATE,
@@ -174,8 +296,10 @@ contract("ERC725X", (accounts) => {
         "0x" + salt,
         bytecode
       );
-      assert.equal(receipt.logs[1].event, "ContractCreated");
-      assert.equal(receipt.logs[1].args.contractAddress, precomputed);
+      assert.equal(receipt.logs[0].event, "ContractCreated");
+      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+      assert.equal(receipt.logs[0].args._contractAddress, precomputed);
+      assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create2", async () => {
@@ -197,82 +321,6 @@ contract("ERC725X", (accounts) => {
         bytecode
       );
       assert(web3.utils.toChecksumAddress(receipt) == precomputed);
-    });
-
-    context("Revert on failed low level call and return bytes", async () => {
-      it("Should revert with a reason while calling Revertable Function (using the new way)", async () => {
-        const OPERATION_CALL = 0x0;
-        abi = returnTest.contract.methods
-          .functionThatRevertsWithError("Yamen")
-          .encodeABI();
-
-        await expectRevert(
-          account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
-            from: owner,
-          }),
-          "Yamen"
-        );
-      });
-
-      it("Should return an array of struct {Girl} and {Boy} (decoded)", async () => {
-        const OPERATION_CALL = 0x0;
-        abi = returnTest.contract.methods
-          .functionThatReturnsCiviliensAndWarriors(
-            [{ name: "Yamen", age: 19 }],
-            [
-              { single: true, age: 54 },
-              { single: false, age: 22 },
-            ]
-          )
-          .encodeABI();
-        result = await account.execute.call(
-          OPERATION_CALL,
-          returnTest.address,
-          "0x0",
-          abi,
-          { from: owner }
-        );
-
-        await account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
-          from: owner,
-        });
-        // console.log(result)
-        let Result = web3.eth.abi.decodeParameters(
-          [
-            { "Boy[]": { name: "string", age: "uint256" } },
-            { "Girl[]": { single: "bool", age: "uint256" } },
-          ],
-          result
-        );
-        // console.log(Result);
-      });
-
-      it("Should return some array of strings (decoded)", async () => {
-        const OPERATION_CALL = 0x0;
-        let names1 = ["Yamen", "Jean", "Fabian"];
-        let names2 = ["Yamen"];
-
-        abi = returnTest.contract.methods
-          .returnSomeStrings(names1, names2)
-          .encodeABI();
-
-        result = await account.execute.call(
-          OPERATION_CALL,
-          returnTest.address,
-          "0x0",
-          abi,
-          {
-            from: owner,
-          }
-        );
-
-        let Result = web3.eth.abi.decodeParameters(
-          ["string[]", "string[]"],
-          result
-        );
-        assert.deepEqual(Result[0], names1);
-        assert.deepEqual(Result[1], names2);
-      });
     });
   });
 });

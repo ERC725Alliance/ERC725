@@ -15,6 +15,7 @@ const KeyManager = artifacts.require("SimpleKeyManager");
 const ERC725Utils = artifacts.require("ERC725Utils");
 const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
+const ReturnTest = artifacts.require("ReturnTest");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
@@ -203,6 +204,16 @@ contract("ERC725", function(accounts) {
 
         assert.isTrue(result);
       });
+
+      it("Supports ISLP1", async () => {
+        const owner = accounts[2];
+        const account = await AccountContract.new(owner, { from: owner });
+        const interfaceID = "0x6bb56a14";
+
+        const result = await account.supportsInterface.call(interfaceID);
+
+        assert.isTrue(result);
+      });
     });
 
     context("ERC1271", async () => {
@@ -310,6 +321,21 @@ contract("ERC725", function(accounts) {
         assert.isTrue(new BN(destBalance).add(amount).eq(new BN(finalBalance)));
       });
 
+      it("Should revert when calling a function that reverts", async () => {
+        const OPERATION_CALL = 0x0;
+        returnTest = await ReturnTest.new({ from: owner });
+        abi = returnTest.contract.methods
+          .functionThatRevertsWithError("Yamen")
+          .encodeABI();
+
+        await expectRevert(
+          account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+            from: owner,
+          }),
+          "Yamen"
+        );
+      });
+
       it("Fails with non-owner executing", async () => {
         const dest = accounts[6];
         const amount = ether("10");
@@ -334,7 +360,7 @@ contract("ERC725", function(accounts) {
       it("Allows owner to execute create", async () => {
         const dest = accounts[6];
         const amount = ether("10");
-        const OPERATION_CREATE = 3;
+        const OPERATION_CREATE = 1;
 
         let receipt = await account.execute(
           OPERATION_CREATE,
@@ -346,7 +372,9 @@ contract("ERC725", function(accounts) {
           }
         );
 
-        assert.equal(receipt.logs[1].event, "ContractCreated");
+        assert.equal(receipt.logs[0].event, "ContractCreated");
+        assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+        assert.equal(receipt.logs[0].args._value, "0");
       });
 
       it("Allows owner to execute create2", async () => {
@@ -372,8 +400,10 @@ contract("ERC725", function(accounts) {
           "0x" + salt,
           bytecode
         );
-        assert.equal(receipt.logs[1].event, "ContractCreated");
-        assert.equal(receipt.logs[1].args.contractAddress, precomputed);
+        assert.equal(receipt.logs[0].event, "ContractCreated");
+        assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+        assert.equal(receipt.logs[0].args._contractAddress, precomputed);
+        assert.equal(receipt.logs[0].args._value, "0");
       });
     }); //Context interactions
 
@@ -392,7 +422,6 @@ contract("ERC725", function(accounts) {
         let key = [UniversalReceiverDelegateKey];
         let value = [UniversalR1.address];
         await account.setData(key, value, { from: owner });
-        let [data] = await account.getData(key);
 
         let result = await account.universalReceiver.call(
           UniversalReceiverDelegateKey,
@@ -407,7 +436,6 @@ contract("ERC725", function(accounts) {
         let key = [UniversalReceiverDelegateKey];
         let value = [UniversalR2.address];
         await account.setData(key, value, { from: owner });
-        let [data] = await account.getData(key);
 
         await expectRevert(
           account.universalReceiver.call(UniversalReceiverDelegateKey, "0x0", {

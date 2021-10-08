@@ -1,10 +1,10 @@
+const { assert } = require("chai");
 const {
   singletons,
   BN,
   ether,
   expectRevert,
 } = require("openzeppelin-test-helpers");
-const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 
 const AccountContract = artifacts.require("ERC725Y");
 
@@ -50,12 +50,55 @@ contract("ERC725Y", (accounts) => {
     });
   });
 
+  context("Interactions with Account contracts", async () => {
+    const owner = accounts[3];
+    const newOwner = accounts[5];
+    let account = {};
+
+    beforeEach(async () => {
+      account = await AccountContract.new(owner, { from: owner });
+    });
+
+    it("Uprade ownership correctly", async () => {
+      await account.transferOwnership(newOwner, { from: owner });
+      const idOwner = await account.owner.call();
+
+      assert.equal(idOwner, newOwner, "Addresses should match");
+    });
+
+    it("Refuse upgrades from non-onwer", async () => {
+      await expectRevert(
+        account.transferOwnership(newOwner, { from: newOwner }),
+        "Ownable: caller is not the owner"
+      );
+    });
+
+    it("Owner can set data", async () => {
+      const key = [web3.utils.asciiToHex("Important Data")];
+      const data = [web3.utils.asciiToHex("Important Data")];
+
+      await account.setData(key, data, { from: owner });
+
+      let fetchedData = await account.getData(key);
+
+      assert.deepEqual(data, fetchedData);
+    });
+
+    it("Fails when non-owner sets data", async () => {
+      const key = [web3.utils.asciiToHex("Important Data")];
+      const data = [web3.utils.asciiToHex("Important Data")];
+
+      await expectRevert(
+        account.setData(key, data, { from: newOwner }),
+        "Ownable: caller is not the owner"
+      );
+    });
+  });
+
   context("Storage test", async () => {
     let account;
     let owner = accounts[2];
     let count = 1000000000;
-    let keys = [];
-    let values = [];
 
     it("Create account", async () => {
       account = await AccountContract.new(owner, { from: owner });
@@ -226,51 +269,15 @@ contract("ERC725Y", (accounts) => {
         const result = await erc725YReader.CallGetData(account.address, key);
         assert.deepEqual(result, value);
       });
-    });
-  });
 
-  context("Interactions with Account contracts", async () => {
-    const owner = accounts[3];
-    const newOwner = accounts[5];
-    let account = {};
+      it("Should be able to setData (constructed) in a smart contract", async () => {
+        const Key = [web3.utils.keccak256("MyName")];
+        const value = [web3.utils.utf8ToHex("LUKSO")];
 
-    beforeEach(async () => {
-      account = await AccountContract.new(owner, { from: owner });
-    });
-
-    it("Uprade ownership correctly", async () => {
-      await account.transferOwnership(newOwner, { from: owner });
-      const idOwner = await account.owner.call();
-
-      assert.equal(idOwner, newOwner, "Addresses should match");
-    });
-
-    it("Refuse upgrades from non-onwer", async () => {
-      await expectRevert(
-        account.transferOwnership(newOwner, { from: newOwner }),
-        "Ownable: caller is not the owner"
-      );
-    });
-
-    it("Owner can set data", async () => {
-      const key = [web3.utils.asciiToHex("Important Data")];
-      const data = [web3.utils.asciiToHex("Important Data")];
-
-      await account.setData(key, data, { from: owner });
-
-      let fetchedData = await account.getData(key);
-
-      assert.deepEqual(data, fetchedData);
-    });
-
-    it("Fails when non-owner sets data", async () => {
-      const key = [web3.utils.asciiToHex("Important Data")];
-      const data = [web3.utils.asciiToHex("Important Data")];
-
-      await expectRevert(
-        account.setData(key, data, { from: newOwner }),
-        "Ownable: caller is not the owner"
-      );
+        await erc725YWriter.setDataComputed(account.address);
+        const result = await erc725YReader.CallGetData(account.address, Key);
+        assert.deepEqual(result, value);
+      });
     });
   });
 });
