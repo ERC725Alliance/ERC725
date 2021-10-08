@@ -13,7 +13,8 @@
   },
   "scripts": {
     "lint": "solium -d contracts/",
-    "test": "truffle test"
+    "test": "truffle test",
+    "solc": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
