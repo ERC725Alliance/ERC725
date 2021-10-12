@@ -30,14 +30,11 @@ jobs:
       - name: Install Truffle
         run: npm install truffle -g
 
-      # Install dependencies
       - name: Install dependencies
-        run: cd ./implementations && npm ci
+        run: cd ./implementations && npm install
 
-      # Compile contracts 
       - name: Compile contracts
         run: truffle compile --all
 
-      # Run all unit tests
       - name: Run Tests
         run: npm test
