@@ -1,11 +1,11 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# This workflow will do a clean install of node dependencies, cache/restore them, build the contract abis + JSON interfaces and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 name: Node.js CI - Build + Test
 
 on:
   push:
     branches:
-      - "*"
+      - "develop"
   pull_request:
     branches:
       - "*"
@@ -14,17 +14,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js 16
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '16' # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
           cache: "npm"
 
       - name: Install Truffle
@@ -32,6 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: cd ./implementations && npm install
+
+      - name: Run Solium Linter
+        run: npm lint
 
       - name: Compile contracts
         run: truffle compile --all
