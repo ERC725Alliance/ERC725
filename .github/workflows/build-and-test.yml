@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: implementations
+        working-directory: ./implementations
 
     steps:
       - uses: actions/checkout@v2
