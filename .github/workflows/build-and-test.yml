@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./implementations
+        working-directory: implementations
 
     steps:
       - uses: actions/checkout@v2
@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: '16' # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
           cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
 
       - name: Install Truffle
         run: npm install truffle -g
