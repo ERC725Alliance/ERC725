@@ -230,9 +230,9 @@ contract("ERC725Y", (accounts) => {
           keys.push(web3.utils.numberToHex(count++));
           values.push(web3.utils.numberToHex(count + 1000));
         }
-        await erc725YWriter.CallSetData(account.address, keys, values);
+        await erc725YWriter.callSetData(account.address, keys, values);
 
-        const result = await erc725YReader.CallGetData(account.address, keys);
+        const result = await erc725YReader.callGetData(account.address, keys);
         assert.deepEqual(result, values);
       });
 
@@ -247,13 +247,13 @@ contract("ERC725Y", (accounts) => {
           "0x0123456789abcdef",
           "0xabcdefabcdefabcdef123456789123456789",
         ];
-        await erc725YWriter.CallSetData(
+        await erc725YWriter.callSetData(
           account.address,
           multipleKeys,
           multipleValues
         );
 
-        let fetchedResult = await erc725YReader.CallGetData(
+        let fetchedResult = await erc725YReader.callGetData(
           account.address,
           multipleKeys
         );
@@ -264,9 +264,9 @@ contract("ERC725Y", (accounts) => {
         let key = [web3.utils.numberToHex(count++)];
         let value = [web3.utils.numberToHex(count + 11)];
 
-        await erc725YWriter.CallSetData(account.address, key, value);
+        await erc725YWriter.callSetData(account.address, key, value);
 
-        const result = await erc725YReader.CallGetData(account.address, key);
+        const result = await erc725YReader.callGetData(account.address, key);
         assert.deepEqual(result, value);
       });
 
@@ -275,7 +275,7 @@ contract("ERC725Y", (accounts) => {
         const value = [web3.utils.utf8ToHex("LUKSO")];
 
         await erc725YWriter.setDataComputed(account.address);
-        const result = await erc725YReader.CallGetData(account.address, Key);
+        const result = await erc725YReader.callGetData(account.address, Key);
         assert.deepEqual(result, value);
       });
     });
