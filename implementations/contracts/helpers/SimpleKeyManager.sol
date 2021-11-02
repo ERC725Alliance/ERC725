@@ -54,8 +54,8 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     {
         require(hasRole(EXECUTOR_ROLE, _msgSender()), 'Only executors are allowed');
 
-        address(Account).call{value: msg.value, gas: gasleft()}(_data); //(success, ) =
-        emit Executed(msg.value, _data);
+        (bool success, ) = address(Account).call{value: msg.value, gas: gasleft()}(_data);
+        if (success) emit Executed(msg.value, _data);
     }
 
 
@@ -85,8 +85,8 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         // increase the nonce
         _nonceStore[from] = _nonceStore[from].add(1);
 
-        address(Account).call{value: 0, gas: gasleft()}(_data); //(success, ) =
-        emit Executed(0, _data);
+        (bool success, ) = address(Account).call{value: 0, gas: gasleft()}(_data);
+        if (success) emit Executed(0, _data);
     }
 
     /**

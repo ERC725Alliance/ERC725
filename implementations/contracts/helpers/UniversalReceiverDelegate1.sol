@@ -13,7 +13,7 @@ contract UniversalReceiverDelegate1 is ILSP1Delegate , ERC165Storage {
     _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
     }
 
-    function universalReceiverDelegate(address sender, bytes32 typeId, bytes memory data) external override returns (bytes memory){
+    function universalReceiverDelegate(address sender, bytes32 typeId, bytes memory data) external pure override returns (bytes memory){
         return "0x33ddddddddddddddd333333333333jjjjjjjjjjjjfffffff";
     }
 
