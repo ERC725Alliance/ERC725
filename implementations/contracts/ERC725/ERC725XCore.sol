@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// interfaces
-import "../interfaces/IERC725X.sol";
-
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "../Utils/OwnableUnset.sol";
@@ -11,6 +8,9 @@ import "../Utils/OwnableUnset.sol";
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
+
+// interfaces
+import "../interfaces/IERC725X.sol";
 
 /**
  * @title ERC725 X (Core) executor
@@ -52,38 +52,35 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         
         uint256 txGas = gasleft();
 
-            // CALL
+        // CALL
         if (_operation == OPERATION_CALL) {
-           result = executeCall(_to, _value, _data, txGas);
+            result = executeCall(_to, _value, _data, txGas);
 
-           // emit event
-             emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
-            // STATICCALL
+        // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-           result = executeStaticCall(_to, _data, txGas);
+            result = executeStaticCall(_to, _data, txGas);
 
-           // emit event
-              emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
-            // DELEGATECALL
+        // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
             
-            // emit event
-             emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
-            // CREATE
+        // CREATE
         } else if (_operation == OPERATION_CREATE) {
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(_operation, contractAddress, _value);
 
-            // CREATE2
+        // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
@@ -147,11 +144,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         }
 
-         return result;
+        return result;
     }
 
     // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
-    
     function executeDelegateCall(
         address to,
         bytes memory data,
@@ -171,13 +167,12 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
             }
             revert(abi.decode(result, (string)));
 
-         }
+        }
 
-         return result;
+        return result;
     }
 
     // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
-
     function performCreate(
         uint256 value,
         bytes memory deploymentData

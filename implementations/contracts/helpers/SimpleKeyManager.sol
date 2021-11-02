@@ -40,16 +40,17 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
 
 
     function getNonce(address _address)
-    public
-    view
-    returns (uint256) {
+        public
+        view
+        returns (uint256) 
+    {
         return _nonceStore[_address];
     }
 
 
     function execute(bytes memory _data)
-    external
-    payable
+        external
+        payable
     {
         require(hasRole(EXECUTOR_ROLE, _msgSender()), "Only executors are allowed");
 
@@ -98,16 +99,16 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     * @param _signature owner's signature(s) of the data
     */
     function isValidSignature(bytes32 _hash, bytes memory _signature)
-    override
-    public
-    view
-    returns (bytes4 magicValue)
+        override
+        public
+        view
+        returns (bytes4 magicValue)
     {
         address recoveredAddress = ECDSA.recover(_hash, _signature);
 
         return (hasRole(EXECUTOR_ROLE, recoveredAddress) || hasRole(DEFAULT_ADMIN_ROLE, recoveredAddress))
-        ? _INTERFACE_ID_ERC1271
-        : _ERC1271FAILVALUE;
+            ? _INTERFACE_ID_ERC1271
+            : _ERC1271FAILVALUE;
     }
 
     /**
@@ -115,6 +116,6 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, AccessControl) returns (bool) {
         return interfaceId == _INTERFACE_ID_ERC1271
-        || super.supportsInterface(interfaceId);
+            || super.supportsInterface(interfaceId);
     }
 }

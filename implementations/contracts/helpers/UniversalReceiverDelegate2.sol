@@ -10,7 +10,7 @@ contract UniversalReceiverDelegate2 is ILSP1Delegate , ERC165Storage {
     bytes4 internal constant _INTERFACE_ID_LSP1DELEGATE = 0xc2d7bcc1;
 
     constructor () {
-    _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
+        _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
     }
 
     // solhint-disable no-unused-vars

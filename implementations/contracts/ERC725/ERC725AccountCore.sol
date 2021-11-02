@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 // modules
 import "./ERC725XCore.sol";
 import "./ERC725YCore.sol";
-import "../IERC1271.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -12,6 +11,7 @@ import "../helpers/UtilsLib.sol";
 import "../Utils/ERC725Utils.sol";
 
 // interfaces
+import "../IERC1271.sol";
 import "../interfaces/ILSP1_UniversalReceiver.sol";
 import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
 
@@ -21,7 +21,6 @@ import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
  */
-
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271 {
     using ERC725Utils for IERC725Y;
 
@@ -67,19 +66,19 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
         override
         public
         view
-    returns (bytes4 magicValue)
+        returns (bytes4 magicValue)
     {
         // if OWNER is a contract
         if (UtilsLib.isContract(owner())) {
             return supportsInterface(_INTERFACE_ID_ERC1271)
-            ? IERC1271(owner()).isValidSignature(_hash, _signature)
-            : _ERC1271FAILVALUE;
+                ? IERC1271(owner()).isValidSignature(_hash, _signature)
+                : _ERC1271FAILVALUE;
 
         // if OWNER is a key
         } else {
             return owner() == ECDSA.recover(_hash, _signature)
-            ? _INTERFACE_ID_ERC1271
-            : _ERC1271FAILVALUE;
+                ? _INTERFACE_ID_ERC1271
+                : _ERC1271FAILVALUE;
         }
     }
 

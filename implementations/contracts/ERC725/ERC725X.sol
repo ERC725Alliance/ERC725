@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// modules
 import "./ERC725XCore.sol";
 
 /**
@@ -25,5 +26,5 @@ contract ERC725X is ERC725XCore {
         }
         _registerInterface(_INTERFACE_ID_ERC725X);
     }
-    
+
 }
