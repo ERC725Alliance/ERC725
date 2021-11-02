@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "../IERC1271.sol";
+import "../interfaces/IERC1271.sol";
 import "../interfaces/IERC725X.sol";
 
 // modules
@@ -13,12 +13,13 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+// constants
+import "../Constants.sol";
+import "../InterfaceIDs.sol";
+
 contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     using ECDSA for bytes32;
     using SafeMath for uint256;
-
-    bytes4 internal constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
-    bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
 
     // keccak256("EXECUTOR_ROLE")
     bytes32 public constant EXECUTOR_ROLE = 0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63;

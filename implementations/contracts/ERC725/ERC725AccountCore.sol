@@ -15,6 +15,10 @@ import "../IERC1271.sol";
 import "../interfaces/ILSP1_UniversalReceiver.sol";
 import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
 
+// constants
+import "../Constants.sol";
+import "../InterfaceIDs.sol";
+
 /**
  * @title Abstract (Core) implementation of ERC725Account
  * @dev Bundles ERC725X and ERC725Y, and ERC1271 and allows receiving native tokens.
@@ -23,15 +27,6 @@ import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
  */
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271 {
     using ERC725Utils for IERC725Y;
-
-    bytes4 internal constant _INTERFACE_ID_ERC725ACCOUNT = 0x63cb749b;
-    bytes4 internal constant _INTERFACE_ID_ERC1271 = type(IERC1271).interfaceId;
-    bytes4 internal constant _ERC1271FAILVALUE = 0xffffffff;
-    bytes4 internal constant _INTERFACE_ID_LSP1 = type(ILSP1).interfaceId;
-    bytes4 internal constant _INTERFACE_ID_LSP1DELEGATE = type(ILSP1Delegate).interfaceId;
-
-    bytes32 internal constant _UNIVERSAL_RECEIVER_DELEGATE_KEY =
-    0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47; // keccak256("LSP1UniversalReceiverDelegate")
 
     event ValueReceived(address indexed sender, uint256 indexed value);
 
