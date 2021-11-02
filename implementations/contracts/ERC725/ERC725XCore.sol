@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import "../interfaces/IERC725X.sol";
+
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "../Utils/OwnableUnset.sol";
@@ -8,9 +11,6 @@ import "../Utils/OwnableUnset.sol";
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
-
-// interfaces
-import "../interfaces/IERC725X.sol";
 
 /**
  * @title ERC725 X (Core) executor

@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import "../interfaces/IERC1271.sol";
+import "../interfaces/ILSP1_UniversalReceiver.sol";
+import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
+
 // modules
 import "./ERC725XCore.sol";
 import "./ERC725YCore.sol";
@@ -9,11 +14,6 @@ import "./ERC725YCore.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "../helpers/UtilsLib.sol";
 import "../Utils/ERC725Utils.sol";
-
-// interfaces
-import "../IERC1271.sol";
-import "../interfaces/ILSP1_UniversalReceiver.sol";
-import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
 
 // constants
 import "../Constants.sol";

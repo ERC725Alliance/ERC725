@@ -20,7 +20,7 @@ interface IERC1271 {
         bytes32 _hash, //bytes memory _data,
         bytes memory _signature
     )
-    external
-    view
-    returns (bytes4 magicValue);
+        external
+        view
+        returns (bytes4 magicValue);
 }

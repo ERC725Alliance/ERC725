@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.0;
 
+// interfaces
 import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
+
+// modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 // constants

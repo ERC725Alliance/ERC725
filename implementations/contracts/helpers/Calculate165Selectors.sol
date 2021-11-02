@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "../ERC725/ERC725Account.sol";
-
 // interfaces
 import "../interfaces/IERC725X.sol";
 import "../interfaces/IERC725Y.sol";
+
+// modules
+import "../ERC725/ERC725Account.sol";
 
 contract Calculate165Selectors {
 
