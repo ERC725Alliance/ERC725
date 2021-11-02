@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 // interfaces
 import "../IERC1271.sol";
-import "../ERC725/IERC725X.sol";
+import "../interfaces/IERC725X.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
