@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "../ERC725/ERC725Y.sol";
-import "../ERC725/ERC725YInit.sol";
+import "../interfaces/IERC725Y.sol";
 
 library ERC725Utils {
     
