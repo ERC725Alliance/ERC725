@@ -5,7 +5,7 @@ import "../interfaces/IERC725Y.sol";
 
 contract ERC725YReader {
 
-    function CallGetData(address to, bytes32[] calldata _keys)
+    function callGetData(address to, bytes32[] calldata _keys)
         public
         view
         returns(bytes[] memory)

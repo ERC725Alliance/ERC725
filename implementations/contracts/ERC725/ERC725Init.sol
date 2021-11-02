@@ -17,7 +17,7 @@ contract ERC725Init is ERC725XInit, ERC725YInit {
      * // @notice Sets the owner of the contract
      * // @param _newOwner the owner of the contract.
      */
-    function initialize(address _newOwner) virtual override(ERC725XInit, ERC725YInit) public initializer {
+    function initialize(address _newOwner) public virtual override(ERC725XInit, ERC725YInit) initializer {
         ERC725XInit.initialize(_newOwner);
         ERC725YInit.initialize(_newOwner);
     }

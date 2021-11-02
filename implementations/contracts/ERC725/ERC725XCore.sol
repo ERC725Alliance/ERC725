@@ -108,17 +108,23 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         uint256 txGas
     ) internal returns (bytes memory) {
 
+        // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
 
-          if (!success) {
-          if (result.length < 68) revert();
+        if (!success) {
+
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+            
+            // solhint-disable no-inline-assembly
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-         }
 
-         return result;
+        }
+
+        return result;
     }
 
     function executeStaticCall(
@@ -130,12 +136,17 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
         if (!success) {
-        if (result.length < 68) revert();
+
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-         }
+
+        }
+
          return result;
     }
 
@@ -147,14 +158,19 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         uint256 txGas
     ) internal returns (bytes memory) {
 
+        // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
 
-          if (!success) {
-          if (result.length < 68) revert();
+        if (!success) {
+            
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+            
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
+
          }
 
          return result;

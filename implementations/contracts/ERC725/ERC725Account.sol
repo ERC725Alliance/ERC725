@@ -19,8 +19,7 @@ contract ERC725Account is ERC725, ERC725AccountCore  {
      * @param _newOwner the owner of the contract.
      */
     constructor(address _newOwner) ERC725(_newOwner){
-        
-        _registerInterface(_INTERFACE_ID_ERC725Account);
+        _registerInterface(_INTERFACE_ID_ERC725ACCOUNT);
         _registerInterface(_INTERFACE_ID_ERC1271);
         _registerInterface(_INTERFACE_ID_LSP1);
     }

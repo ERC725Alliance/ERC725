@@ -5,13 +5,13 @@ import "../interfaces/IERC725Y.sol";
 
 contract ERC725YWriter {
 
-    function CallSetData(address to, bytes32[] calldata _keys, bytes[] calldata _values)
+    function callSetData(address to, bytes32[] calldata _keys, bytes[] calldata _values)
         public
     {
         IERC725Y(to).setData(_keys, _values);
     }
 
-        function setDataComputed(address to)
+    function setDataComputed(address to)
         public
     {
         // create the keys

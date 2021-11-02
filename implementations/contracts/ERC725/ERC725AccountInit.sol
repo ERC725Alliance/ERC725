@@ -14,10 +14,10 @@ import "./ERC725AccountCore.sol";
 
 contract ERC725AccountInit is ERC725Init, ERC725AccountCore  {
 
-    function initialize(address _newOwner) virtual override(ERC725Init) public initializer {
+    function initialize(address _newOwner) public virtual override(ERC725Init) initializer {
         ERC725Init.initialize(_newOwner);
 
-        _registerInterface(_INTERFACE_ID_ERC725Account);
+        _registerInterface(_INTERFACE_ID_ERC725ACCOUNT);
         _registerInterface(_INTERFACE_ID_ERC1271);
         _registerInterface(_INTERFACE_ID_LSP1);
     }

@@ -23,7 +23,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     // keccak256("EXECUTOR_ROLE")
     bytes32 public constant EXECUTOR_ROLE = 0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63;
 
-    IERC725X public Account;
+    IERC725X public account;
     mapping (address => uint256) private _nonceStore;
 
     // EVENTS
@@ -34,9 +34,8 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, _newOwner);
         _setupRole(EXECUTOR_ROLE, _newOwner);
 
-
         // Link account
-        Account = IERC725X(_account);
+        account = IERC725X(_account);
     }
 
 
@@ -52,9 +51,10 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     external
     payable
     {
-        require(hasRole(EXECUTOR_ROLE, _msgSender()), 'Only executors are allowed');
+        require(hasRole(EXECUTOR_ROLE, _msgSender()), "Only executors are allowed");
 
-        (bool success, ) = address(Account).call{value: msg.value, gas: gasleft()}(_data);
+        // solhint-disable avoid-low-level-calls
+        (bool success, ) = address(account).call{value: msg.value, gas: gasleft()}(_data);
         if (success) emit Executed(msg.value, _data);
     }
 
@@ -68,7 +68,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     )
     external
     {
-        require(signedFor == address(this), 'Message not signed for this keyManager');
+        require(signedFor == address(this), "Message not signed for this keyManager");
 
         bytes memory blob = abi.encodePacked(
             address(this), // needs to be signed for this keyManager
@@ -79,13 +79,14 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         // recover the signer
         address from = keccak256(blob).toEthSignedMessageHash().recover(_signature);
 
-        require(hasRole(EXECUTOR_ROLE, from), 'Only executors are allowed');
-        require(_nonceStore[from] == _nonce, 'Incorrect nonce');
+        require(hasRole(EXECUTOR_ROLE, from), "Only executors are allowed");
+        require(_nonceStore[from] == _nonce, "Incorrect nonce");
 
         // increase the nonce
         _nonceStore[from] = _nonceStore[from].add(1);
 
-        (bool success, ) = address(Account).call{value: 0, gas: gasleft()}(_data);
+        // solhint-disable avoid-low-level-calls
+        (bool success, ) = address(account).call{value: 0, gas: gasleft()}(_data);
         if (success) emit Executed(0, _data);
     }
 
