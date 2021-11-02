@@ -17,6 +17,7 @@ contract ERC725 is ERC725X, ERC725Y  {
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
      */
+    // solhint-disable no-empty-blocks
     constructor(address _newOwner)
         ERC725X(_newOwner)
         ERC725Y(_newOwner)
