@@ -12,6 +12,9 @@ import "../Utils/OwnableUnset.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 
+// constants
+import "../Operations.sol";
+
 /**
  * @title ERC725 X (Core) executor
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
@@ -24,12 +27,6 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     bytes4 internal constant _INTERFACE_ID_ERC725X = type(IERC725X).interfaceId;
-
-    uint256 internal constant OPERATION_CALL = 0;
-    uint256 internal constant OPERATION_CREATE = 1;
-    uint256 internal constant OPERATION_CREATE2 = 2;
-    uint256 internal constant OPERATION_STATICCALL = 3;
-    uint256 internal constant OPERATION_DELEGATECALL = 4;
 
     /* Public functions */
 
