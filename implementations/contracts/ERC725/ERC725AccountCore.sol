@@ -30,7 +30,7 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
 
     event ValueReceived(address indexed sender, uint256 indexed value);
 
-    receive() external payable{
+    receive() external payable {
         emit ValueReceived(_msgSender(), msg.value);
     }
 
@@ -49,38 +49,39 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
     //        }
     //    }
 
-
     /**
-    * @notice Checks if an owner signed `_data`.
-    * ERC1271 interface.
-    *
-    * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
-    * @param _signature owner's signature(s) of the data
-    */
+     * @notice Checks if an owner signed `_data`.
+     * ERC1271 interface.
+     *
+     * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
+     * @param _signature owner's signature(s) of the data
+     */
     function isValidSignature(bytes32 _hash, bytes memory _signature)
-        override
         public
         view
+        override
         returns (bytes4 magicValue)
     {
+        // prettier-ignore
         // if OWNER is a contract
         if (UtilsLib.isContract(owner())) {
-            return supportsInterface(_INTERFACE_ID_ERC1271)
-                ? IERC1271(owner()).isValidSignature(_hash, _signature)
-                : _ERC1271FAILVALUE;
-
+            return 
+                supportsInterface(_INTERFACE_ID_ERC1271)
+                    ? IERC1271(owner()).isValidSignature(_hash, _signature)
+                    : _ERC1271FAILVALUE;
         // if OWNER is a key
         } else {
-            return owner() == ECDSA.recover(_hash, _signature)
-                ? _INTERFACE_ID_ERC1271
-                : _ERC1271FAILVALUE;
+            return 
+                owner() == ECDSA.recover(_hash, _signature)
+                    ? _INTERFACE_ID_ERC1271
+                    : _ERC1271FAILVALUE;
         }
     }
 
     function universalReceiver(bytes32 _typeId, bytes calldata _data)
         external
-        override
         virtual
+        override
         returns (bytes memory returnValue)
     {
         bytes memory receiverData = IERC725Y(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
@@ -89,18 +90,18 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
         // call external contract
         if (receiverData.length == 20) {
             address universalReceiverAddress = BytesLib.toAddress(receiverData, 0);
-            
-            if(ERC165(universalReceiverAddress).supportsInterface(_INTERFACE_ID_LSP1DELEGATE)) {
+
+            if (ERC165(universalReceiverAddress).supportsInterface(_INTERFACE_ID_LSP1DELEGATE)) {
                 returnValue = ILSP1Delegate(universalReceiverAddress).universalReceiverDelegate(
-                    _msgSender(), 
-                    _typeId, 
+                    _msgSender(),
+                    _typeId,
                     _data
                 );
             }
         }
 
         emit UniversalReceiver(_msgSender(), _typeId, returnValue, _data);
-        
+
         return returnValue;
     }
 }

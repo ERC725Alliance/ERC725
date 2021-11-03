@@ -31,7 +31,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     uint256 internal constant OPERATION_STATICCALL = 3;
     uint256 internal constant OPERATION_DELEGATECALL = 4;
 
-
     /* Public functions */
 
     /**
@@ -48,9 +47,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override onlyOwner returns(bytes memory result) {
-        
+    ) public payable virtual override onlyOwner returns (bytes memory result) {
         uint256 txGas = gasleft();
+
+        // prettier-ignore
 
         // CALL
         if (_operation == OPERATION_CALL) {
@@ -104,21 +104,18 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal returns (bytes memory) {
-
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
 
         if (!success) {
-
             // solhint-disable reason-string
             if (result.length < 68) revert();
-            
+
             // solhint-disable no-inline-assembly
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-
         }
 
         return result;
@@ -129,11 +126,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal view returns (bytes memory) {
-
         (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
         if (!success) {
-
             // solhint-disable reason-string
             if (result.length < 68) revert();
 
@@ -141,7 +136,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-
         }
 
         return result;
@@ -153,36 +147,31 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal returns (bytes memory) {
-
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
 
         if (!success) {
-            
             // solhint-disable reason-string
             if (result.length < 68) revert();
-            
+
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-
         }
 
         return result;
     }
 
     // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
-    function performCreate(
-        uint256 value,
-        bytes memory deploymentData
-        ) internal returns (address newContract) {
-
+    function performCreate(uint256 value, bytes memory deploymentData)
+        internal
+        returns (address newContract)
+    {
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }
 
         require(newContract != address(0), "Could not deploy contract");
     }
-
 }

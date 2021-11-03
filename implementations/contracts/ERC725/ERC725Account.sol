@@ -11,13 +11,12 @@ import "./ERC725AccountCore.sol";
  *
  * @author Fabian Vogelsteller <fabian@lukso.network>
  */
-contract ERC725Account is ERC725, ERC725AccountCore  {
-
+contract ERC725Account is ERC725, ERC725AccountCore {
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract.
      */
-    constructor(address _newOwner) ERC725(_newOwner){
+    constructor(address _newOwner) ERC725(_newOwner) {
         _registerInterface(_INTERFACE_ID_ERC725ACCOUNT);
         _registerInterface(_INTERFACE_ID_ERC1271);
         _registerInterface(_INTERFACE_ID_LSP1);

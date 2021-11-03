@@ -16,7 +16,11 @@ import "./ERC725XCore.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 contract ERC725XInit is ERC725XCore, Initializable {
-
+    /**
+     * @notice Sets the owner of the contract
+     * @param _newOwner the owner of the contract.
+     */
+    // prettier-ignore
     function initialize(address _newOwner) 
         public 
         virtual 
@@ -29,5 +33,4 @@ contract ERC725XInit is ERC725XCore, Initializable {
 
         _registerInterface(_INTERFACE_ID_ERC725X);
     }
-
 }
