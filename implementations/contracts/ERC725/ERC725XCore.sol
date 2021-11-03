@@ -12,6 +12,9 @@ import "../Utils/OwnableUnset.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 
+// constants
+import "../Operations.sol";
+
 /**
  * @title ERC725 X (Core) executor
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
