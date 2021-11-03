@@ -1,20 +1,26 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.0;
 
+// interfaces
 import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
+
+// modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
+// constants
+import "../InterfaceIDs.sol";
 
-contract UniversalReceiverDelegate2 is ILSP1Delegate , ERC165Storage {
-
-    bytes4 constant _INTERFACE_ID_LSP1DELEGATE = 0xc2d7bcc1;
-
-    constructor () {
-    _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
+contract UniversalReceiverDelegate2 is ILSP1Delegate, ERC165Storage {
+    constructor() {
+        _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
     }
 
-    function universalReceiverDelegate(address sender, bytes32 typeId, bytes memory data) external override returns (bytes memory){
+    // solhint-disable no-unused-vars
+    function universalReceiverDelegate(
+        address sender,
+        bytes32 typeId,
+        bytes memory data
+    ) external pure override returns (bytes memory) {
         revert("This Contract reverts");
     }
-
 }

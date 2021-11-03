@@ -2,13 +2,12 @@
 pragma solidity ^0.8.0;
 
 contract ReturnTest {
-
-    struct Boy{
+    struct Boy {
         string name;
         uint256 age;
     }
 
-    struct Girl{
+    struct Girl {
         bool single;
         uint256 age;
     }
@@ -17,20 +16,43 @@ contract ReturnTest {
         revert(error);
     }
 
-    function returnSomeUints(uint256[] memory _arr1,uint256[] memory _arr2) public pure returns(uint256[] memory,uint256[] memory){
-        return (_arr1,_arr2);
+    function returnSomeUints(uint256[] memory _arr1, uint256[] memory _arr2)
+        public
+        pure
+        returns (uint256[] memory, uint256[] memory)
+    {
+        return (_arr1, _arr2);
     }
 
-    function returnSomeStrings(string[] memory _s1, string[] memory _s2) public pure returns(string[] memory, string[] memory){
-        return (_s1,_s2);
+    function returnSomeStrings(string[] memory _s1, string[] memory _s2)
+        public
+        pure
+        returns (string[] memory, string[] memory)
+    {
+        return (_s1, _s2);
     }
 
-    function returnSomeBytes(bytes[] memory _someData,bytes[] memory _someData1,bytes[] memory _someData2) public pure returns(bytes[] memory,bytes[] memory,bytes[] memory) {
-        return (_someData,_someData1,_someData2);
+    function returnSomeBytes(
+        bytes[] memory _someData,
+        bytes[] memory _someData1,
+        bytes[] memory _someData2
+    )
+        public
+        pure
+        returns (
+            bytes[] memory,
+            bytes[] memory,
+            bytes[] memory
+        )
+    {
+        return (_someData, _someData1, _someData2);
     }
 
-    function functionThatReturnsBoysAndGirls(Boy[] memory _someData,Girl[] memory _someData1) public pure returns(Boy[] memory, Girl[] memory) {
-        return (_someData,_someData1);
+    function functionThatReturnsBoysAndGirls(Boy[] memory _someData, Girl[] memory _someData1)
+        public
+        pure
+        returns (Boy[] memory, Girl[] memory)
+    {
+        return (_someData, _someData1);
     }
-    
 }

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "./IERC725Y.sol";
+import "../interfaces/IERC725Y.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -33,13 +33,13 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     function getData(bytes32[] memory _keys)
         public
         view
-        virtual 
+        virtual
         override
-        returns(bytes[] memory values)
+        returns (bytes[] memory values)
     {
         values = new bytes[](_keys.length);
 
-        for (uint256 i=0; i < _keys.length; i++) {
+        for (uint256 i = 0; i < _keys.length; i++) {
             values[i] = _getData(_keys[i]);
         }
 
@@ -62,7 +62,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
             _setData(_keys[i], _values[i]);
         }
     }
-    
+
     /* Internal functions */
 
     /**
@@ -70,12 +70,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
      * @param _key the key which value to retrieve
      * @return _value The data stored at the key
      */
-    function _getData(bytes32 _key)
-        internal
-        view
-        virtual
-        returns (bytes memory _value)
-    {
+    function _getData(bytes32 _key) internal view virtual returns (bytes memory _value) {
         return store[_key];
     }
 
@@ -84,10 +79,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
      * @param _key the key which value to retrieve
      * @param _value the bytes to set.
      */
-    function _setData(bytes32 _key, bytes memory _value)
-        internal
-        virtual
-    {
+    function _setData(bytes32 _key, bytes memory _value) internal virtual {
         store[_key] = _value;
         emit DataChanged(_key, _value);
     }

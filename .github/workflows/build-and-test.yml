@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js 16
         uses: actions/setup-node@v2
         with:
-          node-version: '16' # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+          node-version: "16" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
           cache: "npm"
           cache-dependency-path: implementations/package-lock.json
 
@@ -32,8 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Solium Linter
-        run: npm lint
+      - name: Run Solhint Linter
+        run: npm run lint
 
       - name: Compile contracts
         run: truffle compile --all

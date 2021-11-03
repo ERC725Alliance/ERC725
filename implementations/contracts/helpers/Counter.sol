@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 contract Counter {
-    uint count;
+    uint256 public count;
 
-    constructor () {
+    constructor() {
         count = 0;
     }
 
@@ -16,5 +16,6 @@ contract Counter {
         return count;
     }
 
+    // solhint-disable no-empty-blocks
     receive() external payable {}
 }

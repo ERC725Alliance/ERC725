@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "./IERC725X.sol";
+import "../interfaces/IERC725X.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -11,6 +11,9 @@ import "../Utils/OwnableUnset.sol";
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
+
+// constants
+import "../Operations.sol";
 
 /**
  * @title ERC725 X (Core) executor
@@ -24,13 +27,6 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     bytes4 internal constant _INTERFACE_ID_ERC725X = type(IERC725X).interfaceId;
-
-    uint256 internal constant OPERATION_CALL = 0;
-    uint256 internal constant OPERATION_CREATE = 1;
-    uint256 internal constant OPERATION_CREATE2 = 2;
-    uint256 internal constant OPERATION_STATICCALL = 3;
-    uint256 internal constant OPERATION_DELEGATECALL = 4;
-
 
     /* Public functions */
 
@@ -48,42 +44,40 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         address _to,
         uint256 _value,
         bytes calldata _data
-    ) public payable virtual override onlyOwner returns(bytes memory result) {
-        
+    ) public payable virtual override onlyOwner returns (bytes memory result) {
         uint256 txGas = gasleft();
 
-            // CALL
+        // prettier-ignore
+
+        // CALL
         if (_operation == OPERATION_CALL) {
-           result = executeCall(_to, _value, _data, txGas);
+            result = executeCall(_to, _value, _data, txGas);
 
-           // emit event
-             emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
-            // STATICCALL
+        // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-           result = executeStaticCall(_to, _data, txGas);
+            result = executeStaticCall(_to, _data, txGas);
 
-           // emit event
-              emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
-            // DELEGATECALL
+        // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
             
-            // emit event
-             emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, _data);
 
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
-            // CREATE
+        // CREATE
         } else if (_operation == OPERATION_CREATE) {
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(_operation, contractAddress, _value);
 
-            // CREATE2
+        // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
@@ -107,18 +101,21 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal returns (bytes memory) {
-
+        // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
 
-          if (!success) {
-          if (result.length < 68) revert();
+        if (!success) {
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+
+            // solhint-disable no-inline-assembly
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-         }
+        }
 
-         return result;
+        return result;
     }
 
     function executeStaticCall(
@@ -126,52 +123,52 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal view returns (bytes memory) {
-
         (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
         if (!success) {
-        if (result.length < 68) revert();
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-         }
-         return result;
+        }
+
+        return result;
     }
 
     // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
-    
     function executeDelegateCall(
         address to,
         bytes memory data,
         uint256 txGas
     ) internal returns (bytes memory) {
-
+        // solhint-disable avoid-low-level-calls
         (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
 
-          if (!success) {
-          if (result.length < 68) revert();
+        if (!success) {
+            // solhint-disable reason-string
+            if (result.length < 68) revert();
+
             assembly {
                 result := add(result, 0x04)
             }
             revert(abi.decode(result, (string)));
-         }
+        }
 
-         return result;
+        return result;
     }
 
     // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
-
-    function performCreate(
-        uint256 value,
-        bytes memory deploymentData
-        ) internal returns (address newContract) {
-
+    function performCreate(uint256 value, bytes memory deploymentData)
+        internal
+        returns (address newContract)
+    {
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }
 
         require(newContract != address(0), "Could not deploy contract");
     }
-
 }

@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// modules
 import "./ERC725XCore.sol";
 
 /**
  * @title ERC725 X executor
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- * including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
+ *      including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
+ *
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  *
  * `execute` MUST only be called by the owner of the contract set via ERC173.
@@ -25,5 +27,4 @@ contract ERC725X is ERC725XCore {
         }
         _registerInterface(_INTERFACE_ID_ERC725X);
     }
-    
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity >=0.5.0 <0.79.0;
+pragma solidity ^0.8.0;
 
 /**
  * @notice ERC-1271: Standard Signature Validation Method for Contracts
@@ -20,7 +20,7 @@ interface IERC1271 {
         bytes32 _hash, //bytes memory _data,
         bytes memory _signature
     )
-    external
-    view
-    returns (bytes4 magicValue);
+        external
+        view
+        returns (bytes4 magicValue);
 }

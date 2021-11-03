@@ -53,10 +53,37 @@ Run linter (solium):
 npm run lint
 ```
 
+## Technical References
+
+## Interface IDs
+
+The table below contains a list of [ERC165]() interface IDs used by the [Solidity implementations of the ERC725 smart contracts]().
+
+| Interface Name                                                                                                            | Interface ID | Description                                             |
+| :------------------------------------------------------------------------------------------------------------------------ | :----------- | :------------------------------------------------------ |
+| ERC725Account                                                                                                             | `0x63cb749b` | General key-value store and execution standard          |
+| [ERC1271](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1271.md)                                                  | `0x1626ba7e` | Standard Signature Validation Method for Contracts      |
+| [LSP1](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-1-UniversalReceiver.md)                                   | `0x6bb56a14` | Universal Receiver entry function                       |
+| [LSP1Delegate](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md#lsp1universalreceiverdelegate) | `0xc2d7bcc1` | Universal Receiver delegated to an other smart contract |
+
+The `ERC725Account`'s **interface ID** is calculated as the `XOR` of the functions selectors from the interfaces it implements.
+Despite the fact that an `ERC725Account` is an **ownable contract**, the selectors from [`ERC173`](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-173.md) (`owner()` and `transferOwnership(address)`) are omitted in the calculation.
+
+```
+  getData              // ERC725Y
+^ setData              // ERC725Y
+^ execute              // ERC725X
+^ universalReceiver    // LSP1
+^ isValidSignature     // ERC1271
+```
+
+`ERC725X` (`execute`), `ERC725Y` (`getData` and `setData`), `LSP1`
+
 ### Solc Contract details
 
-The repository offers a shell utility tool that uses `solc` to generate details about each contracts (function selectors, storage layout, evm opcodes...)
-These details can be shown using the following command.
+> **Notice:** you need the `solc` compiler installed locally to use this command. [Installation instructions can be found in the solidity documentation](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)
+
+The repository offers a shell utility tool that generate details about each contracts (function selectors, storage layout, evm opcodes...). You can obtain them via the following command.
 
 ```bash
 npm run solc
@@ -75,5 +102,3 @@ solc
  |- gas-costs.md
 
 ```
-
-NB: The `solc` compiler needs to be installed in order to use this utility tool. [Installation instructions can be found in the solidity documentation](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)

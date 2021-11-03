@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// modules
 import "./ERC725YCore.sol";
 
 /**
@@ -20,7 +21,6 @@ contract ERC725Y is ERC725YCore {
      */
     constructor(address _newOwner) {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
-        
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }

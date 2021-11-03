@@ -12,7 +12,7 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "solium -d contracts/",
+    "lint": "solhint 'contracts/**/*.sol'",
     "test": "truffle test",
     "solc": "sh solc.sh"
   },
@@ -31,8 +31,25 @@
     "ethereumjs-tx": "^2.1.0",
     "ethereumjs-util": "^6.2.1",
     "openzeppelin-test-helpers": "^0.4.2",
+    "prettier": "^2.4.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.18",
     "solc": "^0.4.26",
-    "solidity-bytes-utils": "0.8.0",
-    "solium": "^1.2.5"
+    "solhint": "^3.3.6",
+    "solidity-bytes-utils": "0.8.0"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.sol",
+        "options": {
+          "printWidth": 99,
+          "tabWidth": 4,
+          "useTabs": false,
+          "singleQuote": false,
+          "bracketSpacing": false,
+          "explicitTypes": "always"
+        }
+      }
+    ]
   }
 }
