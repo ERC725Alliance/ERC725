@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 contract Counter {
-    uint public count;
+    uint256 public count;
 
-    constructor () {
+    constructor() {
         count = 0;
     }
 

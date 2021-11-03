@@ -10,15 +10,17 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 // constants
 import "../InterfaceIDs.sol";
 
-contract UniversalReceiverDelegate2 is ILSP1Delegate , ERC165Storage {
-
-    constructor () {
+contract UniversalReceiverDelegate2 is ILSP1Delegate, ERC165Storage {
+    constructor() {
         _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
     }
 
     // solhint-disable no-unused-vars
-    function universalReceiverDelegate(address sender, bytes32 typeId, bytes memory data) external pure override returns (bytes memory){
+    function universalReceiverDelegate(
+        address sender,
+        bytes32 typeId,
+        bytes memory data
+    ) external pure override returns (bytes memory) {
         revert("This Contract reverts");
     }
-
 }

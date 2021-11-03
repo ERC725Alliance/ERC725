@@ -9,7 +9,6 @@ import "../interfaces/IERC725Y.sol";
 import "../ERC725/ERC725Account.sol";
 
 contract Calculate165Selectors {
-
     function calculateSelectorERC725X() public pure returns (bytes4) {
         return type(IERC725X).interfaceId;
     }
@@ -20,6 +19,8 @@ contract Calculate165Selectors {
 
     function calculateSelectorERC725Account() public pure returns (bytes4) {
         ERC725Account i;
+
+        // prettier-ignore
 
         // Owner and transferOwnership are left for purpose
         return i.getData.selector
