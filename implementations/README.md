@@ -55,7 +55,7 @@ npm run lint
 
 ## Technical References
 
-## Interface IDs
+### Interface IDs
 
 The table below contains a list of [ERC165]() interface IDs used by the [Solidity implementations of the ERC725 smart contracts]().
 
@@ -76,8 +76,6 @@ Despite the fact that an `ERC725Account` is an **ownable contract**, the selecto
 ^ universalReceiver    // LSP1
 ^ isValidSignature     // ERC1271
 ```
-
-`ERC725X` (`execute`), `ERC725Y` (`getData` and `setData`), `LSP1`
 
 ### Solc Contract details
 
