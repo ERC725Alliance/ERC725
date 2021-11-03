@@ -69,6 +69,4 @@ abstract contract OwnableUnset is Context {
         _owner = newOwner;
         emit OwnershipTransferred(oldOwner, newOwner);
     }
-
-    
 }
