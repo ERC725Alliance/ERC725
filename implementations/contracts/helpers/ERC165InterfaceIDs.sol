@@ -29,7 +29,9 @@ contract ERC165InterfaceIDs {
             ^ i.isValidSignature.selector;
 
         // ensure we have not hardcoded an incorrect value for the constant _INTERFACE_ID_ERC725ACCOUNT
-        assert(result == _INTERFACE_ID_ERC725ACCOUNT);
+        if (result == _INTERFACE_ID_ERC725ACCOUNT) {
+            revert("calculateERC725AccountInterfaceID: XOR result does not match value stored in constant _INTERFACE_ID_ERC725ACCOUNT");
+        }
 
         return result;
     }
