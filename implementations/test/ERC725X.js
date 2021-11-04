@@ -12,9 +12,11 @@ const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
 const DelegateTest = artifacts.require("DelegateTest");
 
+const { INTERFACE_ID } = require("../utils/constants");
+
 contract("ERC725X", (accounts) => {
   let erc1820;
-  beforeEach(async function() {
+  beforeEach(async function () {
     erc1820 = await singletons.ERC1820Registry(accounts[1]);
   });
 
@@ -33,7 +35,7 @@ contract("ERC725X", (accounts) => {
     it("Supports ERC165", async () => {
       const owner = accounts[2];
       const account = await AccountContract.new(owner, { from: owner });
-      const interfaceID = "0x01ffc9a7";
+      const interfaceID = INTERFACE_ID.ERC165;
 
       const result = await account.supportsInterface.call(interfaceID);
 
@@ -42,7 +44,7 @@ contract("ERC725X", (accounts) => {
     it("Supports ERC725X", async () => {
       const owner = accounts[2];
       const account = await AccountContract.new(owner, { from: owner });
-      const interfaceID = "0x44c028fe";
+      const interfaceID = INTERFACE_ID.ERC725X;
 
       const result = await account.supportsInterface.call(interfaceID);
 
