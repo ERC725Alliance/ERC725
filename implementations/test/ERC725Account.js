@@ -17,7 +17,7 @@ const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
 const ReturnTest = artifacts.require("ReturnTest");
 
-const { INTERFACE_ID } = require("./utils/constants");
+const { INTERFACE_ID } = require("../utils/constants");
 
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
