@@ -1,10 +1,5 @@
 const { assert } = require("chai");
-const {
-  singletons,
-  BN,
-  ether,
-  expectRevert,
-} = require("openzeppelin-test-helpers");
+const { BN, ether, expectRevert } = require("openzeppelin-test-helpers");
 const { getEncodedCall, checkErrorRevert } = require("../helpers/utils");
 const { calculateCreate2 } = require("eth-create2-calculator");
 
@@ -31,6 +26,7 @@ const UniversalReceiverDelegateKey =
 const DUMMY_SIGNER = web3.eth.accounts.wallet.add(DUMMY_PRIVATEKEY);
 
 const OPERATION_CALL = 0;
+const OPERATION_CREATE = 1;
 
 let ERC725AccountIdentifier = [
   web3.utils.keccak256("ERC725Account").substr(0, 10),
@@ -50,7 +46,7 @@ contract("ERC725", function (accounts) {
   beforeEach(async function () {
     // Deploy contracts
     await AccountContract.detectNetwork();
-    Account = await AccountContract.new(accounts[0]);
+    Account = await AccountContract.new(owner);
     Counter = await CounterContract.new();
     UniversalR1 = await UniversalReceiver1.new();
     UniversalR2 = await UniversalReceiver2.new();
@@ -140,10 +136,12 @@ contract("ERC725", function (accounts) {
   });
 });
 
-contract.only("ERC725Account", (accounts) => {
-  let Account;
+contract("ERC725Account", (accounts) => {
+  let owner = accounts[0];
+  let nonOwner = accounts[1];
+  let recipient = accounts[2];
 
-  let owner = accounts[2];
+  let Account;
 
   before(async function () {
     Account = await AccountContract.new(owner, { from: owner });
@@ -223,28 +221,7 @@ contract.only("ERC725Account", (accounts) => {
     });
   });
 
-  context("Interactions with Account contracts", async () => {
-    let newOwner = accounts[5];
-    let Account;
-
-    beforeEach(async () => {
-      Account = await AccountContract.new(owner, { from: owner });
-    });
-
-    it("Upgrade ownership correctly", async () => {
-      await Account.transferOwnership(newOwner, { from: owner });
-      const accountOwner = await Account.owner.call();
-
-      assert.equal(accountOwner, newOwner, "Addresses should match");
-    });
-
-    it("Refuse upgrades from non-onwer", async () => {
-      await expectRevert(
-        Account.transferOwnership(newOwner, { from: newOwner }),
-        "Ownable: caller is not the owner"
-      );
-    });
-
+  context("Interactions with Account contract", async () => {
     it("Owner can set data", async () => {
       const key = [web3.utils.asciiToHex("Important Data")];
       const data = [web3.utils.asciiToHex("Important Data")];
@@ -252,7 +229,6 @@ contract.only("ERC725Account", (accounts) => {
       await Account.setData(key, data, { from: owner });
 
       let fetchedData = await Account.getData(key);
-
       assert.deepEqual(data, fetchedData);
     });
 
@@ -261,14 +237,13 @@ contract.only("ERC725Account", (accounts) => {
       const data = [web3.utils.asciiToHex("Important Data")];
 
       await expectRevert(
-        Account.setData(key, data, { from: newOwner }),
+        Account.setData(key, data, { from: nonOwner }),
         "Ownable: caller is not the owner"
       );
     });
 
     it("Allows owner to execute calls", async () => {
-      const recipient = accounts[6];
-      const amount = ether("1");
+      let amount = ether("1");
 
       await web3.eth.sendTransaction({
         from: owner,
@@ -276,15 +251,19 @@ contract.only("ERC725Account", (accounts) => {
         value: amount,
       });
 
-      const destBalance = await web3.eth.getBalance(recipient);
+      let recipientBalanceInitial = await web3.eth.getBalance(recipient);
 
-      await Account.execute(OPERATION_CALL, recipient, amount, "0x0", {
+      await Account.execute(OPERATION_CALL, recipient, amount, "0x", {
         from: owner,
       });
 
-      const finalBalance = await web3.eth.getBalance(recipient);
+      let recipientBalanceFinal = await web3.eth.getBalance(recipient);
 
-      assert.isTrue(new BN(destBalance).add(amount).eq(new BN(finalBalance)));
+      assert.isTrue(
+        new BN(recipientBalanceInitial)
+          .add(amount)
+          .eq(new BN(recipientBalanceFinal))
+      );
     });
 
     it("Should revert when calling a function that reverts", async () => {
@@ -302,8 +281,7 @@ contract.only("ERC725Account", (accounts) => {
     });
 
     it("Fails with non-owner executing", async () => {
-      const recipient = accounts[6];
-      const amount = ether("1");
+      let amount = ether("1");
 
       // send money to the Account
       await web3.eth.sendTransaction({
@@ -314,18 +292,14 @@ contract.only("ERC725Account", (accounts) => {
 
       // try to move it away
       await expectRevert(
-        Account.execute(OPERATION_CALL, recipient, amount, "0x0", {
-          from: newOwner,
+        Account.execute(OPERATION_CALL, recipient, amount, "0x", {
+          from: nonOwner,
         }),
         "Ownable: caller is not the owner"
       );
     });
 
     it("Allows owner to execute create", async () => {
-      const recipient = accounts[6];
-      const amount = ether("1");
-      const OPERATION_CREATE = 1;
-
       let receipt = await Account.execute(
         OPERATION_CREATE,
         recipient,
@@ -368,13 +342,12 @@ contract.only("ERC725Account", (accounts) => {
   context("Testing UniversalReceiver", async () => {
     beforeEach(async () => {
       await AccountContract.detectNetwork();
-      Account = await AccountContract.new(accounts[0]);
+      Account = await AccountContract.new(owner);
       UniversalR1 = await UniversalReceiver1.new();
       UniversalR2 = await UniversalReceiver2.new();
     });
 
     it("Call the universal receiver and return data", async () => {
-      let owner = accounts[0];
       let key = [UniversalReceiverDelegateKey];
       let value = [UniversalR1.address];
       await Account.setData(key, value, { from: owner });
@@ -388,13 +361,12 @@ contract.only("ERC725Account", (accounts) => {
     });
 
     it("Call the universal receiver and revert", async () => {
-      let owner = accounts[0];
       let key = [UniversalReceiverDelegateKey];
       let value = [UniversalR2.address];
       await Account.setData(key, value, { from: owner });
 
       await expectRevert(
-        Account.universalReceiver.call(UniversalReceiverDelegateKey, "0x0", {
+        Account.universalReceiver.call(UniversalReceiverDelegateKey, "0x", {
           from: owner,
         }),
         "This Contract reverts"
@@ -421,6 +393,58 @@ contract.only("ERC725Account", (accounts) => {
     it("Account should have owner as KeyManager", async () => {
       const accountOwner = await Account.owner.call();
       assert.equal(accountOwner, KeyManager.address, "Addresses should match");
+    });
+
+    it("Key Manager can execute on behalf of Identity", async () => {
+      let recipient = accounts[1];
+      let amount = ether("1");
+
+      // Fund Account contract
+      await web3.eth.sendTransaction({
+        from: owner,
+        to: Account.address,
+        value: amount,
+      });
+
+      let recipientBalanceInitial = await web3.eth.getBalance(recipient);
+      let accountBalanceInitial = await web3.eth.getBalance(Account.address);
+      let keyManagerBalanceInitial = await web3.eth.getBalance(
+        KeyManager.address
+      );
+
+      let payload = Account.contract.methods
+        .execute(OPERATION_CALL, recipient, amount.toString(), "0x")
+        .encodeABI();
+
+      await KeyManager.execute(payload, {
+        from: owner,
+      });
+
+      let recipientBalanceFinal = await web3.eth.getBalance(recipient);
+      let accountBalanceFinal = await web3.eth.getBalance(Account.address);
+      let keyManagerBalanceFinal = await web3.eth.getBalance(
+        KeyManager.address
+      );
+
+      assert.equal(
+        keyManagerBalanceInitial,
+        keyManagerBalanceFinal,
+        "manager balance shouldn't have changed"
+      );
+
+      assert.isTrue(
+        new BN(recipientBalanceInitial)
+          .add(amount)
+          .eq(new BN(recipientBalanceFinal)),
+        `Recipient address should have received ${amount} ethers`
+      );
+
+      assert.isTrue(
+        new BN(accountBalanceInitial)
+          .sub(amount)
+          .eq(new BN(accountBalanceFinal)),
+        `Account should have sent ${amount} ethers`
+      );
     });
 
     context("ERC1271 from KeyManager", async () => {
@@ -483,51 +507,33 @@ contract.only("ERC725Account", (accounts) => {
         );
       });
     });
+  });
+});
 
-    it("Key Manager can execute on behalf of Identity", async () => {
-      const recipient = accounts[1];
-      const amount = ether("1");
+contract("ERC725Account with ownership upgrade", (accounts) => {
+  let previousOwner = accounts[2];
+  let owner = accounts[3];
+  let nonOwner = accounts[4];
 
-      // Fund Account contract
-      await web3.eth.sendTransaction({
-        from: owner,
-        to: Account.address,
-        value: amount,
-      });
+  let Account;
 
-      // Initial Balances
-      const destBalance = await web3.eth.getBalance(recipient);
-      const idBalance = await web3.eth.getBalance(Account.address);
-      const managerBalance = await web3.eth.getBalance(KeyManager.address);
-
-      let abi = Account.contract.methods
-        .execute(OPERATION_CALL, recipient, amount.toString(), "0x")
-        .encodeABI();
-
-      await KeyManager.execute(abi, {
-        from: owner,
-      });
-
-      //Final Balances
-      const destBalanceFinal = await web3.eth.getBalance(recipient);
-      const idBalanceFinal = await web3.eth.getBalance(Account.address);
-      const managerBalanceFinal = await web3.eth.getBalance(KeyManager.address);
-
-      assert.equal(
-        managerBalance,
-        managerBalanceFinal,
-        "manager balance shouldn't have changed"
-      );
-
-      assert.isTrue(
-        new BN(destBalance).add(amount).eq(new BN(destBalanceFinal)),
-        "Destination address should have recived amount"
-      );
-
-      assert.isTrue(
-        new BN(idBalance).sub(amount).eq(new BN(idBalanceFinal)),
-        "Account should have spent amount"
-      );
+  before(async () => {
+    Account = await AccountContract.new(previousOwner, {
+      from: previousOwner,
     });
+  });
+
+  it("Upgrade ownership correctly", async () => {
+    await Account.transferOwnership(owner, { from: previousOwner });
+    const accountOwner = await Account.owner.call();
+
+    assert.equal(accountOwner, owner, "Addresses should match");
+  });
+
+  it("Refuse upgrades from non-onwer", async () => {
+    await expectRevert(
+      Account.transferOwnership(owner, { from: nonOwner }),
+      "Ownable: caller is not the owner"
+    );
   });
 });
