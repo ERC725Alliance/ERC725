@@ -7,6 +7,12 @@ const INTERFACE_ID = {
   LSP1: "0x6bb56a14",
 };
 
+const ERC1271 = {
+  MAGIC_VALUE: "0x1626ba7e",
+  FAIL_VALUE: "0xffffffff",
+};
+
 module.exports = {
   INTERFACE_ID,
+  ERC1271,
 };
