@@ -3,8 +3,6 @@ pragma solidity ^0.8.0;
 
 /**
  * @dev Contract module that allows to receive arbitrary messages when assets are sent or received.
- *
- * ERC 165 interface id: 0x6bb56a14
  */
 interface ILSP1  /* is ERC165 */ {
     

@@ -7,8 +7,6 @@
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts.
  *
- * ERC 165 interface id: 0x5a988c0f
- *
  * `setData` should only be callable by the owner of the contract set via ERC173.
  */
 interface IERC725Y /* is ERC165, ERC173 */ {

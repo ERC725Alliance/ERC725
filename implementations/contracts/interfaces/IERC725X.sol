@@ -6,8 +6,6 @@ pragma solidity ^0.8.0;
  * including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  *
- * ERC 165 interface id: 0x44c028fe
- *
  * `execute` should only be callable by the owner of the contract set via ERC173.
  */
 /* is ERC165, ERC173 */
