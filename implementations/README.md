@@ -61,7 +61,10 @@ The table below contains a list of [ERC165]() interface IDs used by the [Solidit
 
 | Interface Name                                                                                                            | Interface ID | Description                                             |
 | :------------------------------------------------------------------------------------------------------------------------ | :----------- | :------------------------------------------------------ |
-| ERC725Account                                                                                                             | `0x63cb749b` | General key-value store and execution standard          |
+| ERC725X                                                                                                                   | `0x44c028fe` | General executor                                        |
+| ERC725Y                                                                                                                   | `0x5a988c0f` | General key-value store                                 |
+| ERC725Account                                                                                                             | `0x63cb749b` | `ERC725X` + `ERC725Y` + `LSP1` + `ERC1271`              |
+| [ERC165](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)                                                    | `0x01ffc9a7` | Standard Interface Detection for Contracts              |
 | [ERC1271](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1271.md)                                                  | `0x1626ba7e` | Standard Signature Validation Method for Contracts      |
 | [LSP1](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-1-UniversalReceiver.md)                                   | `0x6bb56a14` | Universal Receiver entry function                       |
 | [LSP1Delegate](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md#lsp1universalreceiverdelegate) | `0xc2d7bcc1` | Universal Receiver delegated to an other smart contract |
