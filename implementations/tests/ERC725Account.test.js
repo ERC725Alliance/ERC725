@@ -11,22 +11,18 @@ const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
 const ReturnTest = artifacts.require("ReturnTest");
 
-const { INTERFACE_ID, ERC1271 } = require("../utils/constants");
+const {
+  INTERFACE_ID,
+  ERC1271,
+  OPERATION_TYPE,
+  UNIVERSAL_RECEIVER_DELEGATE_KEY,
+  EXECUTOR_ROLE,
+  DUMMY_PRIVATEKEY,
+} = require("../utils/constants");
 const { web3 } = require("openzeppelin-test-helpers/src/setup");
-
-// keccak256("EXECUTOR_ROLE")
-const EXECUTOR_ROLE =
-  "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63";
-const DUMMY_PRIVATEKEY =
-  "0xcafecafe7D0F0EBcafeC2D7cafe84cafe3248DDcafe8B80C421CE4C55A26cafe";
-const UniversalReceiverDelegateKey =
-  "0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47";
 
 // generate an Account
 const DUMMY_SIGNER = web3.eth.accounts.wallet.add(DUMMY_PRIVATEKEY);
-
-const OPERATION_CALL = 0;
-const OPERATION_CREATE = 1;
 
 let ERC725AccountIdentifier = [
   web3.utils.keccak256("ERC725Account").substr(0, 10),
@@ -58,9 +54,13 @@ contract("ERC725", (accounts) => {
 
     // Call Counter.increment from Account
     const encodedCall = getEncodedCall(Counter, "increment");
-    await Account.execute(OPERATION_CALL, Counter.address, 0, encodedCall, {
-      from: owner,
-    });
+    await Account.execute(
+      OPERATION_TYPE.CALL,
+      Counter.address,
+      0,
+      encodedCall,
+      { from: owner }
+    );
 
     // Check that increment was called
     assert.equal((await Counter.get()).toString(), "1");
@@ -73,7 +73,7 @@ contract("ERC725", (accounts) => {
     // Calling Counter.increment from Account should fail
     const encodedCall = getEncodedCall(Counter, "increment");
     await checkErrorRevert(
-      Account.execute(OPERATION_CALL, Counter.address, 0, encodedCall, {
+      Account.execute(OPERATION_TYPE.CALL, Counter.address, 0, encodedCall, {
         from: nonOwner,
       }),
       "Ownable: caller is not the owner"
@@ -115,7 +115,7 @@ contract("ERC725", (accounts) => {
     assert.equal(oneEth, await web3.eth.getBalance(Account.address));
 
     // Sending 1 ether
-    await Account.execute(OPERATION_CALL, Counter.address, oneEth, "0x", {
+    await Account.execute(OPERATION_TYPE.CALL, Counter.address, oneEth, "0x", {
       from: owner,
     });
 
@@ -123,7 +123,7 @@ contract("ERC725", (accounts) => {
     assert.equal(zeroEth, await web3.eth.getBalance(Account.address));
 
     // Sending 1 ether directly from the owner and pass on
-    await Account.execute(OPERATION_CALL, Counter.address, oneEth, "0x", {
+    await Account.execute(OPERATION_TYPE.CALL, Counter.address, oneEth, "0x", {
       from: owner,
       value: oneEth,
     });
@@ -253,7 +253,7 @@ contract("ERC725Account", (accounts) => {
 
       let recipientBalanceInitial = await web3.eth.getBalance(recipient);
 
-      await Account.execute(OPERATION_CALL, recipient, amount, "0x", {
+      await Account.execute(OPERATION_TYPE.CALL, recipient, amount, "0x", {
         from: owner,
       });
 
@@ -273,7 +273,7 @@ contract("ERC725Account", (accounts) => {
         .encodeABI();
 
       await expectRevert(
-        Account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
+        Account.execute(OPERATION_TYPE.CALL, returnTest.address, "0x0", abi, {
           from: owner,
         }),
         "Yamen"
@@ -292,7 +292,7 @@ contract("ERC725Account", (accounts) => {
 
       // try to move it away
       await expectRevert(
-        Account.execute(OPERATION_CALL, recipient, amount, "0x", {
+        Account.execute(OPERATION_TYPE.CALL, recipient, amount, "0x", {
           from: nonOwner,
         }),
         "Ownable: caller is not the owner"
@@ -301,9 +301,9 @@ contract("ERC725Account", (accounts) => {
 
     it("Allows owner to execute create", async () => {
       let receipt = await Account.execute(
-        OPERATION_CREATE,
+        OPERATION_TYPE.CREATE,
         recipient,
-        "0",
+        0,
         "0x608060405234801561001057600080fd5b506040516105f93803806105f98339818101604052602081101561003357600080fd5b810190808051906020019092919050505080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050610564806100956000396000f3fe60806040526004361061003f5760003560e01c806344c028fe1461004157806354f6127f146100fb578063749ebfb81461014a5780638da5cb5b1461018f575b005b34801561004d57600080fd5b506100f96004803603608081101561006457600080fd5b8101908080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001906401000000008111156100b557600080fd5b8201836020820111156100c757600080fd5b803590602001918460018302840111640100000000831117156100e957600080fd5b90919293919293905050506101e6565b005b34801561010757600080fd5b506101346004803603602081101561011e57600080fd5b81019080803590602001909291905050506103b7565b6040518082815260200191505060405180910390f35b34801561015657600080fd5b5061018d6004803603604081101561016d57600080fd5b8101908080359060200190929190803590602001909291905050506103d3565b005b34801561019b57600080fd5b506101a46104df565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146102a9576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260128152602001807f6f6e6c792d6f776e65722d616c6c6f776564000000000000000000000000000081525060200191505060405180910390fd5b600085141561030757610301848484848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050610505565b506103b0565b60018514156103aa57600061035f83838080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505061051d565b90508073ffffffffffffffffffffffffffffffffffffffff167fcf78cf0d6f3d8371e1075c69c492ab4ec5d8cf23a1a239b6a51a1d00be7ca31260405160405180910390a2506103af565b600080fd5b5b5050505050565b6000806000838152602001908152602001600020549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610496576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260128152602001807f6f6e6c792d6f776e65722d616c6c6f776564000000000000000000000000000081525060200191505060405180910390fd5b806000808481526020019081526020016000208190555080827f35553580e4553c909abeb5764e842ce1f93c45f9f614bde2a2ca5f5b7b7dc0fb60405160405180910390a35050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600080600083516020850186885af190509392505050565b60008151602083016000f0905091905056fea265627a7a723158207fb9c8d804ca4e17aec99dbd7aab0a61583b56ebcbcb7e05589f97043968644364736f6c634300051100320000000000000000000000009501234ef8368466383d698c7fe7bd5ded85b4f6",
         {
           from: owner,
@@ -311,7 +311,7 @@ contract("ERC725Account", (accounts) => {
       );
 
       assert.equal(receipt.logs[0].event, "ContractCreated");
-      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+      assert.equal(receipt.logs[0].args._operation, OPERATION_TYPE.CREATE);
       assert.equal(receipt.logs[0].args._value, "0");
     });
 
@@ -321,19 +321,22 @@ contract("ERC725Account", (accounts) => {
       const salt =
         "cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe";
       const data = bytecode + salt;
-      const OPERATION_CREATE2 = 2;
 
       // deploy with added 32 bytes salt
-      let receipt = await Account.execute(OPERATION_CREATE2, owner, "0", data, {
-        from: owner,
-      });
+      let receipt = await Account.execute(
+        OPERATION_TYPE.CREATE2,
+        owner,
+        0,
+        data,
+        { from: owner }
+      );
       const precomputed = calculateCreate2(
         Account.address,
         "0x" + salt,
         bytecode
       );
       assert.equal(receipt.logs[0].event, "ContractCreated");
-      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+      assert.equal(receipt.logs[0].args._operation, OPERATION_TYPE.CREATE2);
       assert.equal(receipt.logs[0].args._contractAddress, precomputed);
       assert.equal(receipt.logs[0].args._value, "0");
     });
@@ -348,12 +351,12 @@ contract("ERC725Account", (accounts) => {
     });
 
     it("Call the universal receiver and return data", async () => {
-      let key = [UniversalReceiverDelegateKey];
+      let key = [UNIVERSAL_RECEIVER_DELEGATE_KEY];
       let value = [UniversalR1.address];
       await Account.setData(key, value, { from: owner });
 
       let result = await Account.universalReceiver.call(
-        UniversalReceiverDelegateKey,
+        UNIVERSAL_RECEIVER_DELEGATE_KEY,
         "0x0",
         { from: owner }
       );
@@ -361,12 +364,12 @@ contract("ERC725Account", (accounts) => {
     });
 
     it("Call the universal receiver and revert", async () => {
-      let key = [UniversalReceiverDelegateKey];
+      let key = [UNIVERSAL_RECEIVER_DELEGATE_KEY];
       let value = [UniversalR2.address];
       await Account.setData(key, value, { from: owner });
 
       await expectRevert(
-        Account.universalReceiver.call(UniversalReceiverDelegateKey, "0x", {
+        Account.universalReceiver.call(UNIVERSAL_RECEIVER_DELEGATE_KEY, "0x", {
           from: owner,
         }),
         "This Contract reverts"
@@ -413,7 +416,7 @@ contract("ERC725Account", (accounts) => {
       );
 
       let payload = Account.contract.methods
-        .execute(OPERATION_CALL, recipient, amount.toString(), "0x")
+        .execute(OPERATION_TYPE.CALL, recipient, amount.toString(), "0x")
         .encodeABI();
 
       await KeyManager.execute(payload, {

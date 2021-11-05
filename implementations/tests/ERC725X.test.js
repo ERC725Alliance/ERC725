@@ -7,13 +7,7 @@ const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
 const DelegateTest = artifacts.require("DelegateTest");
 
-const { INTERFACE_ID } = require("../utils/constants");
-
-const OPERATION_CALL = 0;
-const OPERATION_CREATE = 1;
-const OPERATION_CREATE2 = 2;
-const OPERATION_STATICCALL = 3;
-const OPERATION_DELEGATECALL = 4;
+const { INTERFACE_ID, OPERATION_TYPE } = require("../utils/constants");
 
 contract("ERC725X", (accounts) => {
   let owner = accounts[0];
@@ -80,7 +74,7 @@ contract("ERC725X", (accounts) => {
       initialValue = await counter.get();
       abi = counter.contract.methods.increment().encodeABI();
 
-      await account.execute(OPERATION_CALL, counter.address, 0, abi, {
+      await account.execute(OPERATION_TYPE.CALL, counter.address, 0, abi, {
         from: owner,
       });
       secondValue = await counter.get();
@@ -95,7 +89,7 @@ contract("ERC725X", (accounts) => {
         .encodeABI();
 
       await expectRevert(
-        account.execute(OPERATION_CALL, returnTest.address, 0, abi, {
+        account.execute(OPERATION_TYPE.CALL, returnTest.address, 0, abi, {
           from: owner,
         }),
         "Yamen"
@@ -111,7 +105,7 @@ contract("ERC725X", (accounts) => {
         .encodeABI();
 
       result = await account.execute.call(
-        OPERATION_CALL,
+        OPERATION_TYPE.CALL,
         returnTest.address,
         0,
         abi,
@@ -136,16 +130,20 @@ contract("ERC725X", (accounts) => {
         .functionThatReturnsBoysAndGirls(boys, girls)
         .encodeABI();
       result = await account.execute.call(
-        OPERATION_CALL,
+        OPERATION_TYPE.CALL,
         returnTest.address,
         0,
         abi,
         { from: owner }
       );
 
-      await account.execute(OPERATION_CALL, returnTest.address, "0x0", abi, {
-        from: owner,
-      });
+      await account.execute(
+        OPERATION_TYPE.CALL,
+        returnTest.address,
+        "0x",
+        abi,
+        { from: owner }
+      );
 
       let Result = web3.eth.abi.decodeParameters(
         [
@@ -165,13 +163,11 @@ contract("ERC725X", (accounts) => {
         .encodeABI();
 
       result = await account.execute.call(
-        OPERATION_STATICCALL,
+        OPERATION_TYPE.STATICCALL,
         returnTest.address,
         0,
         abi,
-        {
-          from: owner,
-        }
+        { from: owner }
       );
 
       let Result = web3.eth.abi.decodeParameters(
@@ -188,7 +184,7 @@ contract("ERC725X", (accounts) => {
       abi = counter.contract.methods.increment().encodeABI();
 
       await expectRevert(
-        account.execute(OPERATION_STATICCALL, counter.address, 0, abi, {
+        account.execute(OPERATION_TYPE.STATICCALL, counter.address, 0, abi, {
           from: owner,
         }),
         "revert"
@@ -201,9 +197,13 @@ contract("ERC725X", (accounts) => {
         .encodeABI();
 
       await expectRevert(
-        account.execute(OPERATION_STATICCALL, returnTest.address, "0x0", abi, {
-          from: owner,
-        }),
+        account.execute(
+          OPERATION_TYPE.STATICCALL,
+          returnTest.address,
+          "0x",
+          abi,
+          { from: owner }
+        ),
         "Yamen"
       );
     });
@@ -214,13 +214,11 @@ contract("ERC725X", (accounts) => {
       abi = delegateTestsecond.contract.methods.countChange(Number).encodeABI();
 
       await delegateTest.execute(
-        OPERATION_DELEGATECALL,
+        OPERATION_TYPE.DELEGATECALL,
         delegateTestsecond.address,
         0,
         abi,
-        {
-          from: owner,
-        }
+        { from: owner }
       );
 
       Value = await delegateTest.count();
@@ -229,23 +227,21 @@ contract("ERC725X", (accounts) => {
 
     it("Allows owner to execute create", async () => {
       let receipt = await account.execute(
-        OPERATION_CREATE,
+        OPERATION_TYPE.CREATE,
         recipient,
         "0",
         bytecode,
-        {
-          from: owner,
-        }
+        { from: owner }
       );
 
       assert.equal(receipt.logs[0].event, "ContractCreated");
-      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE);
+      assert.equal(receipt.logs[0].args._operation, OPERATION_TYPE.CREATE);
       assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create1", async () => {
       let receipt = await account.execute.call(
-        OPERATION_CREATE,
+        OPERATION_TYPE.CREATE,
         recipient,
         0,
         bytecode,
@@ -256,23 +252,27 @@ contract("ERC725X", (accounts) => {
     });
 
     it("Allows owner to execute create2", async () => {
-      let receipt = await account.execute(OPERATION_CREATE2, owner, 0, data, {
-        from: owner,
-      });
+      let receipt = await account.execute(
+        OPERATION_TYPE.CREATE2,
+        owner,
+        0,
+        data,
+        { from: owner }
+      );
       const precomputed = calculateCreate2(
         account.address,
         "0x" + salt, // deploy with added 32 bytes salt
         bytecode
       );
       assert.equal(receipt.logs[0].event, "ContractCreated");
-      assert.equal(receipt.logs[0].args._operation, OPERATION_CREATE2);
+      assert.equal(receipt.logs[0].args._operation, OPERATION_TYPE.CREATE2);
       assert.equal(receipt.logs[0].args._contractAddress, precomputed);
       assert.equal(receipt.logs[0].args._value, "0");
     });
 
     it("Should return contract address when using create2", async () => {
       let receipt = await account.execute.call(
-        OPERATION_CREATE2,
+        OPERATION_TYPE.CREATE2,
         owner,
         0,
         data,
