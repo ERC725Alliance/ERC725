@@ -41,9 +41,9 @@ contract("ERC725X", (accounts) => {
   });
 
   context("Testing contract functions", async () => {
-    const owner = accounts[3];
-    const newOwner = accounts[5];
-    const recipient = accounts[6];
+    const owner = accounts[1];
+    const newOwner = accounts[2];
+    const recipient = accounts[3];
     let account;
 
     const bytecode =

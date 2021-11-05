@@ -37,7 +37,7 @@ let supportStandardsKey = [
     ERC725AccountIdentifier[0].replace("0x", ""),
 ];
 
-contract("ERC725", function (accounts) {
+contract("ERC725", (accounts) => {
   let owner = accounts[0],
     nonOwner = accounts[1];
 
@@ -512,7 +512,7 @@ contract("ERC725Account", (accounts) => {
 
 contract("ERC725Account with ownership upgrade", (accounts) => {
   let previousOwner = accounts[2];
-  let owner = accounts[3];
+  let newOwner = accounts[3];
   let nonOwner = accounts[4];
 
   let Account;
@@ -524,15 +524,15 @@ contract("ERC725Account with ownership upgrade", (accounts) => {
   });
 
   it("Upgrade ownership correctly", async () => {
-    await Account.transferOwnership(owner, { from: previousOwner });
+    await Account.transferOwnership(newOwner, { from: previousOwner });
     const accountOwner = await Account.owner.call();
 
-    assert.equal(accountOwner, owner, "Addresses should match");
+    assert.equal(accountOwner, newOwner, "Addresses should match");
   });
 
   it("Refuse upgrades from non-onwer", async () => {
     await expectRevert(
-      Account.transferOwnership(owner, { from: nonOwner }),
+      Account.transferOwnership(newOwner, { from: nonOwner }),
       "Ownable: caller is not the owner"
     );
   });
