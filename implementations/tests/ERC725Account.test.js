@@ -5,11 +5,12 @@ const { calculateCreate2 } = require("eth-create2-calculator");
 
 const AccountContract = artifacts.require("ERC725Account");
 
-const CounterContract = artifacts.require("Counter");
 const SimpleKeyManager = artifacts.require("SimpleKeyManager");
 const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
+
 const ReturnTest = artifacts.require("ReturnTest");
+const CounterContract = artifacts.require("Counter");
 
 const {
   INTERFACE_ID,
