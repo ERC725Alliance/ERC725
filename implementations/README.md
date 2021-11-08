@@ -75,6 +75,7 @@ Despite the fact that an `ERC725Account` is an **ownable contract**, the selecto
 ^ execute              // ERC725X
 ^ universalReceiver    // LSP1
 ^ isValidSignature     // ERC1271
+= 0x63cb749b           // ERC725Account
 ```
 
 ### Solc Contract details
