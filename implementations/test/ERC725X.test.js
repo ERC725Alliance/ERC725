@@ -28,10 +28,29 @@ contract("ERC725X", (accounts) => {
 
   context("ERC165", async () => {
     it("Supports ERC165", async () => {
+<<<<<<< HEAD:implementations/test/ERC725X.test.js
       assert.isTrue(await account.supportsInterface.call(INTERFACE_ID.ERC165));
     });
     it("Supports ERC725X", async () => {
       assert.isTrue(await account.supportsInterface.call(INTERFACE_ID.ERC725X));
+=======
+      const owner = accounts[2];
+      const account = await AccountContract.new(owner, { from: owner });
+      const interfaceID = INTERFACE_ID.ERC165;
+
+      const result = await account.supportsInterface.call(interfaceID);
+
+      assert.isTrue(result);
+    });
+    it("Supports ERC725X", async () => {
+      const owner = accounts[2];
+      const account = await AccountContract.new(owner, { from: owner });
+      const interfaceID = INTERFACE_ID.ERC725X;
+
+      const result = await account.supportsInterface.call(interfaceID);
+
+      assert.isTrue(result);
+>>>>>>> develop:implementations/test/ERC725X.js
     });
   });
 
