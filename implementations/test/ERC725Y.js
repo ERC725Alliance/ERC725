@@ -11,9 +11,11 @@ const AccountContract = artifacts.require("ERC725Y");
 const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 
+const { INTERFACE_ID } = require("../utils/constants");
+
 contract("ERC725Y", (accounts) => {
   let erc1820;
-  beforeEach(async function() {
+  beforeEach(async function () {
     erc1820 = await singletons.ERC1820Registry(accounts[1]);
   });
 
@@ -32,7 +34,7 @@ contract("ERC725Y", (accounts) => {
     it("Supports ERC165", async () => {
       const owner = accounts[2];
       const account = await AccountContract.new(owner, { from: owner });
-      const interfaceID = "0x01ffc9a7";
+      const interfaceID = INTERFACE_ID.ERC165;
 
       const result = await account.supportsInterface.call(interfaceID);
 
@@ -42,7 +44,7 @@ contract("ERC725Y", (accounts) => {
     it("Supports ERC725Y", async () => {
       const owner = accounts[2];
       const account = await AccountContract.new(owner, { from: owner });
-      const interfaceID = "0x5a988c0f";
+      const interfaceID = INTERFACE_ID.ERC725Y;
 
       const result = await account.supportsInterface.call(interfaceID);
 

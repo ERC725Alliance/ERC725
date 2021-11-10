@@ -1,8 +1,12 @@
-const solc = require('solc');
-const { getCoinbase, compileCode } = require('./utils');
+const solc = require("solc");
+const { getCoinbase, compileCode } = require("./utils");
 const { checkAddressChecksum, toChecksumAddress } = web3.utils;
 
+const { INTERFACE_ID } = require("../utils/constants");
 
+/**
+ * @notice the ERC725Y InterfaceID mentioned in the Solidity contract below is @deprecated and has changed
+ */
 async function createAccountForwarder(address, constructorData) {
   if (!checkAddressChecksum(address)) {
     address = toChecksumAddress(address);
@@ -18,10 +22,10 @@ async function createAccountForwarder(address, constructorData) {
       _owner = _newOwner;
       
       // register all interfaces
-      _supportedInterfaces[0x01ffc9a7] = true; // ERC165
-      _supportedInterfaces[0x1626ba7e] = true; // ERC1271
-      _supportedInterfaces[0x44c028fe] = true; // ERC725X
-      _supportedInterfaces[0x2bd57b73] = true; // ERC725Y
+      _supportedInterfaces[${INTERFACE_ID.ERC165}] = true; // ERC165
+      _supportedInterfaces[${INTERFACE_ID.ERC1271}] = true; // ERC1271
+      _supportedInterfaces[${INTERFACE_ID.ERC725X}] = true; // ERC725X
+      _supportedInterfaces[${INTERFACE_ID.ERC725Y}] = true; // ERC725Y
     }
     
     function() external payable {
@@ -47,16 +51,17 @@ async function createAccountForwarder(address, constructorData) {
   }
   `;
   const coinbase = await getCoinbase();
-  const data = solc.compile(solidityCode, 1).contracts[':Forwarder'];
+  const data = solc.compile(solidityCode, 1).contracts[":Forwarder"];
   const contract = new web3.eth.Contract(JSON.parse(data.interface));
-  return contract.deploy({
-    data: data.bytecode,
-    arguments: [constructorData]
-  })
-  .send({
-    gas: 6721975,
-    from: coinbase
-  });
+  return contract
+    .deploy({
+      data: data.bytecode,
+      arguments: [constructorData],
+    })
+    .send({
+      gas: 6721975,
+      from: coinbase,
+    });
 }
 
 async function createInitializeForwarder(address, constructorData) {
@@ -96,19 +101,20 @@ async function createInitializeForwarder(address, constructorData) {
   }
   `;
   const coinbase = await getCoinbase();
-  const data = solc.compile(solidityCode, 1).contracts[':Forwarder'];
+  const data = solc.compile(solidityCode, 1).contracts[":Forwarder"];
   const contract = new web3.eth.Contract(JSON.parse(data.interface));
-  return contract.deploy({
-    data: data.bytecode,
-    arguments: [constructorData]
-  })
-  .send({
-    gas: 6721975,
-    from: coinbase
-  });
+  return contract
+    .deploy({
+      data: data.bytecode,
+      arguments: [constructorData],
+    })
+    .send({
+      gas: 6721975,
+      from: coinbase,
+    });
 }
 
 module.exports = {
   createAccountForwarder,
-  createInitializeForwarder
+  createInitializeForwarder,
 };

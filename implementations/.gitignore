@@ -3,3 +3,6 @@ node_modules
 solc
 
 .openzeppelin/.session
+
+# Mac
+.DS_Store

@@ -17,6 +17,8 @@ const UniversalReceiver1 = artifacts.require("UniversalReceiverDelegate1");
 const UniversalReceiver2 = artifacts.require("UniversalReceiverDelegate2");
 const ReturnTest = artifacts.require("ReturnTest");
 
+const { INTERFACE_ID } = require("../utils/constants");
+
 // keccak256("EXECUTOR_ROLE")
 const EXECUTOR_ROLE =
   "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63";
@@ -41,11 +43,11 @@ let supportStandardsKey = [
     ERC725AccountIdentifier[0].replace("0x", ""),
 ];
 
-contract("ERC725", function(accounts) {
+contract("ERC725", function (accounts) {
   let Account, Counter, UniversalRTest;
 
   context("Simple tests", async () => {
-    beforeEach(async function() {
+    beforeEach(async function () {
       // Deploy contracts
       erc725utils = await ERC725Utils.new();
       await AccountContract.detectNetwork();
@@ -56,7 +58,7 @@ contract("ERC725", function(accounts) {
       UniversalR2 = await UniversalReceiver2.new();
     });
 
-    it("should allow the owner to call execute", async function() {
+    it("should allow the owner to call execute", async function () {
       // Counter should be 0 initially
       assert.equal((await Counter.get()).toString(), "0");
 
@@ -70,7 +72,7 @@ contract("ERC725", function(accounts) {
       assert.equal((await Counter.get()).toString(), "1");
     });
 
-    it("should not allow non-owner to call execute", async function() {
+    it("should not allow non-owner to call execute", async function () {
       // Counter should be 0 initially
       assert.equal((await Counter.get()).toString(), "0");
 
@@ -142,7 +144,7 @@ contract("ERC725", function(accounts) {
 
   contract("ERC725Account", (accounts) => {
     let erc1820;
-    beforeEach(async function() {
+    beforeEach(async function () {
       erc1820 = await singletons.ERC1820Registry(accounts[1]);
     });
 
@@ -161,7 +163,7 @@ contract("ERC725", function(accounts) {
       it("Supports ERC165", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x01ffc9a7";
+        const interfaceID = INTERFACE_ID.ERC165;
 
         const result = await account.supportsInterface.call(interfaceID);
 
@@ -170,7 +172,7 @@ contract("ERC725", function(accounts) {
       it("Supports ERC725X", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x44c028fe";
+        const interfaceID = INTERFACE_ID.ERC725X;
 
         const result = await account.supportsInterface.call(interfaceID);
 
@@ -179,7 +181,7 @@ contract("ERC725", function(accounts) {
       it("Supports ERC725Y", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x5a988c0f";
+        const interfaceID = INTERFACE_ID.ERC725Y;
 
         const result = await account.supportsInterface.call(interfaceID);
 
@@ -188,7 +190,7 @@ contract("ERC725", function(accounts) {
       it("Supports ERC1271", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x1626ba7e";
+        const interfaceID = INTERFACE_ID.ERC1271;
 
         const result = await account.supportsInterface.call(interfaceID);
 
@@ -198,17 +200,17 @@ contract("ERC725", function(accounts) {
       it("Supports ERC725Account", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x63cb749b";
+        const interfaceID = INTERFACE_ID.ERC725Account;
 
         const result = await account.supportsInterface.call(interfaceID);
 
         assert.isTrue(result);
       });
 
-      it("Supports ISLP1", async () => {
+      it("Supports LSP1", async () => {
         const owner = accounts[2];
         const account = await AccountContract.new(owner, { from: owner });
-        const interfaceID = "0x6bb56a14";
+        const interfaceID = INTERFACE_ID.LSP1;
 
         const result = await account.supportsInterface.call(interfaceID);
 
