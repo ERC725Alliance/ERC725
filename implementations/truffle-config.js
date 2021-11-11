@@ -1,4 +1,6 @@
 module.exports = {
+  contracts_build_directory: "./artifacts",
+
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
   mocha: {
