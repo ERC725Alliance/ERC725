@@ -23,14 +23,20 @@ To use in your project install via npm
 npm install
 ```
 
-And import in your contracts
-
-```
-import "erc725/contracts/ERC725/ERC725Account.sol";
+And import in your contracts in solidity
+```solidity
+import "@erc725/smart-contracts/contracts/ERC725Account.sol";
 
 contract MyContract is ERC725Account {
     ...
 }
+```
+
+And import in your contract ABI in JavaScript
+```js
+import ERC725Account from "@erc725/smart-contracts/artifacts/ERC725Account.json";
+
+const  myContract = new web3.eth.Contract(ERC725Account.abi, '0xsomeaddress...')
 ```
 
 ## Development

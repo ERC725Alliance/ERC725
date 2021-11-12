@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "../ERC725/ERC725Account.sol";
+import "../ERC725Account.sol";
 
 // constants
-import "../InterfaceIDs.sol";
+import "../constants.sol";
 
 contract ERC165InterfaceIDs {
     function getERC725XInterfaceID() public pure returns (bytes4) {

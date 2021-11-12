@@ -14,8 +14,8 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 // constants
-import "../Constants.sol";
-import "../InterfaceIDs.sol";
+import "../constants.sol";
+
 
 contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     using ECDSA for bytes32;

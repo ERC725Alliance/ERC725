@@ -8,7 +8,7 @@ import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 // constants
-import "../InterfaceIDs.sol";
+import "../constants.sol";
 
 contract UniversalReceiverDelegate2 is ILSP1Delegate, ERC165Storage {
     constructor() {
