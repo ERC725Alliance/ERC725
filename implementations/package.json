@@ -1,6 +1,6 @@
 {
   "name": "@erc725/smart-contracts",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -10,7 +10,6 @@
   },
   "files": [
     "contracts/**/*.sol",
-    "!contracts/helpers/**/*.sol",
     "artifacts/**/*.json",
     "README.md",
     "LICENSE"
