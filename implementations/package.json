@@ -21,7 +21,7 @@
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "truffle test",
     "solc": "sh solc.sh",
-    "publish": "truffle compile --all; npm publish"
+    "publish": "truffle compile --all; npm run test; npm publish"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
