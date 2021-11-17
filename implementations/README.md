@@ -21,7 +21,7 @@ The package has the following contracts:
 To use in your project install via npm
 
 ```
-npm install
+npm install @erc725/smart-contracts
 ```
 
 And import in your contracts in solidity
