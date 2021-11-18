@@ -11,7 +11,7 @@ import "./ERC725XCore.sol";
 import "./ERC725YCore.sol";
 
 // libraries
-import "./helpers/UtilsLib.sol";
+import "./utils/UtilsLib.sol";
 import "./utils/ERC725Utils.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
