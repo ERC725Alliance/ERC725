@@ -10,7 +10,11 @@
   },
   "files": [
     "contracts/**/*.sol",
-    "artifacts/**/*.json",
+    "!contracts/helpers/*.sol",
+    "artifacts/ILSP*.json",
+    "artifacts/ERC725*.json",
+    "!artifacts/ERC725YReader.json",
+    "!artifacts/ERC725YWriter.json",
     "README.md",
     "LICENSE"
   ],
