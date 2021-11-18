@@ -26,7 +26,7 @@
     "test": "truffle test",
     "solc": "sh solc.sh",
     "publish": "truffle compile --all; npm run test; npm run package; npm publish",
-    "package": "node optimize-artifacts.js"
+    "package": "node reduce-artifacts.js"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
