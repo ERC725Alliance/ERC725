@@ -110,8 +110,8 @@ library ERC725Utils {
         /* solhint-enable */
     }
 
-    function _generateMapKey(bytes32 _mapHash, bytes memory _sender)
-        private
+    function generateMapKey(bytes32 _mapHash, bytes memory _sender)
+        internal
         pure
         returns (bytes32)
     {
