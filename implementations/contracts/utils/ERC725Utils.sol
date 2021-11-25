@@ -98,6 +98,15 @@ library ERC725Utils {
         }
     }
 
+    function generateMapKey(bytes32 _mapHash, bytes memory _sender)
+        internal
+        pure
+        returns (bytes32)
+    {
+        bytes memory mapKey = abi.encodePacked(bytes8(_mapHash), bytes4(0), _sender);
+        return _generateBytes32Key(mapKey);
+    }
+
     // private functions
 
     function _generateBytes32Key(bytes memory _rawKey) private pure returns (bytes32 key) {
@@ -106,15 +115,6 @@ library ERC725Utils {
             key := mload(add(_rawKey, 32))
         }
         /* solhint-enable */
-    }
-
-    function generateMapKey(bytes32 _mapHash, bytes memory _sender)
-        internal
-        pure
-        returns (bytes32)
-    {
-        bytes memory mapKey = abi.encodePacked(bytes8(_mapHash), bytes4(0), _sender);
-        return _generateBytes32Key(mapKey);
     }
 
     function _generateArrayKeyAtIndex(bytes32 _arrayKey, uint256 _index)
