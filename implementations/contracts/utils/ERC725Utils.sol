@@ -26,9 +26,9 @@ library ERC725Utils {
         bytes32 _mapKey,
         address _sender,
         bytes4 _appendix
-    ) internal view returns (bytes memory payload) {
-        bytes32[] memory keys = new bytes32[](3);
-        bytes[] memory values = new bytes[](3);
+    ) internal view returns (bytes32[] memory keys, bytes[] memory values) {
+        keys = new bytes32[](3);
+        values = new bytes[](3);
 
         bytes memory rawArrayLength = getDataSingle(_account, _arrayKey);
 
@@ -51,7 +51,6 @@ library ERC725Utils {
             values[0] = abi.encodePacked(newArrayLength);
             values[2] = abi.encodePacked(bytes8(uint64(arrayLength)), _appendix);
         }
-        payload = abi.encodeWithSelector(IERC725Y.setData.selector, keys, values);
     }
 
     /**
@@ -64,9 +63,9 @@ library ERC725Utils {
         bytes32 mapHash,
         bytes32 _mapKeyToRemove,
         bytes4 _appendix
-    ) internal view returns (bytes memory payload) {
-        bytes32[] memory keys = new bytes32[](5);
-        bytes[] memory values = new bytes[](5);
+    ) internal view returns (bytes32[] memory keys, bytes[] memory values) {
+        keys = new bytes32[](5);
+        values = new bytes[](5);
 
         uint64 index = _extractIndexFromMap(_account, _mapKeyToRemove);
         bytes32 arrayKeyToRemove = _generateArrayKeyAtIndex(_arrayKey, index);
@@ -94,10 +93,9 @@ library ERC725Utils {
             keys[3] = lastKey;
             values[3] = "";
 
-            keys[4] = _generateMapKey(mapHash, lastKeyValue);
+            keys[4] = generateMapKey(mapHash, lastKeyValue);
             values[4] = abi.encodePacked(bytes8(index), _appendix);
         }
-        payload = abi.encodeWithSelector(IERC725Y.setData.selector, keys, values);
     }
 
     // private functions
