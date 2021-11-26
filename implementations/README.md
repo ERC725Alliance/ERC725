@@ -1,4 +1,5 @@
-# ERC725 Implementation
+# @erc725/smart-contracts &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts)
+
 
 **This package is currently in BETA, use with caution!**
 
@@ -20,7 +21,7 @@ The package has the following contracts:
 To use in your project install via npm
 
 ```
-npm install
+npm install @erc725/smart-contracts
 ```
 
 And import in your contracts in solidity

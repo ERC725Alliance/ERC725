@@ -1,4 +1,5 @@
-# ERC 725
+# ERC 725 &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts)
+
 Repository for the code and standard documents around ERC725 and related standards
 
 ## ERC 725 Use Cases
@@ -19,3 +20,7 @@ The default interfaces and implementations can be found in the [implementations]
 The main discussion around ERC725 is happening in the [EIP repository issue](https://github.com/ethereum/EIPs/issues/725).
 
 Specific implementation discussions should happen in the [issues of this repo](https://github.com/ERC725Alliance/ERC725/issues).  
+
+## License
+
+ERC725 is [Apache 2.0 licensed](./LICENSE).
