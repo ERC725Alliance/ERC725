@@ -4,14 +4,16 @@ pragma solidity ^0.8.0;
 /**
  * @dev Contract module that allows to receive arbitrary messages when assets are sent or received.
  */
-interface ILSP1  /* is ERC165 */ {
-    
+/* is ERC165 */
+interface ILSP1UniversalReceiver {
     event UniversalReceiver(
-        address indexed from, 
-        bytes32 indexed typeId, 
+        address indexed from,
+        bytes32 indexed typeId,
         bytes indexed returnedValue,
         bytes receivedData
     );
 
-    function universalReceiver(bytes32 typeId, bytes calldata data) external returns (bytes memory);
+    function universalReceiver(bytes32 typeId, bytes calldata data)
+        external
+        returns (bytes memory);
 }
