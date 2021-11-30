@@ -24,9 +24,10 @@ contract ERC725AccountInit is ERC725Init, ERC725AccountCore {
         initializer 
     {
         ERC725Init.initialize(_newOwner);
-
-        _registerInterface(_INTERFACE_ID_ERC725ACCOUNT);
-        _registerInterface(_INTERFACE_ID_ERC1271);
-        _registerInterface(_INTERFACE_ID_LSP1);
+        erc725Y = IERC725Y(this);
+        
+        _registerInterface(_INTERFACEID_ERC725ACCOUNT);
+        _registerInterface(_INTERFACEID_ERC1271);
+        _registerInterface(_INTERFACEID_LSP1);
     }
 }
