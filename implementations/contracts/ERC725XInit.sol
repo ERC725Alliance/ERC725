@@ -31,6 +31,6 @@ contract ERC725XInit is ERC725XCore, Initializable {
             OwnableUnset.initOwner(_newOwner);
         }
 
-        _registerInterface(_INTERFACE_ID_ERC725X);
+        _registerInterface(_INTERFACEID_ERC725X);
     }
 }

@@ -16,7 +16,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 // constants
 import "../constants.sol";
 
-
 contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     using ECDSA for bytes32;
     using SafeMath for uint256;
@@ -99,7 +98,7 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         return
             (hasRole(EXECUTOR_ROLE, recoveredAddress) ||
                 hasRole(DEFAULT_ADMIN_ROLE, recoveredAddress))
-                ? _INTERFACE_ID_ERC1271
+                ? _INTERFACEID_ERC1271
                 : _ERC1271FAILVALUE;
     }
 
@@ -113,6 +112,6 @@ contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
         override(ERC165, AccessControl)
         returns (bool)
     {
-        return interfaceId == _INTERFACE_ID_ERC1271 || super.supportsInterface(interfaceId);
+        return interfaceId == _INTERFACEID_ERC1271 || super.supportsInterface(interfaceId);
     }
 }

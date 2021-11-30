@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "../interfaces/ILSP1_UniversalReceiverDelegate.sol";
+import "../interfaces/ILSP1UniversalReceiverDelegate.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 // constants
 import "../constants.sol";
 
-contract UniversalReceiverDelegate2 is ILSP1Delegate, ERC165Storage {
+contract UniversalReceiverDelegate2 is ILSP1UniversalReceiverDelegate, ERC165Storage {
     constructor() {
-        _registerInterface(_INTERFACE_ID_LSP1DELEGATE);
+        _registerInterface(_INTERFACEID_LSP1_DELEGATE);
     }
 
     // solhint-disable no-unused-vars

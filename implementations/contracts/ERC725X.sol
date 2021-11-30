@@ -25,6 +25,6 @@ contract ERC725X is ERC725XCore {
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
-        _registerInterface(_INTERFACE_ID_ERC725X);
+        _registerInterface(_INTERFACEID_ERC725X);
     }
 }

@@ -26,8 +26,6 @@ import "./constants.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
-    bytes4 internal constant _INTERFACE_ID_ERC725X = type(IERC725X).interfaceId;
-
     /* Public functions */
 
     /**

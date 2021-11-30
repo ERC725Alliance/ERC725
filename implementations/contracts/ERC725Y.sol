@@ -25,6 +25,6 @@ contract ERC725Y is ERC725YCore {
             OwnableUnset.initOwner(_newOwner);
         }
 
-        _registerInterface(_INTERFACE_ID_ERC725Y);
+        _registerInterface(_INTERFACEID_ERC725Y);
     }
 }

@@ -9,11 +9,11 @@ import "../constants.sol";
 
 contract ERC165InterfaceIDs {
     function getERC725XInterfaceID() public pure returns (bytes4) {
-        return _INTERFACE_ID_ERC725X;
+        return _INTERFACEID_ERC725X;
     }
 
     function getERC725YInterfaceID() public pure returns (bytes4) {
-        return _INTERFACE_ID_ERC725Y;
+        return _INTERFACEID_ERC725Y;
     }
 
     function calculateERC725AccountInterfaceID() public pure returns (bytes4) {
@@ -29,8 +29,10 @@ contract ERC165InterfaceIDs {
             ^ i.isValidSignature.selector;
 
         // ensure we have not hardcoded an incorrect value for the constant _INTERFACE_ID_ERC725ACCOUNT
-        if (result != _INTERFACE_ID_ERC725ACCOUNT) {
-            revert("calculateERC725AccountInterfaceID: XOR result does not match value stored in constant _INTERFACE_ID_ERC725ACCOUNT");
+        if (result != _INTERFACEID_ERC725ACCOUNT) {
+            revert(
+                "calculateERC725AccountInterfaceID: XOR result does not match value stored in constant _INTERFACE_ID_ERC725ACCOUNT"
+            );
         }
 
         return result;
