@@ -11,7 +11,6 @@ import "./ERC725YCore.sol";
 
 // libraries
 import "./utils/UtilsLib.sol";
-import "./utils/ERC725Utils.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 // constants
@@ -24,8 +23,6 @@ import "./constants.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
  */
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, LSP1UniversalReceiver, IERC1271 {
-    using ERC725Utils for IERC725Y;
-
     event ValueReceived(address indexed sender, uint256 indexed value);
 
     receive() external payable {
