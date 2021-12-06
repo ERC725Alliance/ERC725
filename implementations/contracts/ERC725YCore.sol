@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 // interfaces
 import "./interfaces/IERC725Y.sol";
 
+import "./constants.sol";
 // modules
 import "./utils/OwnableUnset.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -19,8 +20,6 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
  *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
-    bytes4 internal constant _INTERFACE_ID_ERC725Y = type(IERC725Y).interfaceId;
-
     mapping(bytes32 => bytes) internal store;
 
     /* Public functions */

@@ -3,8 +3,7 @@ pragma solidity ^0.8.0;
 
 // interfaces
 import "./interfaces/IERC1271.sol";
-import "./interfaces/ILSP1_UniversalReceiver.sol";
-import "./interfaces/ILSP1_UniversalReceiverDelegate.sol";
+import "./LSP1UniversalReceiver.sol";
 
 // modules
 import "./ERC725XCore.sol";
@@ -12,12 +11,10 @@ import "./ERC725YCore.sol";
 
 // libraries
 import "./utils/UtilsLib.sol";
-import "./utils/ERC725Utils.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 // constants
 import "./constants.sol";
-
 
 /**
  * @title Abstract (Core) implementation of ERC725Account
@@ -25,9 +22,7 @@ import "./constants.sol";
  *
  *  @author Fabian Vogelsteller <fabian@lukso.network>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
  */
-abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271 {
-    using ERC725Utils for IERC725Y;
-
+abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, LSP1UniversalReceiver, IERC1271 {
     event ValueReceived(address indexed sender, uint256 indexed value);
 
     receive() external payable {
@@ -66,42 +61,15 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, ILSP1, IERC1271
         // if OWNER is a contract
         if (UtilsLib.isContract(owner())) {
             return 
-                supportsInterface(_INTERFACE_ID_ERC1271)
+                supportsInterface(_INTERFACEID_ERC1271)
                     ? IERC1271(owner()).isValidSignature(_hash, _signature)
                     : _ERC1271FAILVALUE;
         // if OWNER is a key
         } else {
             return 
                 owner() == ECDSA.recover(_hash, _signature)
-                    ? _INTERFACE_ID_ERC1271
+                    ? _INTERFACEID_ERC1271
                     : _ERC1271FAILVALUE;
         }
-    }
-
-    function universalReceiver(bytes32 _typeId, bytes calldata _data)
-        external
-        virtual
-        override
-        returns (bytes memory returnValue)
-    {
-        bytes memory receiverData = IERC725Y(this).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
-        returnValue = "";
-
-        // call external contract
-        if (receiverData.length == 20) {
-            address universalReceiverAddress = BytesLib.toAddress(receiverData, 0);
-
-            if (ERC165(universalReceiverAddress).supportsInterface(_INTERFACE_ID_LSP1DELEGATE)) {
-                returnValue = ILSP1Delegate(universalReceiverAddress).universalReceiverDelegate(
-                    _msgSender(),
-                    _typeId,
-                    _data
-                );
-            }
-        }
-
-        emit UniversalReceiver(_msgSender(), _typeId, returnValue, _data);
-
-        return returnValue;
     }
 }
