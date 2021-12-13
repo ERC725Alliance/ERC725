@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "../interfaces/IERC725Y.sol";
+import "solidity-bytes-utils/contracts/BytesLib.sol";
 
 library ERC725Utils {
     // internal functions
@@ -61,8 +62,7 @@ library ERC725Utils {
         IERC725Y _account,
         bytes32 _arrayKey,
         bytes32 mapHash,
-        bytes32 _mapKeyToRemove,
-        bytes4 _appendix
+        bytes32 _mapKeyToRemove
     ) internal view returns (bytes32[] memory keys, bytes[] memory values) {
         keys = new bytes32[](5);
         values = new bytes[](5);
@@ -87,14 +87,19 @@ library ERC725Utils {
             bytes32 lastKey = _generateArrayKeyAtIndex(_arrayKey, newLength);
             bytes memory lastKeyValue = getDataSingle(_account, lastKey);
 
+            bytes32 mapOfLastkey = generateMapKey(mapHash, lastKeyValue);
+            bytes memory mapValueOfLastkey = getDataSingle(_account, mapOfLastkey);
+
+            bytes memory appendix = BytesLib.slice(mapValueOfLastkey, 8, 4);
+
             keys[2] = arrayKeyToRemove;
             values[2] = lastKeyValue;
 
             keys[3] = lastKey;
             values[3] = "";
 
-            keys[4] = generateMapKey(mapHash, lastKeyValue);
-            values[4] = abi.encodePacked(bytes8(index), _appendix);
+            keys[4] = mapOfLastkey;
+            values[4] = abi.encodePacked(bytes8(index), appendix);
         }
     }
 
