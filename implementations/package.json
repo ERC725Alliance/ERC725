@@ -41,7 +41,7 @@
     "eth-gas-reporter": "^0.2.19",
     "openzeppelin-test-helpers": "^0.4.2",
     "prettier": "^2.4.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.18",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solc": "^0.4.26",
     "solhint": "^3.3.6",
     "truffle": "^5.2.5"
