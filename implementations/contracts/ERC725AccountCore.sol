@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "./interfaces/IERC1271.sol";
 import "./LSP1UniversalReceiver.sol";
+import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 // modules
 import "./ERC725XCore.sol";

@@ -5,8 +5,8 @@ import "./interfaces/IERC725X.sol";
 import "./interfaces/IERC725Y.sol";
 import "./interfaces/ILSP1UniversalReceiver.sol";
 import "./interfaces/ILSP1UniversalReceiverDelegate.sol";
-import "./interfaces/IERC1271.sol";
 import "./interfaces/IERC173.sol";
+import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 // >> INTERFACES
 
@@ -19,11 +19,12 @@ bytes4 constant _INTERFACEID_ERC725ACCOUNT = 0x63cb749b;
 bytes4 constant _INTERFACEID_LSP1 = type(ILSP1UniversalReceiver).interfaceId;
 bytes4 constant _INTERFACEID_LSP1_DELEGATE = type(ILSP1UniversalReceiverDelegate).interfaceId;
 
+// ERC173 - Contract Ownership Standard
+bytes4 constant _INTERFACEID_ERC173 = type(IERC173).interfaceId;
+
 // ERC1271 - Standard Signature Validation
 bytes4 constant _INTERFACEID_ERC1271 = type(IERC1271).interfaceId;
 
-// ERC173 - Contract Ownership Standard
-bytes4 constant _INTERFACEID_ERC173 = type(IERC173).interfaceId;
 
 // >> OPERATIONS
 uint256 constant OPERATION_CALL = 0;
