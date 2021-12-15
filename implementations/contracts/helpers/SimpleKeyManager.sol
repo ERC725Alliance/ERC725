@@ -1,21 +1,24 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// constants
+import "../constants.sol";
+
 // interfaces
 import "../interfaces/IERC1271.sol";
 import "../interfaces/IERC725X.sol";
-
-// modules
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-// constants
-import "../constants.sol";
+// modules
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
+/**
+ * @dev Contract used for testing
+ */
 contract SimpleKeyManager is ERC165, IERC1271, AccessControl {
     using ECDSA for bytes32;
     using SafeMath for uint256;

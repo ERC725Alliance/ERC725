@@ -6,15 +6,14 @@ import "./ERC725XInit.sol";
 import "./ERC725YInit.sol";
 
 /**
- * @title ERC725 bundle
+ * @title Proxy Implementation of ERC725 bundle
+ * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725X and ERC725Y together into one smart contract
- *
- *  @author Fabian Vogelsteller <fabian@lukso.network>
  */
 contract ERC725Init is ERC725XInit, ERC725YInit {
     /**
      * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract.
+     * @param _newOwner the owner of the contract
      */
     function initialize(address _newOwner)
         public

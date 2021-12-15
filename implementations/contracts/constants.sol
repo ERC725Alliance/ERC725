@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
 import "./interfaces/IERC725X.sol";
 import "./interfaces/IERC725Y.sol";
 import "./interfaces/ILSP1UniversalReceiver.sol";
 import "./interfaces/ILSP1UniversalReceiverDelegate.sol";
 import "./interfaces/IERC1271.sol";
-import "./interfaces/IERC173.sol";
 
 // >> INTERFACES
 
@@ -21,9 +21,6 @@ bytes4 constant _INTERFACEID_LSP1_DELEGATE = type(ILSP1UniversalReceiverDelegate
 
 // ERC1271 - Standard Signature Validation
 bytes4 constant _INTERFACEID_ERC1271 = type(IERC1271).interfaceId;
-
-// ERC173 - Contract Ownership Standard
-bytes4 constant _INTERFACEID_ERC173 = type(IERC173).interfaceId;
 
 // >> OPERATIONS
 uint256 constant OPERATION_CALL = 0;

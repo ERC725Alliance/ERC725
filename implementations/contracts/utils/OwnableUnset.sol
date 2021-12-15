@@ -5,7 +5,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/Context.sol";
 
 /**
- * @dev Contract module which provides a basic access control mechanism, where
+ * @dev Modified version of ERC173 with no constructor, instead should call `initOwner` function
+ * Contract module which provides a basic access control mechanism, where
  * there is an account (an owner) that can be granted exclusive access to
  * specific functions.
  *
@@ -38,6 +39,10 @@ abstract contract OwnableUnset is Context {
         _;
     }
 
+    /**
+     * @dev initiate the owner for the contract
+     * It can be called once
+     */
     function initOwner(address newOwner) internal {
         require(!_initiatedOwner, "Ownable: owner can only be initiated once");
         _initiatedOwner = true;

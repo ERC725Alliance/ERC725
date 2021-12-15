@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// modules
-import "../ERC725Account.sol";
-
 // constants
 import "../constants.sol";
 
+// modules
+import "../ERC725Account.sol";
+
+/**
+ * @dev Contract used to calculate interfacesId
+ */
 contract ERC165InterfaceIDs {
     function getERC725XInterfaceID() public pure returns (bytes4) {
         return _INTERFACEID_ERC725X;

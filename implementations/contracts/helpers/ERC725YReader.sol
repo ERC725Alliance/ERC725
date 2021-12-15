@@ -4,6 +4,9 @@ pragma solidity ^0.8.0;
 // interfaces
 import "../interfaces/IERC725Y.sol";
 
+/**
+ * @dev Contract used for testing
+ */
 contract ERC725YReader {
     function callGetData(address to, bytes32[] calldata _keys)
         public

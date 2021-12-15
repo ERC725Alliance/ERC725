@@ -1,55 +1,43 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// constants
+import "./constants.sol";
+
 // interfaces
 import "./interfaces/IERC1271.sol";
 import "./LSP1UniversalReceiver.sol";
-
-// modules
-import "./ERC725XCore.sol";
-import "./ERC725YCore.sol";
 
 // libraries
 import "./utils/UtilsLib.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-// constants
-import "./constants.sol";
+// modules
+import "./ERC725XCore.sol";
+import "./ERC725YCore.sol";
 
 /**
- * @title Abstract (Core) implementation of ERC725Account
- * @dev Bundles ERC725X and ERC725Y, and ERC1271 and allows receiving native tokens.
- *
- *  @author Fabian Vogelsteller <fabian@lukso.network>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
+ * @title Core implementation of ERC725Account
+ * @author Fabian Vogelsteller <fabian@lukso.network>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
+ * @dev Bundles ERC725X and ERC725Y, ERC1271 and LSP1UniversalReceiver and allows receiving native tokens
  */
 abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, LSP1UniversalReceiver, IERC1271 {
+    /**
+     * @notice Emitted when a native token is received
+     * @param sender The address of the sender
+     * @param value The amount of value sent
+     */
     event ValueReceived(address indexed sender, uint256 indexed value);
 
+    /**
+     * @dev Emits an event when a native token is received
+     */
     receive() external payable {
         emit ValueReceived(_msgSender(), msg.value);
     }
 
-    //    TODO to be discussed
-    //    function fallback()
-    //    public
-    //    {
-    //        address to = owner();
-    //        assembly {
-    //            calldatacopy(0, 0, calldatasize())
-    //            let result := staticcall(gas(), to, 0, calldatasize(), 0, 0)
-    //            returndatacopy(0, 0, returndatasize())
-    //            switch result
-    //            case 0  { revert (0, returndatasize()) }
-    //            default { return (0, returndatasize()) }
-    //        }
-    //    }
-
     /**
-     * @notice Checks if an owner signed `_data`.
-     * ERC1271 interface.
-     *
-     * @param _hash hash of the data signed//Arbitrary length data signed on the behalf of address(this)
-     * @param _signature owner's signature(s) of the data
+     * @inheritdoc IERC1271
      */
     function isValidSignature(bytes32 _hash, bytes memory _signature)
         public
@@ -72,4 +60,19 @@ abstract contract ERC725AccountCore is ERC725XCore, ERC725YCore, LSP1UniversalRe
                     : _ERC1271FAILVALUE;
         }
     }
+
+    //    TODO to be discussed
+    //    function fallback()
+    //    public
+    //    {
+    //        address to = owner();
+    //        assembly {
+    //            calldatacopy(0, 0, calldatasize())
+    //            let result := staticcall(gas(), to, 0, calldatasize(), 0, 0)
+    //            returndatacopy(0, 0, returndatasize())
+    //            switch result
+    //            case 0  { revert (0, returndatasize()) }
+    //            default { return (0, returndatasize()) }
+    //        }
+    //    }
 }
