@@ -1,29 +1,24 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "./interfaces/IERC725X.sol";
-import "./interfaces/IERC725Y.sol";
-import "./interfaces/ILSP1UniversalReceiver.sol";
-import "./interfaces/ILSP1UniversalReceiverDelegate.sol";
-import "./interfaces/IERC173.sol";
-import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
 // >> INTERFACES
 
+// ERC173 - Contract Ownership Standard
+bytes4 constant _INTERFACEID_ERC173 = 0x0e083076;
+
+// ERC1271 - Standard Signature Validation
+bytes4 constant _INTERFACEID_ERC1271 = 0x1626ba7e;
+
 // ERC725 - Smart Contract based Account
-bytes4 constant _INTERFACEID_ERC725X = type(IERC725X).interfaceId;
-bytes4 constant _INTERFACEID_ERC725Y = type(IERC725Y).interfaceId;
+bytes4 constant _INTERFACEID_ERC725X = 0x44c028fe;
+bytes4 constant _INTERFACEID_ERC725Y = 0x5a988c0f;
 bytes4 constant _INTERFACEID_ERC725ACCOUNT = 0x63cb749b;
 
 // LSP1 - Universal Receiver
-bytes4 constant _INTERFACEID_LSP1 = type(ILSP1UniversalReceiver).interfaceId;
-bytes4 constant _INTERFACEID_LSP1_DELEGATE = type(ILSP1UniversalReceiverDelegate).interfaceId;
+bytes4 constant _INTERFACEID_LSP1 = 0x6bb56a14;
+bytes4 constant _INTERFACEID_LSP1_DELEGATE = 0xc2d7bcc1;
 
-// ERC173 - Contract Ownership Standard
-bytes4 constant _INTERFACEID_ERC173 = type(IERC173).interfaceId;
 
-// ERC1271 - Standard Signature Validation
-bytes4 constant _INTERFACEID_ERC1271 = type(IERC1271).interfaceId;
 
 
 // >> OPERATIONS
