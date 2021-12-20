@@ -1,6 +1,6 @@
 {
   "name": "@erc725/smart-contracts",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -25,7 +25,7 @@
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "truffle test",
     "solc": "sh solc.sh",
-    "publish": "truffle compile --all; npm run test; npm run package; npm publish",
+    "release": "truffle compile --all; npm run test; npm run package; npm publish",
     "package": "node reduce-artifacts.js"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
