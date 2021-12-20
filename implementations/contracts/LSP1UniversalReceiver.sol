@@ -14,7 +14,7 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
 import "./utils/ERC725Utils.sol";
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
 /**

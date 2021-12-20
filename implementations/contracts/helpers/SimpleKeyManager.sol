@@ -6,7 +6,6 @@ import "../constants.sol";
 
 // interfaces
 import "../interfaces/IERC725X.sol";
-import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";

@@ -6,7 +6,6 @@ import "./constants.sol";
 
 // interfaces
 import "./LSP1UniversalReceiver.sol";
-import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 // libraries
 import "./utils/UtilsLib.sol";

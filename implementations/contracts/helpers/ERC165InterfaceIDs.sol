@@ -1,14 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// interfaces
-import "../interfaces/IERC725X.sol";
-import "../interfaces/IERC725Y.sol";
-import "../interfaces/ILSP1UniversalReceiver.sol";
-import "../interfaces/ILSP1UniversalReceiverDelegate.sol";
-import "../interfaces/IERC173.sol";
-import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
 // modules
 import "../ERC725Account.sol";
 
@@ -22,11 +14,6 @@ import "../ERC725Account.sol";
  * @dev Contract used to calculate interfacesId
  */
 contract ERC165InterfaceIDs {
-    function getERC173InterfaceID() public pure returns (bytes4) {
-        require(_INTERFACEID_ERC173 == type(IERC173).interfaceId);
-        return _INTERFACEID_ERC173;
-    }
-
     function getERC1271InterfaceID() public pure returns (bytes4) {
         require(_INTERFACEID_ERC1271 == type(IERC1271).interfaceId);
         return _INTERFACEID_ERC1271;
