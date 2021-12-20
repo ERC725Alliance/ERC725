@@ -6,19 +6,15 @@ import "./ERC725XCore.sol";
 
 /**
  * @title ERC725 X executor
+ * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- *      including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
- *
- * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
- *
- * `execute` MUST only be called by the owner of the contract set via ERC173.
- *
- *  @author Fabian Vogelsteller <fabian@lukso.network>
+ * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
+ * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 contract ERC725X is ERC725XCore {
     /**
-     * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract.
+     * @notice Sets the owner of the contract and register ERC725X interfaceId
+     * @param _newOwner the owner of the contract
      */
     constructor(address _newOwner) {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors

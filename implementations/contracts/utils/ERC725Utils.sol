@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
 import "../interfaces/IERC725Y.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 
+/**
+ * @title ERC725Utils
+ * @author Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)
+ * @dev Utils library to be used when dealing with contracts related to ERC725
+ */
 library ERC725Utils {
     // internal functions
 
@@ -19,7 +25,7 @@ library ERC725Utils {
 
     /**
      * @dev Initiates Map and ArrayKey and sets the length of the Array to `1` if it's not set before,
-     *      if it's already set, it decodes the arrayLength, increment it and adds Map and ArrayKey .
+     * If it's already set, it decodes the arrayLength, increment it and adds Map and ArrayKey
      */
     function addMapAndArrayKey(
         IERC725Y _account,
@@ -56,7 +62,7 @@ library ERC725Utils {
 
     /**
      * @dev Decrements the arrayLength, removes the Map, swaps the arrayKey that need to be removed with
-     *      the last `arrayKey` in the array and removes the last arrayKey with updating all modified entries.
+     * the last `arrayKey` in the array and removes the last arrayKey with updating all modified entries
      */
     function removeMapAndArrayKey(
         IERC725Y _account,

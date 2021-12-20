@@ -1,31 +1,24 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// interfaces
-import "../interfaces/IERC725X.sol";
-import "../interfaces/IERC725Y.sol";
-import "../interfaces/ILSP1UniversalReceiver.sol";
-import "../interfaces/ILSP1UniversalReceiverDelegate.sol";
-import "../interfaces/IERC173.sol";
-import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
 // modules
 import "../ERC725Account.sol";
 
 // constants
 import "../constants.sol";
 
+// modules
+import "../ERC725Account.sol";
+
+/**
+ * @dev Contract used to calculate interfacesId
+ */
 contract ERC165InterfaceIDs {
-
-    function getERC173InterfaceID() public pure returns (bytes4) {
-        require(_INTERFACEID_ERC173 == type(IERC173).interfaceId);
-        return _INTERFACEID_ERC173;
-    }
-
     function getERC1271InterfaceID() public pure returns (bytes4) {
         require(_INTERFACEID_ERC1271 == type(IERC1271).interfaceId);
         return _INTERFACEID_ERC1271;
     }
+
     function getERC725XInterfaceID() public pure returns (bytes4) {
         require(_INTERFACEID_ERC725X == type(IERC725X).interfaceId);
         return _INTERFACEID_ERC725X;
@@ -50,7 +43,7 @@ contract ERC165InterfaceIDs {
 
         // ensure we have not hardcoded an incorrect value for the constant _INTERFACE_ID_ERC725ACCOUNT
         require(
-            result == _INTERFACEID_ERC725ACCOUNT, 
+            result == _INTERFACEID_ERC725ACCOUNT,
             "calculateERC725AccountInterfaceID: XOR result does not match value stored in constant _INTERFACE_ID_ERC725ACCOUNT"
         );
 

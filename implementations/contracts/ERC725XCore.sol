@@ -1,41 +1,32 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// constants
+import "./constants.sol";
+
 // interfaces
 import "./interfaces/IERC725X.sol";
-
-// modules
-import "./utils/OwnableUnset.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 
-// constants
-import "./constants.sol";
+// modules
+import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
+import "./utils/OwnableUnset.sol";
 
 /**
- * @title ERC725 X (Core) executor
+ * @title Core implementation of ERC725 X executor
+ * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- * including using `delegatecall`, `staticcall`, as well creating contracts using `create` and `create2`.
- * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
- *
- * `execute` MUST only be called by the owner of the contract set via ERC173.
- *
- *  @author Fabian Vogelsteller <fabian@lukso.network>
+ * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
+ * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     /* Public functions */
 
     /**
-     * @notice Executes any other smart contract. Is only callable by the owner.
-     *
-     *
-     * @param _operation the operation to execute: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4;
-     * @param _to the smart contract or address to interact with. `_to` will be unused if a contract is created (operation 1 and 2)
-     * @param _value the value of ETH to transfer
-     * @param _data the call data, or the contract data to deploy
+     * @inheritdoc IERC725X
      */
     function execute(
         uint256 _operation,
@@ -92,7 +83,16 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
     /* Internal functions */
 
-    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
+    /**
+     * @dev perform staticcall using operation 3
+     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
+     *
+     * @param to The address on which staticcall is executed
+     * @param value The value to be sent with the call
+     * @param data The data to be sent with the call
+     * @param txGas The amount of gas for performing staticcall
+     * @return The data from the call
+     */
     function executeCall(
         address to,
         uint256 value,
@@ -116,6 +116,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         return result;
     }
 
+    /**
+     * @dev perform staticcall using operation 3
+     * @param to The address on which staticcall is executed
+     * @param data The data to be sent with the call
+     * @param txGas The amount of gas for performing staticcall
+     * @return The data from the call
+     */
     function executeStaticCall(
         address to,
         bytes memory data,
@@ -136,7 +143,15 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         return result;
     }
 
-    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
+    /**
+     * @dev perform delegatecall using operation 4
+     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
+     *
+     * @param to The address on which delegatecall is executed
+     * @param data The data to be sent with the call
+     * @param txGas The amount of gas for performing delegatecall
+     * @return The data from the call
+     */
     function executeDelegateCall(
         address to,
         bytes memory data,
@@ -158,7 +173,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         return result;
     }
 
-    // Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
+    /**
+     * @dev perform contract creation using operation 1
+     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
+     *
+     * @param value The value to be sent to the contract created
+     * @param deploymentData The contract bytecode to deploy
+     * @return newContract The address of the contract created
+     */
     function performCreate(uint256 value, bytes memory deploymentData)
         internal
         returns (address newContract)

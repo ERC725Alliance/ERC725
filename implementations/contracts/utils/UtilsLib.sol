@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-/*
+/**
  * @title Solidity Utils
  * @author Fabian Vogelsteller <fabian@lukso.network>
  *

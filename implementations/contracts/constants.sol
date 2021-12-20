@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import "./interfaces/IERC725X.sol";
+import "./interfaces/IERC725Y.sol";
+import "./interfaces/ILSP1UniversalReceiver.sol";
+import "./interfaces/ILSP1UniversalReceiverDelegate.sol";
+import "./interfaces/IERC1271.sol";
+
 // >> INTERFACES
 
 // ERC173 - Contract Ownership Standard
@@ -17,9 +24,6 @@ bytes4 constant _INTERFACEID_ERC725ACCOUNT = 0x63cb749b;
 // LSP1 - Universal Receiver
 bytes4 constant _INTERFACEID_LSP1 = 0x6bb56a14;
 bytes4 constant _INTERFACEID_LSP1_DELEGATE = 0xc2d7bcc1;
-
-
-
 
 // >> OPERATIONS
 uint256 constant OPERATION_CALL = 0;
