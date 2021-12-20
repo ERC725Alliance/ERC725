@@ -37,23 +37,20 @@ abstract contract LSP1UniversalReceiver is ILSP1UniversalReceiver, Context {
         override
         returns (bytes memory returnValue)
     {
-        bytes memory receiverData = IERC725Y(erc725Y).getDataSingle(
-            _UNIVERSAL_RECEIVER_DELEGATE_KEY
-        );
-        returnValue = "";
+        bytes memory data = IERC725Y(erc725Y).getDataSingle(_UNIVERSAL_RECEIVER_DELEGATE_KEY);
 
-        // call external contract
-        if (receiverData.length == 20) {
-            address universalReceiverAddress = BytesLib.toAddress(receiverData, 0);
-
-            if (ERC165(universalReceiverAddress).supportsInterface(_INTERFACEID_LSP1_DELEGATE)) {
+        if (data.length >= 20) {
+            address universalReceiverAddress = BytesLib.toAddress(data, 0);
+            if (
+                ERC165Checker.supportsInterface(
+                    universalReceiverAddress,
+                    _INTERFACEID_LSP1_DELEGATE
+                )
+            ) {
                 returnValue = ILSP1UniversalReceiverDelegate(universalReceiverAddress)
                     .universalReceiverDelegate(_msgSender(), _typeId, _data);
             }
         }
-
         emit UniversalReceiver(_msgSender(), _typeId, returnValue, _data);
-
-        return returnValue;
     }
 }
