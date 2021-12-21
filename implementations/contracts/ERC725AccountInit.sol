@@ -15,7 +15,7 @@ contract ERC725AccountInit is ERC725Init, ERC725AccountCore {
      * @notice Sets the owner of the contract and register ERC725Account, ERC1271 and LSP1UniversalReceiver interfacesId
      * @param _newOwner the owner of the contract
      */
-    function initialize(address _newOwner) public virtual override(ERC725Init) initializer {
+    function initialize(address _newOwner) public virtual override(ERC725Init) onlyInitializing {
         ERC725Init.initialize(_newOwner);
         erc725Y = IERC725Y(this);
 

@@ -19,7 +19,7 @@ contract ERC725Init is ERC725XInit, ERC725YInit {
         public
         virtual
         override(ERC725XInit, ERC725YInit)
-        initializer
+        onlyInitializing
     {
         ERC725XInit.initialize(_newOwner);
         ERC725YInit.initialize(_newOwner);

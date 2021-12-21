@@ -17,7 +17,7 @@ contract ERC725XInit is ERC725XCore, Initializable {
      * @notice Sets the owner of the contract and register ERC725X interfaceId
      * @param _newOwner the owner of the contract
      */
-    function initialize(address _newOwner) public virtual initializer {
+    function initialize(address _newOwner) public virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
