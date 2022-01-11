@@ -12,6 +12,7 @@ The package has the following contracts:
 - `ERC725Y.sol`: The data part of ERC725, allows to attach any key-value data to a smart contract. Uses [ERC173](https://eips.ethereum.org/EIPS/eip-173) as a basis.
 - `ERC725.sol`: Combines both implementations: `ERC725X.sol` and `ERC725Y.sol`.
 
+
 ## Usage
 
 To use in your project install via npm
@@ -68,8 +69,8 @@ The table below contains a list of [ERC165]() interface IDs used by the [Solidit
 | :------------------------------------------------------------------------------------------------------------------------ | :----------- | :------------------------------------------------------ |
 | ERC725X                                                                                                                   | `0x44c028fe` | General executor                                        |
 | ERC725Y                                                                                                                   | `0x5a988c0f` | General key-value store                                 |
+| [ERC165](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)                                                    | `0x01ffc9a7` | Standard Interface Detection for Contracts              |
 
-```
 
 ### Solc Contract details
 
