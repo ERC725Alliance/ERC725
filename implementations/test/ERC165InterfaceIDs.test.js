@@ -1,6 +1,6 @@
 const ERC165InterfaceIDs = artifacts.require("ERC165InterfaceIDs");
 
-const { INTERFACE_ID } = require("../utils/constants");
+const { INTERFACE_ID } = require("../constants");
 
 contract("Calculate Interface IDs", (accounts) => {
   let contract;
