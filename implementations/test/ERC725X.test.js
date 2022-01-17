@@ -8,7 +8,7 @@ const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
 const DelegateTest = artifacts.require("DelegateTest");
 
-const { INTERFACE_ID, OPERATION_TYPE } = require("../utils/constants");
+const { INTERFACE_ID, OPERATION_TYPE } = require("../constants");
 
 contract("ERC725X", (accounts) => {
   let owner = accounts[0];

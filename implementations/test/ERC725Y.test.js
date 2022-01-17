@@ -6,7 +6,7 @@ const AccountContract = artifacts.require("ERC725Y");
 const ERC725YWriter = artifacts.require("ERC725YWriter");
 const ERC725YReader = artifacts.require("ERC725YReader");
 
-const { INTERFACE_ID } = require("../utils/constants");
+const { INTERFACE_ID } = require("../constants");
 
 contract("ERC725Y", (accounts) => {
   let owner = accounts[0];
