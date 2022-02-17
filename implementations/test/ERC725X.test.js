@@ -1,9 +1,11 @@
+const { ethers } = require('ethers');
 const { assert } = require('chai');
 const { BN, expectRevert } = require('openzeppelin-test-helpers');
 const { calculateCreate2 } = require('eth-create2-calculator');
 
-const AccountContract = artifacts.require('ERC725X');
+const { expectRevertWithCustomError } = require('./helpers');
 
+const AccountContract = artifacts.require('ERC725X');
 const CounterContract = artifacts.require('Counter');
 const ReturnTest = artifacts.require('ReturnTest');
 const DelegateTest = artifacts.require('DelegateTest');
@@ -81,14 +83,31 @@ contract('ERC725X', (accounts) => {
 			assert.isTrue(new BN(initialValue).add(new BN(1)).eq(new BN(secondValue)));
 		});
 
-		it('Should revert with a reason while executing a call on a revertable function', async () => {
-			abi = returnTest.contract.methods.functionThatRevertsWithError('Yamen').encodeABI();
+		it('Should revert with a error string while executing a call on a revertable function', async () => {
+			abi = returnTest.contract.methods
+				.functionThatRevertsWithErrorString('Yamen')
+				.encodeABI();
 
 			await expectRevert(
 				account.execute(OPERATION_TYPE.CALL, returnTest.address, 0, abi, {
 					from: owner,
 				}),
 				'Yamen',
+			);
+		});
+
+		it('Should revert with a custom error while executing a call on a revertable function', async () => {
+			abi = returnTest.contract.methods.functionThatRevertsWithCustomError().encodeABI();
+
+			const expectedError = ethers.utils
+				.keccak256(ethers.utils.toUtf8Bytes('Bang()'))
+				.slice(0, 10);
+
+			await expectRevertWithCustomError(
+				account.execute(OPERATION_TYPE.CALL, returnTest.address, 0, abi, {
+					from: owner,
+				}),
+				expectedError,
 			);
 		});
 
@@ -168,14 +187,31 @@ contract('ERC725X', (accounts) => {
 			);
 		});
 
-		it('Should revert with a reason while executing a staticcall on a revertable function', async () => {
-			abi = returnTest.contract.methods.functionThatRevertsWithError('Yamen').encodeABI();
+		it('Should revert with a error string while executing a staticcall on a revertable function', async () => {
+			abi = returnTest.contract.methods
+				.functionThatRevertsWithErrorString('Yamen')
+				.encodeABI();
 
 			await expectRevert(
 				account.execute(OPERATION_TYPE.STATICCALL, returnTest.address, 0, abi, {
 					from: owner,
 				}),
 				'Yamen',
+			);
+		});
+
+		it('Should revert with a custom error while executing a staticcall on a revertable function', async () => {
+			abi = returnTest.contract.methods.functionThatRevertsWithCustomError().encodeABI();
+
+			const expectedError = ethers.utils
+				.keccak256(ethers.utils.toUtf8Bytes('Bang()'))
+				.slice(0, 10);
+
+			await expectRevertWithCustomError(
+				account.execute(OPERATION_TYPE.STATICCALL, returnTest.address, 0, abi, {
+					from: owner,
+				}),
+				expectedError,
 			);
 		});
 
@@ -196,6 +232,34 @@ contract('ERC725X', (accounts) => {
 
 			Value = await delegateTest.count();
 			assert(Value.toNumber() == Number);
+		});
+
+		it('Should revert with a error string while executing a delegatecall on a revertable function', async () => {
+			abi = returnTest.contract.methods
+				.functionThatRevertsWithErrorString('Yamen')
+				.encodeABI();
+
+			await expectRevert(
+				account.execute(OPERATION_TYPE.DELEGATECALL, returnTest.address, 0, abi, {
+					from: owner,
+				}),
+				'Yamen',
+			);
+		});
+
+		it('Should revert with a custom error while executing a delegatecall on a revertable function', async () => {
+			abi = returnTest.contract.methods.functionThatRevertsWithCustomError().encodeABI();
+
+			const expectedError = ethers.utils
+				.keccak256(ethers.utils.toUtf8Bytes('Bang()'))
+				.slice(0, 10);
+
+			await expectRevertWithCustomError(
+				account.execute(OPERATION_TYPE.DELEGATECALL, returnTest.address, 0, abi, {
+					from: owner,
+				}),
+				expectedError,
+			);
 		});
 
 		it('Allows owner to execute create', async () => {

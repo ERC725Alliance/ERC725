@@ -10,6 +10,7 @@ import "./interfaces/IERC725X.sol";
 // libraries
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
+import "./utils/ErrorHandlerLib.sol";
 
 // modules
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -103,14 +104,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
 
         if (!success) {
-            // solhint-disable reason-string
-            if (result.length < 68) revert();
-
-            // solhint-disable no-inline-assembly
-            assembly {
-                result := add(result, 0x04)
-            }
-            revert(abi.decode(result, (string)));
+            ErrorHandlerLib.revertWithParsedError(result);
         }
 
         return result;
@@ -131,13 +125,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
         if (!success) {
-            // solhint-disable reason-string
-            if (result.length < 68) revert();
-
-            assembly {
-                result := add(result, 0x04)
-            }
-            revert(abi.decode(result, (string)));
+            ErrorHandlerLib.revertWithParsedError(result);
         }
 
         return result;
@@ -161,13 +149,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
 
         if (!success) {
-            // solhint-disable reason-string
-            if (result.length < 68) revert();
-
-            assembly {
-                result := add(result, 0x04)
-            }
-            revert(abi.decode(result, (string)));
+            ErrorHandlerLib.revertWithParsedError(result);
         }
 
         return result;
