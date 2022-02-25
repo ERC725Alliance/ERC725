@@ -1,7 +1,7 @@
 const { assert, expect } = require("chai");
 const { expectRevert } = require("openzeppelin-test-helpers");
 
-const AccountContract = artifacts.require("ERC725Y");
+const ERC725Y = artifacts.require("ERC725Y");
 const ReaderContract = artifacts.require("Reader");
 
 const ERC725YWriter = artifacts.require("ERC725YWriter");
@@ -9,19 +9,23 @@ const ERC725YReader = artifacts.require("ERC725YReader");
 
 const { INTERFACE_ID } = require("../constants");
 
-contract("ERC725Y", (accounts) => {
+contract("ERC725Y (from EOA)", (accounts) => {
   const owner = accounts[1];
   const newOwner = accounts[2];
   const nonOwner = accounts[3];
+
   let account;
   let reader;
 
   before(async () => {
-    account = await AccountContract.new(owner, { from: owner });
-    reader = await ReaderContract.new(account.address, 30, { from: owner });
+    account = await ERC725Y.new(owner, { from: owner });
+    reader = await ReaderContract.new(account.address, { from: owner });
   });
 
-  context.skip("ERC165", async () => {
+  context("ERC165", async () => {
+    before(async () => {
+      account = await ERC725Y.new(owner, { from: owner });
+    });
     it("Supports ERC165", async () => {
       assert.isTrue(await account.supportsInterface.call(INTERFACE_ID.ERC165));
     });
@@ -31,7 +35,11 @@ contract("ERC725Y", (accounts) => {
     });
   });
 
-  context.skip("Contract Ownership - (ERC173)", async () => {
+  context("Contract Ownership - (ERC173)", async () => {
+    beforeEach(async () => {
+      account = await ERC725Y.new(owner, { from: owner });
+    });
+
     it("should have set the right owner", async () => {
       const accountOwner = await account.owner.call();
       assert.equal(accountOwner, owner, "Addresses should match");
@@ -52,14 +60,13 @@ contract("ERC725Y", (accounts) => {
     });
 
     it("should allow owner to setData", async () => {
-      const key = [web3.utils.asciiToHex("Important Data")];
-      const data = [web3.utils.asciiToHex("Important Data")];
+      const key = web3.utils.asciiToHex("Important Data");
+      const value = web3.utils.asciiToHex("Important Data");
 
-      await account.setData(key, data, { from: owner });
+      await account.setData([key], [value], { from: owner });
 
-      let fetchedData = await account.getData(key);
-
-      assert.deepEqual(data, fetchedData);
+      const [result] = await account.getData([key]);
+      assert.equal(result, value);
     });
 
     it("should revert when non-owner try to set data", async () => {
@@ -338,212 +345,10 @@ contract("ERC725Y", (accounts) => {
     });
   });
 
-  context.skip("Storage test", async () => {
-    let account;
-    let count = 1000000000;
-
-    context.skip("Writing to storage from an EOA", async () => {
-      it("Store 3 items of different bytes-lengths", async () => {
-        let multipleKeys = [
-          "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        ];
-        let multipleValues = [
-          "0xabcdef",
-          "0x0123456789abcdef",
-          "0xabcdefabcdefabcdef123456789123456789",
-        ];
-        await account.setData(multipleKeys, multipleValues, { from: owner });
-
-        assert.deepEqual(await account.getData(multipleKeys), multipleValues);
-      });
-
-      it("Store 3 x keys (array)", async () => {
-        let key1 =
-          "0x1111111111111111111111111111111111111111111111111111111111111111";
-        let key2 =
-          "0x2222222222222222222222222222222222222222222222222222222222222222";
-        let key3 =
-          "0x3333333333333333333333333333333333333333333333333333333333333333";
-
-        let value1 = "0x1111111111";
-        let value2 = "0x2222222222";
-        let value3 = "0x3333333333";
-
-        await account.setData([key1, key2, key3], [value1, value2, value3], {
-          from: owner,
-        });
-
-        assert.deepEqual(await account.getData([key1, key2, key3]), [
-          value1,
-          value2,
-          value3,
-        ]);
-      });
-
-      it("update 3 x keys (array)", async () => {
-        let key1 =
-          "0x1111111111111111111111111111111111111111111111111111111111111111";
-        let key2 =
-          "0x2222222222222222222222222222222222222222222222222222222222222222";
-        let key3 =
-          "0x3333333333333333333333333333333333333333333333333333333333333333";
-
-        let value1 = "0x111111aaaa";
-        let value2 = "0x222222bbbb";
-        let value3 = "0x333333cccc";
-
-        await account.setData([key1, key2, key3], [value1, value2, value3], {
-          from: owner,
-        });
-
-        assert.deepEqual(await account.getData([key1, key2, key3]), [
-          value1,
-          value2,
-          value3,
-        ]);
-      });
-
-      //   it("Store 3 x keys (singular)", async () => {
-      //     let key1 =
-      //       "0x1111111111111111111111111111111111111111111111111111111111111111";
-      //     let key2 =
-      //       "0x2222222222222222222222222222222222222222222222222222222222222222";
-      //     let key3 =
-      //       "0x3333333333333333333333333333333333333333333333333333333333333333";
-
-      //     let value1 = "0x1111111111";
-      //     let value2 = "0x2222222222";
-      //     let value3 = "0x3333333333";
-
-      //     await account.setData(key1, value1, { from: owner });
-      //     await account.setData(key2, value2, { from: owner });
-      //     await account.setData(key3, value3, { from: owner });
-
-      //     assert.equal(await account.getData(key1), value1);
-      //     assert.equal(await account.getData(key2), value2);
-      //     assert.equal(await account.getData(key3), value3);
-      //   });
-
-      //   it("update 3 x keys (singular)", async () => {
-      //     let key1 =
-      //       "0x1111111111111111111111111111111111111111111111111111111111111111";
-      //     let key2 =
-      //       "0x2222222222222222222222222222222222222222222222222222222222222222";
-      //     let key3 =
-      //       "0x3333333333333333333333333333333333333333333333333333333333333333";
-
-      //     let value1 = "0x111111aaaa";
-      //     let value2 = "0x222222bbbb";
-      //     let value3 = "0x333333cccc";
-
-      //     await account.setData(key1, value1, { from: owner });
-      //     await account.setData(key2, value2, { from: owner });
-      //     await account.setData(key3, value3, { from: owner });
-
-      //     assert.equal(await account.getData(key1), value1);
-      //     assert.equal(await account.getData(key2), value2);
-      //     assert.equal(await account.getData(key3), value3);
-      //   });
-      //   it("reading from storage (array)", async () => {
-      //     let expectedValue = "0x111111aaaa";
-      //     let result = await reader.read();
-      //     // assert.equal(result, expectedValue);
-      //   });
-
-      it("increments counter (to infer gas cost of `getData(...)` from other contract", async () => {
-        await reader.incrementCounter();
-      });
-
-      it("reading from storage (singular)", async () => {
-        let expectedValue = "0x111111aaaa";
-        let result = await reader.readSingular();
-        // assert.equal(result, expectedValue);
-      });
-    });
-
-    context.skip("Writing to storage from a smart contract", async () => {
-      let account;
-      let erc725YWriter;
-      let erc725YReader;
-
-      before(async () => {
-        erc725YWriter = await ERC725YWriter.new();
-        erc725YReader = await ERC725YReader.new();
-      });
-
-      beforeEach(async () => {
-        account = await AccountContract.new(erc725YWriter.address, {
-          from: owner,
-        });
-        assert.equal(await account.owner.call(), erc725YWriter.address);
-      });
-
-      it("Should be able to setData and getData of 3 assets from Smart contracts", async () => {
-        let keys = [];
-        let values = [];
-
-        for (let i = 8; i <= 10; i++) {
-          keys.push(web3.utils.numberToHex(count++));
-          values.push(web3.utils.numberToHex(count + 1000));
-        }
-        await erc725YWriter.callSetData(account.address, keys, values);
-
-        const result = await erc725YReader.callGetData(account.address, keys);
-        assert.deepEqual(result, values);
-      });
-
-      it("Should be able to setData (Array of 3 assets of different lengths) from Smart contracts", async () => {
-        let multipleKeys = [
-          "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        ];
-        let multipleValues = [
-          "0xabcdef",
-          "0x0123456789abcdef",
-          "0xabcdefabcdefabcdef123456789123456789",
-        ];
-
-        await erc725YWriter.callSetData(
-          account.address,
-          multipleKeys,
-          multipleValues
-        );
-
-        let fetchedResult = await erc725YReader.callGetData(
-          account.address,
-          multipleKeys
-        );
-        assert.deepEqual(fetchedResult, multipleValues);
-      });
-
-      it("Should be able to setData and getData of 1 asset from Smart contracts", async () => {
-        let key = [web3.utils.numberToHex(count++)];
-        let value = [web3.utils.numberToHex(count + 11)];
-
-        await erc725YWriter.callSetData(account.address, key, value);
-
-        const result = await erc725YReader.callGetData(account.address, key);
-        assert.deepEqual(result, value);
-      });
-
-      it("Should be able to setData (constructed) in a smart contract", async () => {
-        let key = [web3.utils.keccak256("MyName")];
-        let value = [web3.utils.utf8ToHex("LUKSO")];
-
-        await erc725YWriter.setDataComputed(account.address);
-        let result = await erc725YReader.callGetData(account.address, key);
-        assert.deepEqual(result, value);
-      });
-    });
-  });
-
-  context.skip("setting new storage, one byte at a time", async () => {
+  context("write to ERC725Y storage, 32 bytes words at a time", async () => {
     let byte = "11";
 
-    for (let ii = 1; ii <= 400; ii++) {
+    for (let ii = 1; ii <= 384; ii += 31) {
       it(`should write ${ii} bytes in storage`, async () => {
         let value = "0x" + byte.repeat(ii);
         let key = web3.utils.soliditySha3(value);
@@ -556,7 +361,7 @@ contract("ERC725Y", (accounts) => {
     }
   });
 
-  context.skip("updating storage, one byte at a time", async () => {
+  context("update storage, 32 bytes word at a time", async () => {
     let byte = "11";
     let key = web3.utils.soliditySha3("same storage slot");
 
@@ -564,7 +369,7 @@ contract("ERC725Y", (accounts) => {
       await account.setData([key], ["0xaa"], { from: owner });
     });
 
-    for (let ii = 1; ii <= 400; ii++) {
+    for (let ii = 1; ii <= 384; ii += 31) {
       it(`should write ${ii} bytes in storage`, async () => {
         let value = "0x" + byte.repeat(ii);
 
@@ -574,5 +379,135 @@ contract("ERC725Y", (accounts) => {
         assert.equal(result, value);
       });
     }
+  });
+});
+
+contract("ERC725Y (from Smart Contract", (accounts) => {
+  const owner = accounts[1];
+
+  let account;
+  let reader;
+
+  before(async () => {
+    account = await ERC725Y.new(owner, { from: owner });
+    reader = await ReaderContract.new(account.address, { from: owner });
+  });
+
+  context("reading ERC725Y storage from a Smart Contract", async () => {
+    const KEYS = [
+      "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "0x3333333333333333333333333333333333333333333333333333333333333333",
+      "0x4444444444444444444444444444444444444444444444444444444444444444",
+      "0x5555555555555555555555555555555555555555555555555555555555555555",
+    ];
+
+    const VALUES = [
+      "0x" + "11".repeat(1),
+      "0x" + "11".repeat(32),
+      "0x" + "11".repeat(64),
+      "0x" + "11".repeat(96),
+      "0x" + "11".repeat(128),
+    ];
+
+    before(async () => {
+      account = await ERC725Y.new(owner, { from: owner });
+      reader = await ReaderContract.new(account.address, { from: owner });
+
+      await account.setData(KEYS, VALUES, { from: owner });
+    });
+
+    for (let ii = 0; ii < VALUES.length; ii++) {
+      let bytesLength = VALUES[ii].substring(2).length / 2;
+
+      it(`should read ${bytesLength} bytes value`, async () => {
+        let key = KEYS[ii];
+        let expectedValue = VALUES[ii];
+
+        // execute as a transaction to change the state,
+        // and display the gas costs in the gas reporter
+        await reader.read(key);
+
+        const result = await reader.read.call(key);
+        assert.equal(result, expectedValue);
+      });
+    }
+  });
+
+  context("writing to ERC725Y storage from a smart contract", async () => {
+    let account;
+    let erc725YWriter;
+    let erc725YReader;
+    let count = 1000000000;
+
+    before(async () => {
+      erc725YWriter = await ERC725YWriter.new();
+      erc725YReader = await ERC725YReader.new();
+    });
+
+    beforeEach(async () => {
+      account = await ERC725Y.new(erc725YWriter.address, {
+        from: owner,
+      });
+      assert.equal(await account.owner.call(), erc725YWriter.address);
+    });
+
+    it("Should be able to setData and getData of 3 assets from Smart contracts", async () => {
+      let keys = [];
+      let values = [];
+
+      for (let i = 8; i <= 10; i++) {
+        keys.push(web3.utils.numberToHex(count++));
+        values.push(web3.utils.numberToHex(count + 1000));
+      }
+      await erc725YWriter.callSetData(account.address, keys, values);
+
+      const result = await erc725YReader.callGetData(account.address, keys);
+      assert.deepEqual(result, values);
+    });
+
+    it("Should be able to setData (Array of 3 assets of different lengths) from Smart contracts", async () => {
+      let multipleKeys = [
+        "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      ];
+      let multipleValues = [
+        "0xabcdef",
+        "0x0123456789abcdef",
+        "0xabcdefabcdefabcdef123456789123456789",
+      ];
+
+      await erc725YWriter.callSetData(
+        account.address,
+        multipleKeys,
+        multipleValues
+      );
+
+      let fetchedResult = await erc725YReader.callGetData(
+        account.address,
+        multipleKeys
+      );
+      assert.deepEqual(fetchedResult, multipleValues);
+    });
+
+    it("Should be able to setData and getData of 1 asset from Smart contracts", async () => {
+      let key = [web3.utils.numberToHex(count++)];
+      let value = [web3.utils.numberToHex(count + 11)];
+
+      await erc725YWriter.callSetData(account.address, key, value);
+
+      const result = await erc725YReader.callGetData(account.address, key);
+      assert.deepEqual(result, value);
+    });
+
+    it("Should be able to setData (constructed) in a smart contract", async () => {
+      let key = [web3.utils.keccak256("MyName")];
+      let value = [web3.utils.utf8ToHex("LUKSO")];
+
+      await erc725YWriter.setDataComputed(account.address);
+      let result = await erc725YReader.callGetData(account.address, key);
+      assert.deepEqual(result, value);
+    });
   });
 });
