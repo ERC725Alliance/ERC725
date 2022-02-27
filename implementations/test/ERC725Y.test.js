@@ -1228,7 +1228,7 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
         { 
           name: "address",
           key: web3.utils.soliditySha3("address"),
-          value: accounts[0]
+          value: accounts[0].toLowerCase()
         },
         { 
           name: "bytes4",
@@ -1239,30 +1239,79 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
           name: "bytes32",
           key: web3.utils.soliditySha3("bytes32"),
           value: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        { 
+          name: "address[] (x1 address)",
+          key: web3.utils.soliditySha3("address[] (x1 address)"),
+          value: web3.eth.abi.encodeParameter('address[]', [accounts[0]])
+        },
+        { 
+          name: "address[] (x5 addresses)",
+          key: web3.utils.soliditySha3("address[] (x5 addresses)"),
+          value: web3.eth.abi.encodeParameter(
+            'address[]', 
+            accounts.slice(0, 4)
+          )
+        },
+        { 
+          name: "bytes4[] (x1 value)",
+          key: web3.utils.soliditySha3("bytes4[] (x1 value)"),
+          value: web3.eth.abi.encodeParameter(
+            'bytes4[]', 
+            [
+              "0xaaaaaaaa"
+            ]
+          )
+        },
+        { 
+          name: "bytes4[] (x5 values)",
+          key: web3.utils.soliditySha3("bytes4[] (x5 values)"),
+          value: web3.eth.abi.encodeParameter(
+            'bytes4[]', 
+            [
+              "0xaaaaaaaa",
+              "0xbbbbbbbb",
+              "0xcccccccc",
+              "0xdddddddd",
+              "0xeeeeeeee"
+            ]
+          )
+        },
+        { 
+          name: "bytes32[] (x1 value)",
+          key: web3.utils.soliditySha3("bytes32[] (x1 value)"),
+          value: web3.eth.abi.encodeParameter(
+            'bytes32[]', 
+            [
+              "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          )
+        },
+        { 
+          name: "bytes32[] (x5 values)",
+          key: web3.utils.soliditySha3("bytes32[] (x5 values)"),
+          value: web3.eth.abi.encodeParameter(
+            'bytes32[]', 
+            [
+              "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            ]
+          )
         }
       ];
 
       before(async () => {
         account = await ERC725Y.new(owner, { from: owner });
-        await account.setData(
-          [
-            runs[0].key,
-            runs[1].key,
-            runs[2].key,
-          ],
-          [
-            runs[0].value,
-            runs[1].value,
-            runs[2].value,
-          ],
-          { from: owner }
-        );
+        runs.map(async run => await account.setData([run.key], [run.value],{ from: owner }))
 
-        reader = await ReaderContract.new(account.address,{ from: owner });
+        reader = await ReaderContract.new(account.address, { from: owner });
       });
   
       runs.forEach(run => {
-        it("should call ERC725Y contract and fetch a " + run.name + " value its storage", async () => {
+        it("should call ERC725Y contract and fetch a " + run.name + " value from its storage", async () => {
           let key = run.key;
           let expectedValue = run.value;
   
@@ -1274,9 +1323,8 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
           assert.equal(result, expectedValue);
         });
       });
-    });
 
-    
+    });
     
   });
 
