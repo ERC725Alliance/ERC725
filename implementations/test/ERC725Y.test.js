@@ -1224,7 +1224,7 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
     });
 
     context("fetching Solidity value types (stored as raw bytes)", async () => {
-      const DATA = [
+      const runs = [
         { 
           name: "address",
           key: web3.utils.soliditySha3("address"),
@@ -1240,8 +1240,43 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
           key: web3.utils.soliditySha3("bytes32"),
           value: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
-      ]
-    })
+      ];
+
+      before(async () => {
+        account = await ERC725Y.new(owner, { from: owner });
+        await account.setData(
+          [
+            runs[0].key,
+            runs[1].key,
+            runs[2].key,
+          ],
+          [
+            runs[0].value,
+            runs[1].value,
+            runs[2].value,
+          ],
+          { from: owner }
+        );
+
+        reader = await ReaderContract.new(account.address,{ from: owner });
+      });
+  
+      runs.forEach(run => {
+        it("should call ERC725Y contract and fetch a " + run.name + " value its storage", async () => {
+          let key = run.key;
+          let expectedValue = run.value;
+  
+          // execute as a transaction to change the state,
+          // and display the gas costs in the gas reporter
+          await reader.read(key);
+  
+          const result = await reader.read.call(key);
+          assert.equal(result, expectedValue);
+        });
+      });
+    });
+
+    
     
   });
 
