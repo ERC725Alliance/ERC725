@@ -380,7 +380,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
     }
   });
 
-  context.only("write Solidity variable types as raw bytes", async () => {
+  context("write Solidity variable types as raw bytes", async () => {
     const KEY_FOR_BOOLEAN = web3.utils.soliditySha3("Key for boolean");
     const KEY_FOR_ADDRESS = web3.utils.soliditySha3("Key for address");
     const KEY_FOR_STRING = web3.utils.soliditySha3("Key for string");
@@ -620,8 +620,6 @@ contract("ERC725Y (from EOA)", (accounts) => {
           let key = run.key;
           let value = run.value;
 
-          console.log(run.name + ": ", run.value)
-
           await account.setData([key], [value], { from: owner })
 
           const [result] = await account.getData([key])
@@ -801,8 +799,6 @@ contract("ERC725Y (from EOA)", (accounts) => {
         it("should set a " + run.name + " value in storage", async () => {
           let key = run.key;
           let value = run.value;
-
-          console.log(run.name + ": ", run.value)
 
           await account.setData([key], [value], { from: owner })
 
@@ -984,15 +980,190 @@ contract("ERC725Y (from EOA)", (accounts) => {
           let key = run.key;
           let value = run.value;
 
-          console.log(run.name + ": ", run.value)
-
           await account.setData([key], [value], { from: owner })
 
           const [result] = await account.getData([key])
           assert.equal(result, value)
         })
       })
-    })
+    });
+
+    context("abi-encoded arrays", async () => {
+      const KEY_ADDRESSES = web3.utils.soliditySha3("key addresses");
+      const KEY_BYTES4 = web3.utils.soliditySha3("key bytes4");
+      const KEY_BYTES32 = web3.utils.soliditySha3("key bytes32");
+
+      context("address[]", async () => {
+        it("should set 5 x addresses", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('address[]', [
+            accounts[0], accounts[1], accounts[2], accounts[3], accounts[4]
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should update one of the 5 x addresses", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('address[]', [
+            accounts[0], accounts[1], accounts[2], accounts[9], accounts[4]
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should add +1 address", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('address[]', [
+            accounts[0], accounts[1], accounts[2], accounts[9], accounts[4], accounts[5]
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should remove -1 address", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('address[]', [
+            // remove accounts[9]
+            accounts[0], accounts[1], accounts[2], accounts[4], accounts[5]
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+      });
+
+      context("bytes4[]", async () => {
+        it("should set 5 x bytes4 values", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes4[]', [
+            "0xaaaaaaaa", "0xbbbbbbbb", "0xcccccccc", "0xdddddddd", "0xeeeeeeee"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should update one of the 5 x bytes4 values", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes4[]', [
+            "0xaaaaaaaa", "0xbbbbbbbb", "0xcccccccc", "0x11111111", "0xeeeeeeee"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should add +1 bytes4 value", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes4[]', [
+            "0xaaaaaaaa", "0xbbbbbbbb", "0xcccccccc", "0x11111111", "0xeeeeeeee", "0xffffffff"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+
+        it("should remove -1 bytes4 value", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes4[]', [
+            // remove "0x11111111"
+            "0xaaaaaaaa", "0xbbbbbbbb", "0xcccccccc", "0xeeeeeeee", "0xffffffff"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+      });
+
+      context("bytes32[]", async () => {
+        it("should set 5 x bytes32 values", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes32[]', [
+            "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });  
+
+        it("should update one of the 5 x bytes32 values", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes32[]', [
+            "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });  
+  
+        it("should add +1 bytes32 value", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes32[]', [
+            "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+  
+        it("should remove -1 bytes32 value", async () => {
+          let key = KEY_ADDRESSES
+          let value = web3.eth.abi.encodeParameter('bytes32[]', [
+            // remove "0x1111111111111111111111111111111111111111111111111111111111111111"
+            "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          ]);
+  
+          await account.setData([key], [value], { from: owner })
+  
+          const [result] = await account.getData([key])
+          assert.equal(result, value)
+        });
+      });
+
+    });
 
   });
 
@@ -1010,44 +1181,68 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
   });
 
   context("reading ERC725Y storage from a Smart Contract", async () => {
-    const KEYS = [
-      "0x1111111111111111111111111111111111111111111111111111111111111111",
-      "0x2222222222222222222222222222222222222222222222222222222222222222",
-      "0x3333333333333333333333333333333333333333333333333333333333333333",
-      "0x4444444444444444444444444444444444444444444444444444444444444444",
-      "0x5555555555555555555555555555555555555555555555555555555555555555",
-    ];
 
-    const VALUES = [
-      "0x" + "11".repeat(1),
-      "0x" + "11".repeat(32),
-      "0x" + "11".repeat(64),
-      "0x" + "11".repeat(96),
-      "0x" + "11".repeat(128),
-    ];
-
-    before(async () => {
-      account = await ERC725Y.new(owner, { from: owner });
-      reader = await ReaderContract.new(account.address, { from: owner });
-
-      await account.setData(KEYS, VALUES, { from: owner });
+    context("fetching bytesN values", async () => {
+      const KEYS = [
+        "0x1111111111111111111111111111111111111111111111111111111111111111",
+        "0x2222222222222222222222222222222222222222222222222222222222222222",
+        "0x3333333333333333333333333333333333333333333333333333333333333333",
+        "0x4444444444444444444444444444444444444444444444444444444444444444",
+        "0x5555555555555555555555555555555555555555555555555555555555555555",
+      ];
+  
+      const VALUES = [
+        "0x" + "11".repeat(1),
+        "0x" + "11".repeat(32),
+        "0x" + "11".repeat(64),
+        "0x" + "11".repeat(96),
+        "0x" + "11".repeat(128),
+      ];
+  
+      before(async () => {
+        account = await ERC725Y.new(owner, { from: owner });
+        reader = await ReaderContract.new(account.address, { from: owner });
+  
+        await account.setData(KEYS, VALUES, { from: owner });
+      });
+  
+      for (let ii = 0; ii < VALUES.length; ii++) {
+        let bytesLength = VALUES[ii].substring(2).length / 2;
+  
+        it(`should read ${bytesLength} bytes value`, async () => {
+          let key = KEYS[ii];
+          let expectedValue = VALUES[ii];
+  
+          // execute as a transaction to change the state,
+          // and display the gas costs in the gas reporter
+          await reader.read(key);
+  
+          const result = await reader.read.call(key);
+          assert.equal(result, expectedValue);
+        });
+      }
     });
 
-    for (let ii = 0; ii < VALUES.length; ii++) {
-      let bytesLength = VALUES[ii].substring(2).length / 2;
-
-      it(`should read ${bytesLength} bytes value`, async () => {
-        let key = KEYS[ii];
-        let expectedValue = VALUES[ii];
-
-        // execute as a transaction to change the state,
-        // and display the gas costs in the gas reporter
-        await reader.read(key);
-
-        const result = await reader.read.call(key);
-        assert.equal(result, expectedValue);
-      });
-    }
+    context("fetching Solidity value types (stored as raw bytes)", async () => {
+      const DATA = [
+        { 
+          name: "address",
+          key: web3.utils.soliditySha3("address"),
+          value: accounts[0]
+        },
+        { 
+          name: "bytes4",
+          key: web3.utils.soliditySha3("bytes4"),
+          value: "0xaabbccdd"
+        },
+        { 
+          name: "bytes32",
+          key: web3.utils.soliditySha3("bytes32"),
+          value: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    })
+    
   });
 
   context("writing to ERC725Y storage from a smart contract", async () => {
