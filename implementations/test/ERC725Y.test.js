@@ -108,10 +108,10 @@ contract("ERC725Y (from EOA)", (accounts) => {
         assert.equal(result, value);
       });
 
-      it("should set a medium byte value (= an URL)", async () => {
+      it("should set a medium byte value (= an IPFS URL)", async () => {
         let key = KEYS.medium_bytes;
         let value = web3.utils.utf8ToHex(
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Ffeindura&psig=AOvVaw21YL9Wg3jSaEXMHyITcWDe&ust=1593272505347000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD-guDon-oCFQAAAAAdAAAAABAD"
+          "https://ipfs.lukso.network/ipfs/QmZRZumgAf8RaK7kWodCp1Fjz7jEYPpEuSKE8xBFB3d2u5"
         );
         await account.setData([key], [value], { from: owner });
 
@@ -153,10 +153,10 @@ contract("ERC725Y (from EOA)", (accounts) => {
         assert.equal(result, value);
       });
 
-      it("should update a medium byte value (= an URL)", async () => {
+      it("should update a medium byte value (= an IPFS URL)", async () => {
         let key = KEYS.medium_bytes;
         let value = web3.utils.utf8ToHex(
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Ffeindura&psig=AOvVaw21YL9Wg3jSaEXMHyITcWDe&ust=1593272505347000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD-guDon-oCFQAAAAAdAAAAABAD"
+          "https://ipfs.lukso.network/ipfs/QmYSJg8zCrDfkhFF2gWimixffu4pwfsFucAqDutRunJu3G"
         );
         await account.setData([key], [value], { from: owner });
 
@@ -178,7 +178,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
     });
 
     context("when deleting", async () => {
-      it("should update a single byte value", async () => {
+      it("should delete a single byte value", async () => {
         let key = KEYS.single_byte;
 
         await account.setData([key], ["0x"], { from: owner });
@@ -187,7 +187,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
         assert.equal(result, "0x");
       });
 
-      it("should update a small byte value (= 10 bytes)", async () => {
+      it("should delete a small byte value (= 10 bytes)", async () => {
         let key = KEYS.small_bytes;
 
         await account.setData([key], ["0x"], { from: owner });
@@ -196,7 +196,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
         assert.equal(result, "0x");
       });
 
-      it("should update a medium byte value (= an URL)", async () => {
+      it("should delete a medium byte value (= an URL)", async () => {
         let key = KEYS.medium_bytes;
 
         await account.setData([key], ["0x"], { from: owner });
@@ -205,7 +205,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
         assert.equal(result, "0x");
       });
 
-      it("should update a long bytes value (= a paragraph with 572 characters)", async () => {
+      it("should delete a long bytes value (= a paragraph with 572 characters)", async () => {
         let key = KEYS.long_bytes;
 
         await account.setData([key], ["0x"], { from: owner });
@@ -347,7 +347,7 @@ contract("ERC725Y (from EOA)", (accounts) => {
   context("write to storage, 32 bytes words at a time", async () => {
     let byte = "11";
 
-    for (let ii = 1; ii <= 384; ii += 31) {
+    for (let ii = 32; ii <= 480; ii += 32) {
       it(`should write ${ii} bytes in storage`, async () => {
         let value = "0x" + byte.repeat(ii);
         let key = web3.utils.soliditySha3(value);
