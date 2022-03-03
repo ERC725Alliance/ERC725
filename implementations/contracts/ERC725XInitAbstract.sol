@@ -13,11 +13,7 @@ import "./ERC725XCore.sol";
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XInitAbstract is ERC725XCore, Initializable {
-    /**
-     * @notice Sets the owner of the contract and register ERC725X interfaceId
-     * @param _newOwner the owner of the contract
-     */
-    function initialize(address _newOwner) public virtual onlyInitializing {
+    function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
