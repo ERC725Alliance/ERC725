@@ -1283,7 +1283,7 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
     reader = await ReaderContract.new(account.address, { from: owner });
   });
 
-  context.only("reading ERC725Y storage from a Smart Contract", async () => {
+  context("reading ERC725Y storage from a Smart Contract", async () => {
     context("fetching bytesN values", async () => {
       const KEYS = [
         "0x1111111111111111111111111111111111111111111111111111111111111111",
