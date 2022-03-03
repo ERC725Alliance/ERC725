@@ -11,51 +11,51 @@
  *
  * @see Github https://github.com/trufflesuite/truffle/issues/1269
  */
-const fs = require("fs");
-const TruffleConfig = require("@truffle/config");
+const fs = require('fs');
+const TruffleConfig = require('@truffle/config');
 
 // find config file & return new TruffleConfig object with config file settings (cwd)
 const truffleConfig = TruffleConfig.detect();
 const artifactsFolder = truffleConfig.contracts_build_directory;
 
 function generateSmallerArtifact(_file) {
-  fs.readFile(_file, (err, fileContent) => {
-    if (err) console.error(`Error reading file: ${err}`);
+	fs.readFile(_file, (err, fileContent) => {
+		if (err) console.error(`Error reading file: ${err}`);
 
-    let jsonArtifact = JSON.parse(fileContent);
-    removeSourcesEntries(jsonArtifact);
-    removeASTEntries(jsonArtifact);
+		let jsonArtifact = JSON.parse(fileContent);
+		removeSourcesEntries(jsonArtifact);
+		removeASTEntries(jsonArtifact);
 
-    fs.writeFile(_file, JSON.stringify(jsonArtifact), (err) => {
-      err |
-        console.log(
-          "\u2713 Smaller JSON artifact created for -> ",
-          _file.replace(artifactsFolder + "/", "")
-        );
-    });
-  });
+		fs.writeFile(_file, JSON.stringify(jsonArtifact), (err) => {
+			err |
+				console.log(
+					'\u2713 Smaller JSON artifact created for -> ',
+					_file.replace(artifactsFolder + '/', ''),
+				);
+		});
+	});
 }
 
 function removeSourcesEntries(_content) {
-  const sourceEntries = [
-    "generatedSources",
-    "deployedGeneratedSources",
-    "sourceMap",
-    "deployedSourceMap",
-    "source",
-    "sourcePath",
-  ];
-  sourceEntries.map((entry) => delete _content[entry]);
+	const sourceEntries = [
+		'generatedSources',
+		'deployedGeneratedSources',
+		'sourceMap',
+		'deployedSourceMap',
+		'source',
+		'sourcePath',
+	];
+	sourceEntries.map((entry) => delete _content[entry]);
 }
 
 function removeASTEntries(_content) {
-  const astEntries = ["ast", "legacyAST"];
-  astEntries.map((entry) => delete _content[entry]);
+	const astEntries = ['ast', 'legacyAST'];
+	astEntries.map((entry) => delete _content[entry]);
 }
 
 fs.readdir(artifactsFolder, (err, files) => {
-  if (err) console.error(`Error reading 'artifacts/' directory: ${err}`);
-  for (const file of files) {
-    generateSmallerArtifact(artifactsFolder + "/" + file);
-  }
+	if (err) console.error(`Error reading 'artifacts/' directory: ${err}`);
+	for (const file of files) {
+		generateSmallerArtifact(artifactsFolder + '/' + file);
+	}
 });

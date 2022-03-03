@@ -1420,21 +1420,6 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
           }
         );
       });
-
-      it(
-        "should call ERC725Y contract and fetch an address with `getData(bytes32 _key)`",
-        async () => {
-          let key = runs[0].key;
-          let expectedValue = runs[0].value;
-
-          // execute as a transaction to change the state,
-          // and display the gas costs in the gas reporter
-          await reader.readSingle(key);
-
-          const result = await reader.readSingle.call(key);
-          assert.equal(result, expectedValue);
-        }
-      );
     });
   });
 
