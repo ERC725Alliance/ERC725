@@ -13,9 +13,10 @@ import "./ERC725XInitAbstract.sol";
  */
 contract ERC725XInit is ERC725XInitAbstract {
     /**
-     * @inheritdoc ERC725XInitAbstract
+     * @notice Sets the owner of the contract and register ERC725X interfaceId
+     * @param _newOwner the owner of the contract
      */
-    function initialize(address _newOwner) public virtual override initializer {
-        ERC725XInitAbstract.initialize(_newOwner);
+    function initialize(address _newOwner) public virtual initializer {
+        ERC725XInitAbstract._initialize(_newOwner);
     }
 }

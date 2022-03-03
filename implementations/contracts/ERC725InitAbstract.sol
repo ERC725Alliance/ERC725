@@ -11,18 +11,14 @@ import "./ERC725YInitAbstract.sol";
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
 abstract contract ERC725InitAbstract is ERC725XInitAbstract, ERC725YInitAbstract {
-    /**
-     * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract
-     */
-    function initialize(address _newOwner)
-        public
+    function _initialize(address _newOwner)
+        internal
         virtual
         override(ERC725XInitAbstract, ERC725YInitAbstract)
         onlyInitializing
     {
-        ERC725XInitAbstract.initialize(_newOwner);
-        ERC725YInitAbstract.initialize(_newOwner);
+        ERC725XInitAbstract._initialize(_newOwner);
+        ERC725YInitAbstract._initialize(_newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}

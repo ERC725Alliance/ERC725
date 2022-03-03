@@ -13,11 +13,7 @@ import "./ERC725YCore.sol";
  * from interfaces and other smart contracts
  */
 abstract contract ERC725YInitAbstract is ERC725YCore, Initializable {
-    /**
-     * @notice Sets the owner of the contract and register ERC725Y interfaceId
-     * @param _newOwner the owner of the contract
-     */
-    function initialize(address _newOwner) public virtual onlyInitializing {
+    function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
