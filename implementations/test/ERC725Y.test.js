@@ -368,8 +368,8 @@ contract("ERC725Y (from EOA)", (accounts) => {
       await account.setData([key], ["0xaa"], { from: owner });
     });
 
-    for (let ii = 1; ii <= 384; ii += 31) {
-      it(`should write ${ii} bytes in storage`, async () => {
+    for (let ii = 32; ii <= 480; ii += 32) {
+      it(`should update ${ii} bytes in storage`, async () => {
         let value = "0x" + byte.repeat(ii);
 
         await account.setData([key], [value], { from: owner });
@@ -1283,7 +1283,7 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
     reader = await ReaderContract.new(account.address, { from: owner });
   });
 
-  context("reading ERC725Y storage from a Smart Contract", async () => {
+  context.only("reading ERC725Y storage from a Smart Contract", async () => {
     context("fetching bytesN values", async () => {
       const KEYS = [
         "0x1111111111111111111111111111111111111111111111111111111111111111",
@@ -1420,6 +1420,21 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
           }
         );
       });
+
+      it(
+        "should call ERC725Y contract and fetch an address with `getData(bytes32 _key)`",
+        async () => {
+          let key = runs[0].key;
+          let expectedValue = runs[0].value;
+
+          // execute as a transaction to change the state,
+          // and display the gas costs in the gas reporter
+          await reader.readSingle(key);
+
+          const result = await reader.readSingle.call(key);
+          assert.equal(result, expectedValue);
+        }
+      );
     });
   });
 
