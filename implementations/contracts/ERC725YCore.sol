@@ -11,6 +11,9 @@ import "./interfaces/IERC725Y.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "./utils/OwnableUnset.sol";
 
+// libraries
+import "./utils/GasLib.sol";
+
 /**
  * @title Core implementation of ERC725 Y General key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -38,7 +41,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     {
         values = new bytes[](keys.length);
 
-        for (uint256 i = 0; i < keys.length; i++) {
+        for (uint256 i = 0; i < keys.length; i = GasLib.unchecked_inc(i)) {
             values[i] = _getData(keys[i]);
         }
 
@@ -55,7 +58,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
         onlyOwner
     {
         require(_keys.length == _values.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < _keys.length; i++) {
+        for (uint256 i = 0; i < _keys.length; i = GasLib.unchecked_inc(i)) {
             _setData(_keys[i], _values[i]);
         }
     }
