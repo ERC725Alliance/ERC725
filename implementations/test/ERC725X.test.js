@@ -19,6 +19,7 @@ contract('ERC725X', (accounts) => {
 
 	before(async () => {
 		account = await AccountContract.new(owner, { from: owner });
+		
 	});
 
 	context('Account Deployment', async () => {
@@ -87,7 +88,7 @@ contract('ERC725X', (accounts) => {
 				assert.isTrue(new BN(initialValue).add(new BN(1)).eq(new BN(secondValue)));
 			});
 
-			it.todo("should fail if caller is not the owner", async () => {
+			it.skip("should fail if caller is not the owner", async () => {
 				/** @todo */
 			})
 
@@ -168,6 +169,26 @@ contract('ERC725X', (accounts) => {
 		});
 
 		context("STATICCALL", async () => {
+			it("should fail when doing a STATICCALL to an address that is not a contract", async () => {
+				const target = accounts[4];
+
+				const payload = returnTest.contract.methods
+				.functionThatRevertsWithErrorString('Yamen')
+				.encodeABI();
+
+				await expectRevert(
+					account.execute(
+						OPERATION_TYPE.STATICCALL,
+						target,
+						0,
+						"0xaaaaaaaa",
+						{ from: owner }
+					),
+					"Address: static call to non-contract"
+				);
+
+			});
+
 			it('Allows owner to execute static call and return data', async () => {
 				let nums1 = ['10', '22', '1'];
 				let nums2 = ['3'];
@@ -189,7 +210,7 @@ contract('ERC725X', (accounts) => {
 				assert.deepEqual(Result[1], nums2);
 			});
 
-			it.todo("should fail when caller is not the owner", async () => {
+			it.skip("should fail when caller is not the owner", async () => {
 				/** @todo */
 			})
 	
@@ -255,7 +276,7 @@ contract('ERC725X', (accounts) => {
 				assert(Value.toNumber() == Number);
 			});
 
-			it.todo("should fail when caller is not the owner", async () => {
+			it.skip("should fail when caller is not the owner", async () => {
 				/** @todo */
 			})
 	
@@ -301,7 +322,7 @@ contract('ERC725X', (accounts) => {
 				assert.equal(receipt.logs[0].args.value, '0');
 			});
 
-			it.todo("should revert when caller is not the owner", async () => {
+			it.skip("should revert when caller is not the owner", async () => {
 				/** @todo */
 			});
 	
@@ -347,4 +368,5 @@ contract('ERC725X', (accounts) => {
 		})
 		
 	});
+
 });

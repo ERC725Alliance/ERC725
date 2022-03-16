@@ -8,6 +8,7 @@ import "./constants.sol";
 import "./interfaces/IERC725X.sol";
 
 // libraries
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 import "./utils/ErrorHandlerLib.sol";
@@ -24,6 +25,8 @@ import "./utils/OwnableUnset.sol";
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
+    using Address for address;
+    using Address for address payable;
     /* Public functions */
 
     /**
@@ -41,20 +44,33 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         // CALL
         if (_operation == OPERATION_CALL) {
-            result = executeCall(_to, _value, _data, txGas);
+            if (_data.length == 0 && _value > 0) {
+                // Address.sendValue(payable(_to), _value);
+                payable(_to).sendValue(_value);
+            }
+
+            if (_data.length >= 4) {
+                if (_value == 0) {
+                    result = _to.functionCall(_data);
+                } else {
+                    result = _to.functionCallWithValue(_data, _value);
+                }
+            }
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            result = executeStaticCall(_to, _data, txGas);
+            require(_data.length <= 4, "invalid or empty payload");
+            result = _to.functionStaticCall(_data);
 
             emit Executed(_operation, _to, _value, _data);
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+            require(_data.length <= 4, "cannot send an empty payload");
             address currentOwner = owner();
-            result = executeDelegateCall(_to, _data, txGas);
+            result = _to.functionDelegateCall(_data);
             
             emit Executed(_operation, _to, _value, _data);
 
@@ -94,6 +110,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
      * @param txGas The amount of gas for performing staticcall
      * @return The data from the call
      */
+     /*
     function executeCall(
         address to,
         uint256 value,
@@ -109,27 +126,28 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         return result;
     }
+    */
 
-    /**
-     * @dev perform staticcall using operation 3
-     * @param to The address on which staticcall is executed
-     * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing staticcall
-     * @return The data from the call
-     */
-    function executeStaticCall(
-        address to,
-        bytes memory data,
-        uint256 txGas
-    ) internal view returns (bytes memory) {
-        (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
+    // /**
+    //  * @dev perform staticcall using operation 3
+    //  * @param to The address on which staticcall is executed
+    //  * @param data The data to be sent with the call
+    //  * @param txGas The amount of gas for performing staticcall
+    //  * @return The data from the call
+    //  */
+    // function executeStaticCall(
+    //     address to,
+    //     bytes memory data,
+    //     uint256 txGas
+    // ) internal view returns (bytes memory) {
+    //     (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
-        if (!success) {
-            ErrorHandlerLib.revertWithParsedError(result);
-        }
+    //     if (!success) {
+    //         ErrorHandlerLib.revertWithParsedError(result);
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 
     /**
      * @dev perform delegatecall using operation 4
@@ -140,6 +158,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
      * @param txGas The amount of gas for performing delegatecall
      * @return The data from the call
      */
+     /*
     function executeDelegateCall(
         address to,
         bytes memory data,
@@ -154,6 +173,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         return result;
     }
+    */
 
     /**
      * @dev perform contract creation using operation 1
@@ -167,6 +187,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         internal
         returns (address newContract)
     {
+        require(deploymentData.length != 0, "no contract bytecode provided");
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }
