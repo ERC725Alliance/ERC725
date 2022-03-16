@@ -11,15 +11,11 @@ contract('Calculate Interface IDs', (accounts) => {
 
 	it('ERC725X', async () => {
 		const result = await contract.getERC725XInterfaceID.call();
-		console.log('ERC725X:', result);
-
 		assert.equal(result, INTERFACE_ID.ERC725X);
 	});
 
 	it('ERC725Y', async () => {
 		const result = await contract.getERC725YInterfaceID.call();
-		console.log('ERC725Y:', result);
-
 		assert.equal(result, INTERFACE_ID.ERC725Y);
 	});
 });
