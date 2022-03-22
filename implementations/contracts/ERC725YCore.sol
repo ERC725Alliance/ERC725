@@ -28,6 +28,19 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     mapping(bytes32 => bytes) internal store;
 
     /* Public functions */
+    /**
+     * @inheritdoc IERC725Y
+     */
+    function getData(bytes32 key) public view virtual override returns (bytes memory value) {
+        value = _getData(key);
+    }
+
+    /**
+     * @inheritdoc IERC725Y
+     */
+    function setData(bytes32 key, bytes memory value) public virtual override onlyOwner {
+        _setData(key, value);
+    }
 
     /**
      * @inheritdoc IERC725Y
@@ -65,20 +78,10 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
 
     /* Internal functions */
 
-    /**
-     * @notice Gets singular data at a given `key`
-     * @param key The key which value to retrieve
-     * @return value The data stored at the key
-     */
     function _getData(bytes32 key) internal view virtual returns (bytes memory value) {
         return store[key];
     }
 
-    /**
-     * @notice Sets singular data at a given `key`
-     * @param key The key which value to retrieve
-     * @param value The value to set
-     */
     function _setData(bytes32 key, bytes memory value) internal virtual {
         store[key] = value;
         emit DataChanged(key, value);
