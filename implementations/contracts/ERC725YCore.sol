@@ -64,15 +64,15 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32[] memory _keys, bytes[] memory _values)
+    function setData(bytes32[] memory keys, bytes[] memory values)
         public
         virtual
         override
         onlyOwner
     {
-        require(_keys.length == _values.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < _keys.length; i = GasLib.unchecked_inc(i)) {
-            _setData(_keys[i], _values[i]);
+        require(keys.length == values.length, "Keys length not equal to values length");
+        for (uint256 i = 0; i < keys.length; i = GasLib.unchecked_inc(i)) {
+            _setData(keys[i], values[i]);
         }
     }
 
