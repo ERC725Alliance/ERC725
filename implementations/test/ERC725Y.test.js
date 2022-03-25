@@ -58,13 +58,27 @@ contract("ERC725Y (from EOA)", (accounts) => {
       );
     });
 
-    it("should allow owner to setData", async () => {
+    it("should allow owner to setData (singular)", async () => {
       const key = web3.utils.asciiToHex("Important Data");
       const value = web3.utils.asciiToHex("Important Data");
 
-      await account.setData([key], [value], { from: owner });
+      await account.setData(key, value, {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const result = await account.getData(key);
+      assert.equal(result, value);
+    });
+
+    it("should allow owner to setData (multiple)", async () => {
+      const key = web3.utils.asciiToHex("Important Data");
+      const value = web3.utils.asciiToHex("Important Data");
+
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
+
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -73,7 +87,9 @@ contract("ERC725Y (from EOA)", (accounts) => {
       const data = [web3.utils.asciiToHex("Important Data")];
 
       await expectRevert(
-        account.setData(key, data, { from: nonOwner }),
+        account.methods["setData(bytes32[],bytes[])"](key, data, {
+          from: nonOwner,
+        }),
         "Ownable: caller is not the owner"
       );
     });
@@ -92,9 +108,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let key = KEYS.single_byte;
         let value = "0x11";
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -102,9 +120,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let key = KEYS.small_bytes;
         let value = "0x11111111111111111111";
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -113,9 +133,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let value = web3.utils.utf8ToHex(
           "https://ipfs.lukso.network/ipfs/QmZRZumgAf8RaK7kWodCp1Fjz7jEYPpEuSKE8xBFB3d2u5"
         );
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -125,9 +147,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         );
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
     });
@@ -137,9 +161,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let key = KEYS.single_byte;
         let value = "0x11";
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -147,9 +173,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let key = KEYS.small_bytes;
         let value = "0x11111111111111111111";
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -158,9 +186,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let value = web3.utils.utf8ToHex(
           "https://ipfs.lukso.network/ipfs/QmYSJg8zCrDfkhFF2gWimixffu4pwfsFucAqDutRunJu3G"
         );
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
 
@@ -170,9 +200,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           "Donec vitae nisi dui. In fringilla aliquet lorem. Aenean mi ipsum, congue quis mauris vitae, bibendum vulputate odio. Morbi mollis leo quam, id malesuada magna luctus in. Curabitur purus diam, vehicula id vehicula id, ornare a justo. Duis auctor nibh a mauris vestibulum rutrum. Mauris in tortor varius, dictum quam quis, ultrices velit. Vivamus at commodo mauris, a egestas orci. Aenean porta porttitor orci vitae scelerisque. Phasellus lacus sem, interdum vel sodales a, placerat ac sem. Donec ut leo mollis, sodales nulla in, viverra risus. Proin eget hendrerite ipsum."
         );
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
     });
@@ -181,36 +213,44 @@ contract("ERC725Y (from EOA)", (accounts) => {
       it("should delete a single byte value", async () => {
         let key = KEYS.single_byte;
 
-        await account.setData([key], ["0x"], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], ["0x"], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, "0x");
       });
 
       it("should delete a small byte value (= 10 bytes)", async () => {
         let key = KEYS.small_bytes;
 
-        await account.setData([key], ["0x"], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], ["0x"], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, "0x");
       });
 
       it("should delete a medium byte value (= an URL)", async () => {
         let key = KEYS.medium_bytes;
 
-        await account.setData([key], ["0x"], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], ["0x"], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, "0x");
       });
 
       it("should delete a long bytes value (= a paragraph with 572 characters)", async () => {
         let key = KEYS.long_bytes;
 
-        await account.setData([key], ["0x"], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], ["0x"], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, "0x");
       });
     });
@@ -264,7 +304,9 @@ contract("ERC725Y (from EOA)", (accounts) => {
         "0xabcdefabcdefabcdef123456789123456789",
       ];
       await expectRevert(
-        account.setData(keys, values, { from: owner }),
+        account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        }),
         "Keys length not equal to values length"
       );
     });
@@ -274,9 +316,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let keys = KEYS.same_length;
         let values = VALUES.same_length;
 
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
 
@@ -284,9 +328,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let keys = KEYS.different_length;
         let values = VALUES.different_length;
 
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
     });
@@ -301,9 +347,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           "0x444444dddd",
           "0x555555eeee",
         ];
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
 
@@ -316,9 +364,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           "0xddddefefefefeffbbbbcccccbb555576",
           "0xeeee6551ffbbbbcccccbb55556",
         ];
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
     });
@@ -327,18 +377,22 @@ contract("ERC725Y (from EOA)", (accounts) => {
       it("should delete 5 x keys (where all bytes value length were the same)", async () => {
         let keys = KEYS.same_length;
         let values = ["0x", "0x", "0x", "0x", "0x"];
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
 
       it("should delete 5 x keys (where each bytes value length were different)", async () => {
         let keys = KEYS.different_length;
         let values = ["0x", "0x", "0x", "0x", "0x"];
-        await account.setData(keys, values, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](keys, values, {
+          from: owner,
+        });
 
-        const result = await account.getData(keys);
+        const result = await account.methods["getData(bytes32[])"](keys);
         assert.deepEqual(result, values);
       });
     });
@@ -352,9 +406,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         let value = "0x" + byte.repeat(ii);
         let key = web3.utils.soliditySha3(value);
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
     }
@@ -365,16 +421,20 @@ contract("ERC725Y (from EOA)", (accounts) => {
     let key = web3.utils.soliditySha3("same storage slot");
 
     before(async () => {
-      await account.setData([key], ["0xaa"], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], ["0xaa"], {
+        from: owner,
+      });
     });
 
     for (let ii = 32; ii <= 480; ii += 32) {
       it(`should update ${ii} bytes in storage`, async () => {
         let value = "0x" + byte.repeat(ii);
 
-        await account.setData([key], [value], { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+          from: owner,
+        });
 
-        const [result] = await account.getData([key]);
+        const [result] = await account.methods["getData(bytes32[])"]([key]);
         assert.equal(result, value);
       });
     }
@@ -393,9 +453,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
       let key = KEY_FOR_BOOLEAN;
       let value = web3.eth.abi.encodeParameter("bool", true);
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -403,9 +465,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
       let key = KEY_FOR_ADDRESS;
       let value = web3.eth.abi.encodeParameter("address", accounts[5]);
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -416,9 +480,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         "This is a new string"
       );
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -426,9 +492,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
       let key = KEY_FOR_BOOLEAN;
       let value = web3.eth.abi.encodeParameter("bool", false);
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -436,9 +504,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
       let key = KEY_FOR_ADDRESS;
       let value = web3.eth.abi.encodeParameter("address", accounts[6]);
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -449,9 +519,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
         "This is an updated string"
       );
 
-      await account.setData([key], [value], { from: owner });
+      await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+        from: owner,
+      });
 
-      const [result] = await account.getData([key]);
+      const [result] = await account.methods["getData(bytes32[])"]([key]);
       assert.equal(result, value);
     });
 
@@ -694,9 +766,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           let key = run.key;
           let value = run.value;
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -873,9 +947,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           let key = run.key;
           let value = run.value;
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -1052,9 +1128,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
           let key = run.key;
           let value = run.value;
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -1076,9 +1154,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             accounts[4],
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1092,9 +1172,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             accounts[4],
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1109,9 +1191,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             accounts[5],
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1126,9 +1210,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             accounts[5],
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -1144,9 +1230,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xeeeeeeee",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1160,9 +1248,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xeeeeeeee",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1177,9 +1267,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xffffffff",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1194,9 +1286,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xffffffff",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -1212,9 +1306,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1228,9 +1324,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1245,9 +1343,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
 
@@ -1262,9 +1362,11 @@ contract("ERC725Y (from EOA)", (accounts) => {
             "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
           ]);
 
-          await account.setData([key], [value], { from: owner });
+          await account.methods["setData(bytes32[],bytes[])"]([key], [value], {
+            from: owner,
+          });
 
-          const [result] = await account.getData([key]);
+          const [result] = await account.methods["getData(bytes32[])"]([key]);
           assert.equal(result, value);
         });
       });
@@ -1305,7 +1407,9 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
         account = await ERC725Y.new(owner, { from: owner });
         reader = await ReaderContract.new(account.address, { from: owner });
 
-        await account.setData(KEYS, VALUES, { from: owner });
+        await account.methods["setData(bytes32[],bytes[])"](KEYS, VALUES, {
+          from: owner,
+        });
       });
 
       for (let ii = 0; ii < VALUES.length; ii++) {
@@ -1396,13 +1500,18 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
         account = await ERC725Y.new(owner, { from: owner });
         runs.map(
           async (run) =>
-            await account.setData([run.key], [run.value], { from: owner })
+            await account.methods["setData(bytes32[],bytes[])"](
+              [run.key],
+              [run.value],
+              { from: owner }
+            )
         );
 
         reader = await ReaderContract.new(account.address, { from: owner });
       });
 
-      runs.forEach((run) => {
+      for (let i = 0; i < runs.length; i++) {
+        let run = runs[i];
         it(
           "should call ERC725Y contract and fetch a " +
             run.name +
@@ -1419,7 +1528,7 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
             assert.equal(result, expectedValue);
           }
         );
-      });
+      }
     });
   });
 

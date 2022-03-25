@@ -31,4 +31,21 @@ interface IERC725Y {
      * Emits a {DataChanged} event.
      */
     function setData(bytes32[] memory keys, bytes[] memory values) external;
+
+    /**
+     * @notice Gets singular data at a given `key`
+     * @param key The key which value to retrieve
+     * @return value The data stored at the key
+     */
+    function getData(bytes32 key) external view returns (bytes memory value);
+
+    /**
+     * @notice Sets singular data at a given `key`
+     * @param key The key which value to retrieve
+     * @param value The value to set
+     * SHOULD only be callable by the owner of the contract set via ERC173
+     *
+     * Emits a {DataChanged} event.
+     */
+    function setData(bytes32 key, bytes memory value) external;
 }
