@@ -11,6 +11,9 @@ import "./interfaces/IERC725Y.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "./utils/OwnableUnset.sol";
 
+// libraries
+import "./utils/GasLib.sol";
+
 /**
  * @title Core implementation of ERC725 Y General key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -25,6 +28,19 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     mapping(bytes32 => bytes) internal store;
 
     /* Public functions */
+    /**
+     * @inheritdoc IERC725Y
+     */
+    function getData(bytes32 key) public view virtual override returns (bytes memory value) {
+        value = _getData(key);
+    }
+
+    /**
+     * @inheritdoc IERC725Y
+     */
+    function setData(bytes32 key, bytes memory value) public virtual override onlyOwner {
+        _setData(key, value);
+    }
 
     /**
      * @inheritdoc IERC725Y
@@ -38,7 +54,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     {
         values = new bytes[](keys.length);
 
-        for (uint256 i = 0; i < keys.length; i++) {
+        for (uint256 i = 0; i < keys.length; i = GasLib.unchecked_inc(i)) {
             values[i] = _getData(keys[i]);
         }
 
@@ -48,34 +64,24 @@ abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32[] memory _keys, bytes[] memory _values)
+    function setData(bytes32[] memory keys, bytes[] memory values)
         public
         virtual
         override
         onlyOwner
     {
-        require(_keys.length == _values.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < _keys.length; i++) {
-            _setData(_keys[i], _values[i]);
+        require(keys.length == values.length, "Keys length not equal to values length");
+        for (uint256 i = 0; i < keys.length; i = GasLib.unchecked_inc(i)) {
+            _setData(keys[i], values[i]);
         }
     }
 
     /* Internal functions */
 
-    /**
-     * @notice Gets singular data at a given `key`
-     * @param key The key which value to retrieve
-     * @return value The data stored at the key
-     */
     function _getData(bytes32 key) internal view virtual returns (bytes memory value) {
         return store[key];
     }
 
-    /**
-     * @notice Sets singular data at a given `key`
-     * @param key The key which value to retrieve
-     * @param value The value to set
-     */
     function _setData(bytes32 key, bytes memory value) internal virtual {
         store[key] = value;
         emit DataChanged(key, value);

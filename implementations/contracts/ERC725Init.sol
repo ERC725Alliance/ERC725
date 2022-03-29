@@ -2,27 +2,20 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "./ERC725XInit.sol";
-import "./ERC725YInit.sol";
+import "./ERC725InitAbstract.sol";
 
 /**
- * @title Proxy Implementation of ERC725 bundle
+ * @title Deployable Proxy Implementation of ERC725 bundle
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Bundles ERC725X and ERC725Y together into one smart contract
+ * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
-contract ERC725Init is ERC725XInit, ERC725YInit {
+contract ERC725Init is ERC725InitAbstract {
     /**
      * @notice Sets the owner of the contract
      * @param _newOwner the owner of the contract
      */
-    function initialize(address _newOwner)
-        public
-        virtual
-        override(ERC725XInit, ERC725YInit)
-        onlyInitializing
-    {
-        ERC725XInit.initialize(_newOwner);
-        ERC725YInit.initialize(_newOwner);
+    function initialize(address _newOwner) public virtual initializer {
+        ERC725InitAbstract._initialize(_newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}

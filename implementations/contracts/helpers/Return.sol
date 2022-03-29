@@ -15,8 +15,14 @@ contract ReturnTest {
         uint256 age;
     }
 
-    function functionThatRevertsWithError(string memory error) external pure {
+    error Bang();
+
+    function functionThatRevertsWithErrorString(string memory error) external pure {
         revert(error);
+    }
+
+    function functionThatRevertsWithCustomError() external pure {
+        revert Bang();
     }
 
     function returnSomeUints(uint256[] memory _arr1, uint256[] memory _arr2)

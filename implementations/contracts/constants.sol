@@ -9,7 +9,7 @@ import "./interfaces/IERC725Y.sol";
 
 // ERC725 - Smart Contract based Account
 bytes4 constant _INTERFACEID_ERC725X = 0x44c028fe;
-bytes4 constant _INTERFACEID_ERC725Y = 0x5a988c0f;
+bytes4 constant _INTERFACEID_ERC725Y = 0x714df77c;
 
 // >> OPERATIONS
 uint256 constant OPERATION_CALL = 0;
