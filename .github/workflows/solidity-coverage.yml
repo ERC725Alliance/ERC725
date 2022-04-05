@@ -34,6 +34,7 @@ jobs:
       - name: add comment to Pull Request
         uses: wow-actions/auto-comment@v1
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           pullRequestSynchronize: |
             👋 Hi @{{ author }}
             Thank you for your contribution and your pull request.
