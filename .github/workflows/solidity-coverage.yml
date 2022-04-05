@@ -34,7 +34,7 @@ jobs:
       - name: add comment to Pull Request
         uses: wow-actions/auto-comment@v1
         with:
-          pullRequestOpened: |
+          pullRequestSynchronize: |
             👋 Hi @{{ author }}
             Thank you for your contribution and your pull request.
             Here is a report summary of the Solidity code covered by the tests.
