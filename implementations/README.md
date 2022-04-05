@@ -68,7 +68,7 @@ The table below contains a list of [ERC165]() interface IDs used by the [Solidit
 | Interface Name                                                                                                            | Interface ID | Description                                             |
 | :------------------------------------------------------------------------------------------------------------------------ | :----------- | :------------------------------------------------------ |
 | ERC725X                                                                                                                   | `0x44c028fe` | General executor                                        |
-| ERC725Y                                                                                                                   | `0x5a988c0f` | General key-value store                                 |
+| ERC725Y                                                                                                                   | `0x714df77c` | General key-value store                                 |
 | [ERC165](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)                                                    | `0x01ffc9a7` | Standard Interface Detection for Contracts              |
 
 
