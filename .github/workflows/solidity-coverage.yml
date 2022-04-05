@@ -29,13 +29,15 @@ jobs:
         run: npm install
 
       - name: run Solidity coverage
-        run: npx truffle run coverage
+        run: |
+          npx truffle run coverage
+          cat coverage/lcov.info | npx coveralls
 
-      - name: add comment to Pull Request
-        uses: NejcZdovc/comment-pr@v1
-        with:
-          message: "👋 Hi there!"
-          github_token: ${{secrets.GITHUB_TOKEN}}
+      # - name: add comment to Pull Request
+      #   uses: NejcZdovc/comment-pr@v1
+      #   with:
+      #     message: "👋 Hi there!"
+      #     github_token: ${{secrets.GITHUB_TOKEN}}
 
-        # Thank you for your contribution and your pull request.
-        # Here is a report summary of the Solidity code covered by the tests."
+      # Thank you for your contribution and your pull request.
+      # Here is a report summary of the Solidity code covered by the tests."
