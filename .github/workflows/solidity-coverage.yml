@@ -1,0 +1,31 @@
+name: Solidity code coverage
+
+on:
+  push:
+    branches:
+      - "develop"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: implementations
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+          cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: run Solidity coverage
+        run: npx truffle run coverage
