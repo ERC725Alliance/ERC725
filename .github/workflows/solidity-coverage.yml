@@ -32,10 +32,11 @@ jobs:
         run: npx truffle run coverage
 
       - name: add comment to Pull Request
-        uses: wow-actions/auto-comment@v1
+        uses: NejcZdovc/comment-pr@v1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          pullRequestSynchronize: |
-            👋 Hi @{{ author }}
-            Thank you for your contribution and your pull request.
-            Here is a report summary of the Solidity code covered by the tests.
+          message: "👋 Hi there!"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+        # Thank you for your contribution and your pull request.
+        # Here is a report summary of the Solidity code covered by the tests."
