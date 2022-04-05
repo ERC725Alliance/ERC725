@@ -35,8 +35,7 @@ jobs:
         uses: NejcZdovc/comment-pr@v1
         with:
           message: "👋 Hi there!"
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          github_token: ${{secrets.GITHUB_TOKEN}}
 
         # Thank you for your contribution and your pull request.
         # Here is a report summary of the Solidity code covered by the tests."
