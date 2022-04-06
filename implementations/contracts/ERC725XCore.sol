@@ -13,7 +13,6 @@ import "solidity-bytes-utils/contracts/BytesLib.sol";
 import "./utils/ErrorHandlerLib.sol";
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "./utils/OwnableUnset.sol";
 
 /**
@@ -23,7 +22,7 @@ import "./utils/OwnableUnset.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
+abstract contract ERC725XCore is OwnableUnset, IERC725X {
     /* Public functions */
 
     /**

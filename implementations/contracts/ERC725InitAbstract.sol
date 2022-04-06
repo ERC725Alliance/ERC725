@@ -22,4 +22,22 @@ abstract contract ERC725InitAbstract is ERC725XInitAbstract, ERC725YInitAbstract
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC725XInitAbstract, ERC725YInitAbstract)
+        returns (bool)
+    {
+        return
+            interfaceId == _INTERFACEID_ERC725X ||
+            interfaceId == _INTERFACEID_ERC725Y ||
+            super.supportsInterface(interfaceId);
+    }
 }
