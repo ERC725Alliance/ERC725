@@ -44,31 +44,24 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         // CALL
         if (_operation == OPERATION_CALL) {
-            if (_data.length == 0 && _value > 0) {
-                // Address.sendValue(payable(_to), _value);
+            if (_data.length == 0) {
                 payable(_to).sendValue(_value);
-            }
-
-            if (_data.length >= 4) {
-                if (_value == 0) {
-                    result = _to.functionCall(_data);
-                } else {
-                    result = _to.functionCallWithValue(_data, _value);
-                }
+            } else {
+                _value == 0 
+                    ? result = _to.functionCall(_data) 
+                    : result = _to.functionCallWithValue(_data, _value);
             }
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            require(_data.length <= 4, "invalid or empty payload");
             result = _to.functionStaticCall(_data);
 
             emit Executed(_operation, _to, _value, _data);
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
-            require(_data.length <= 4, "cannot send an empty payload");
             address currentOwner = owner();
             result = _to.functionDelegateCall(_data);
             
