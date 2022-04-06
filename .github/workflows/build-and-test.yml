@@ -39,7 +39,7 @@ jobs:
         run: truffle compile --all
 
       - name: Run Tests (with Solidity coverage)
-        run: npm test:coverage
+        run: npm run test:coverage
 
       - name: Coverall
         uses: coverallsapp/github-action@master
