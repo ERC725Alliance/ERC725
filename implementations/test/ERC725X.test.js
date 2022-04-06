@@ -9,7 +9,7 @@ const { INTERFACE_ID, OPERATION_TYPE } = require("../constants");
 const { expectRevertWithCustomError } = require("./helpers");
 
 const ERC725X = artifacts.require("ERC725X");
-const ERC725XPayable = artifacts.require("ERC725XPayableTester");
+const ERC725XPayableTester = artifacts.require("ERC725XPayableTester");
 const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
 const DelegateTest = artifacts.require("DelegateTest");
@@ -70,7 +70,7 @@ contract("ERC725X", (accounts) => {
     let erc725X;
 
     beforeEach(async () => {
-      erc725X = await ERC725XPayable.new(owner, { from: owner });
+      erc725X = await ERC725XPayableTester.new(owner, { from: owner });
 
       await web3.eth.sendTransaction({
         from: owner,
@@ -85,7 +85,13 @@ contract("ERC725X", (accounts) => {
       let initialContractBalance = await web3.eth.getBalance(erc725X.address);
       let initialRecipientBalance = await web3.eth.getBalance(recipient);
 
-      await erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x");
+      let receipt = await erc725X.execute(
+        OPERATION_TYPE.CALL,
+        recipient,
+        amount,
+        "0x"
+      );
+      console.log("receipt (transfer): ", receipt);
 
       let newContractBalance = await web3.eth.getBalance(erc725X.address);
       let newRecipientBalance = await web3.eth.getBalance(recipient);
@@ -188,7 +194,7 @@ contract("ERC725X", (accounts) => {
             let initialValue = await counter.get();
             let abi = counter.contract.methods.increment().encodeABI();
 
-            await erc725X.execute(
+            let receipt = await erc725X.execute(
               OPERATION_TYPE.CALL,
               counter.address,
               0,
@@ -197,6 +203,7 @@ contract("ERC725X", (accounts) => {
                 from: owner,
               }
             );
+            console.log("receipt (state change): ", receipt);
 
             let newValue = await counter.get();
 

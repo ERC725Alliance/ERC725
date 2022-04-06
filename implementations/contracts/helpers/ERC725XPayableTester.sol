@@ -13,7 +13,6 @@ import "../ERC725X.sol";
 contract ERC725XPayableTester is ERC725X {
 
     constructor(address _newOwner) ERC725X(_newOwner) {}
-    receive() external payable {
-        // show me the money!
-    }
+    
+    receive() external payable {}
 }
