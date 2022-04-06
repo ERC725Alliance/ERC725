@@ -1,16 +1,18 @@
 const { ethers } = require("ethers");
-const { assert } = require("chai");
-const { BN, expectRevert } = require("openzeppelin-test-helpers");
+const { assert, expect } = require("chai");
+const { BN, expectRevert, web3 } = require("openzeppelin-test-helpers");
 const { calculateCreate2 } = require("eth-create2-calculator");
 
 const { expectRevertWithCustomError } = require("./helpers");
 
 const ERC725X = artifacts.require("ERC725X");
+const ERC725XPayable = artifacts.require("ERC725XPayableTester");
 const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
 const DelegateTest = artifacts.require("DelegateTest");
 
 const { INTERFACE_ID, OPERATION_TYPE } = require("../constants");
+const { web3 } = require("openzeppelin-test-helpers/src/setup");
 
 contract("ERC725X", (accounts) => {
   const owner = accounts[0];
@@ -60,7 +62,7 @@ contract("ERC725X", (accounts) => {
     });
   });
 
-  context.only("contract deployment", async () => {
+  context("contract deployment", async () => {
     const nonOwner = accounts[1];
 
     const bytecode =
@@ -170,7 +172,83 @@ contract("ERC725X", (accounts) => {
     });
   });
 
-  context("contract interactions", async () => {
+  context.only("CALL (value transfer)", () => {
+    const nonOwner = accounts[2];
+    const recipient = accounts[3];
+
+    let erc725X;
+
+    beforeEach(async () => {
+      erc725X = await ERC725XPayable.new(owner, { from: owner });
+
+      await web3.eth.sendTransaction({
+        from: owner,
+        to: erc725X.address,
+        value: web3.utils.toWei("5", "ether"),
+      });
+    });
+
+    it("should pass if value transferred is less than the balance", async () => {
+      const amount = web3.utils.toWei("1");
+
+      let initialContractBalance = await web3.eth.getBalance(erc725X.address);
+      let initialRecipientBalance = await web3.eth.getBalance(recipient);
+
+      await erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x");
+
+      let newContractBalance = await web3.eth.getBalance(erc725X.address);
+      let newRecipientBalance = await web3.eth.getBalance(recipient);
+
+      assert.isTrue(
+        new BN(initialContractBalance)
+          .sub(new BN(amount))
+          .eq(new BN(newContractBalance))
+      );
+
+      assert.isTrue(
+        new BN(initialRecipientBalance)
+          .add(new BN(amount))
+          .eq(new BN(newRecipientBalance))
+      );
+    });
+
+    it("should pass if value transferred is exactly the balance", async () => {
+      let initialContractBalance = await web3.eth.getBalance(erc725X.address);
+      let initialRecipientBalance = await web3.eth.getBalance(recipient);
+
+      const amount = initialContractBalance;
+
+      await erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x");
+
+      let newContractBalance = await web3.eth.getBalance(erc725X.address);
+      let newRecipientBalance = await web3.eth.getBalance(recipient);
+
+      assert.isTrue(
+        new BN(initialContractBalance)
+          .sub(new BN(amount))
+          .eq(new BN(newContractBalance))
+      );
+
+      assert.isTrue(
+        new BN(initialRecipientBalance)
+          .add(new BN(amount))
+          .eq(new BN(newRecipientBalance))
+      );
+    });
+
+    it("should revert if account transfers more than its balance", async () => {
+      const amount = web3.utils.toWei("10");
+
+      let initialContractBalance = await web3.eth.getBalance(erc725X.address);
+
+      await expectRevert(
+        erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x"),
+        "Address: insufficient balance"
+      );
+    });
+  });
+
+  context.skip("contract interactions", async () => {
     const newOwner = accounts[2];
     const recipient = accounts[3];
 
@@ -183,8 +261,8 @@ contract("ERC725X", (accounts) => {
       delegateTestsecond = await DelegateTest.new(owner, { from: owner });
     });
 
-    context("CALL", async () => {
-      it("should pass if caller is the owner", async () => {
+    context.skip("CALL", async () => {
+      it.skip("should pass if caller is the owner", async () => {
         let initialValue, abi, secondValue;
         counter = await CounterContract.new();
 
@@ -206,7 +284,6 @@ contract("ERC725X", (accounts) => {
 
       // when calling a function on a contract that changes the state of the contract called
 
-      // when calling a function in a contract that reverts
       context("when calling a function on a contract that reverts", () => {
         it("Should revert with a error string while executing a call on a revertable function", async () => {
           abi = returnTest.contract.methods
@@ -301,7 +378,7 @@ contract("ERC725X", (accounts) => {
       });
     });
 
-    context("STATICCALL", async () => {
+    context.skip("STATICCALL", async () => {
       it("Allows owner to execute static call and return data", async () => {
         let nums1 = ["10", "22", "1"];
         let nums2 = ["3"];
@@ -401,7 +478,7 @@ contract("ERC725X", (accounts) => {
       });
     });
 
-    context("DELEGATECALL", async () => {
+    context.skip("DELEGATECALL", async () => {
       it("Allows owner to execute delegatecall", async () => {
         let abi, Value, Number;
         Number = 3;
