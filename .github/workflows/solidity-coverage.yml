@@ -1,43 +1,43 @@
-name: Solidity code coverage
+# name: Solidity code coverage
 
-on:
-  push:
-    branches:
-      - "develop"
-  pull_request:
-    branches:
-      - "*"
+# on:
+#   push:
+#     branches:
+#       - "develop"
+#   pull_request:
+#     branches:
+#       - "*"
 
-jobs:
-  coverage:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: implementations
+# jobs:
+#   coverage:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: implementations
 
-    steps:
-      - uses: actions/checkout@v2
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v2
-        with:
-          node-version: "16" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-          cache: "npm"
-          cache-dependency-path: implementations/package-lock.json
+#       - name: Setup Node.js 16
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: "16" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+#           cache: "npm"
+#           cache-dependency-path: implementations/package-lock.json
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: run Solidity coverage
-        run: |
-          npx truffle run coverage
-          cat coverage/lcov.info | npx coveralls
+#       - name: run Solidity coverage
+#         run: |
+#           npx truffle run coverage
+#           cat coverage/lcov.info | npx coveralls
 
-      # - name: add comment to Pull Request
-      #   uses: NejcZdovc/comment-pr@v1
-      #   with:
-      #     message: "👋 Hi there!"
-      #     github_token: ${{secrets.GITHUB_TOKEN}}
+#       # - name: add comment to Pull Request
+#       #   uses: NejcZdovc/comment-pr@v1
+#       #   with:
+#       #     message: "👋 Hi there!"
+#       #     github_token: ${{secrets.GITHUB_TOKEN}}
 
-      # Thank you for your contribution and your pull request.
-      # Here is a report summary of the Solidity code covered by the tests."
+#       # Thank you for your contribution and your pull request.
+#       # Here is a report summary of the Solidity code covered by the tests."

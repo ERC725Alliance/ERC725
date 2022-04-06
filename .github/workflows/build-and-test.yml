@@ -38,5 +38,10 @@ jobs:
       - name: Compile contracts
         run: truffle compile --all
 
-      - name: Run Tests
-        run: npm test
+      - name: Run Tests (with Solidity coverage)
+        run: npm test:coverage
+
+      - name: Coverall
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -24,7 +24,8 @@
   },
   "scripts": {
     "lint": "solhint 'contracts/**/*.sol'",
-    "test": "truffle test",
+    "test": "truffle test ",
+    "test:coverage": "truffle run coverage",
     "solc": "sh solc.sh",
     "release": "truffle compile --all; npm run test; npm run package; npm publish",
     "package": "node reduce-artifacts.js"
