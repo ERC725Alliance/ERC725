@@ -43,7 +43,7 @@ jobs:
 
       - name: Debug
         run: |
-          ls -lahG && cd coverage && ls -lahG
+          cat coverage/lcov.info | coveralls
 
       # - name: Coverall
       #   uses: coverallsapp/github-action@master
