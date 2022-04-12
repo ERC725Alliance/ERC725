@@ -138,7 +138,7 @@ contract("ERC725X", (accounts) => {
 
       await expectRevert(
         erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x"),
-        "Address: insufficient balance"
+        "ERC725X: insufficient balance for call"
       );
     });
   });
@@ -317,7 +317,7 @@ contract("ERC725X", (accounts) => {
             0,
             "0xaabbccddeeff112233445566778899"
           ),
-          "Address: call to non-contract"
+          "ERC725X: call to non-contract"
         );
       });
     });
@@ -423,7 +423,7 @@ contract("ERC725X", (accounts) => {
           erc725X.execute(OPERATION_TYPE.STATICCALL, target, 0, "0xaaaaaaaa", {
             from: owner,
           }),
-          "Address: static call to non-contract"
+          "ERC725X: static call to non-contract"
         );
       });
 
@@ -450,7 +450,7 @@ contract("ERC725X", (accounts) => {
             0,
             "0xaabbccddeeff112233445566778899"
           ),
-          "Address: static call to non-contract"
+          "ERC725X: static call to non-contract"
         );
       });
     });
@@ -466,7 +466,7 @@ contract("ERC725X", (accounts) => {
             0,
             "0xaabbccddeeff112233445566778899"
           ),
-          "Address: delegate call to non-contract"
+          "ERC725X: delegate call to non-contract"
         );
       });
       it("allows owner to execute delegatecall", async () => {
