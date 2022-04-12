@@ -43,7 +43,7 @@ jobs:
 
       - name: Debug
         run: |
-          cat coverage/lcov.info | coveralls
+          cat coverage/lcov.info | npx coveralls
 
       # - name: Coverall
       #   uses: coverallsapp/github-action@master
