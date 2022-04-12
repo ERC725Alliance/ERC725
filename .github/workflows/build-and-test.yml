@@ -41,8 +41,12 @@ jobs:
       - name: Run Tests (with Solidity coverage)
         run: npm run test:coverage
 
-      - name: Coverall
-        uses: coverallsapp/github-action@master
-        with:
-          path-to-lcov: ./output/coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Debug
+        run: |
+          ls -lahG && cd coverage && ls -lahG
+
+      # - name: Coverall
+      #   uses: coverallsapp/github-action@master
+      #   with:
+      #     path-to-lcov: ./output/coverage/lcov.info
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
