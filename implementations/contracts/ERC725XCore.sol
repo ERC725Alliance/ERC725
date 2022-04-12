@@ -26,7 +26,6 @@ import "./utils/OwnableUnset.sol";
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
     using Address for address;
-    using Address for address payable;
     /* Public functions */
 
     /**
@@ -38,27 +37,39 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
+        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
+        uint256 txGas = gasleft();
+
         // CALL
         if (_operation == OPERATION_CALL) {
-            
-            if (_data.length == 0) {
-                payable(_to).sendValue(_value);
-            } else {
-                result = _to.functionCallWithValue(_data, _value);
+
+            if (_data.length > 0) {
+                require(_to.isContract(), "ERC725X: call to non-contract");
             }
+
+            result = executeCall(_to, _value, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            result = _to.functionStaticCall(_data);
+            if (_data.length > 0) {
+                require(_to.isContract(), "ERC725X: static call to non-contract");
+            }
+            
+            result = executeStaticCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+            if (_data.length > 0) {
+                require(_to.isContract(), "ERC725X: delegate call to non-contract");
+            }
+
             address currentOwner = owner();
-            result = _to.functionDelegateCall(_data);
+            result = executeDelegateCall(_to, _data, txGas);
             
             emit Executed(_operation, _to, _value, _data);
 
@@ -98,7 +109,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
      * @param txGas The amount of gas for performing staticcall
      * @return The data from the call
      */
-     /*
     function executeCall(
         address to,
         uint256 value,
@@ -114,28 +124,27 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         return result;
     }
-    */
 
-    // /**
-    //  * @dev perform staticcall using operation 3
-    //  * @param to The address on which staticcall is executed
-    //  * @param data The data to be sent with the call
-    //  * @param txGas The amount of gas for performing staticcall
-    //  * @return The data from the call
-    //  */
-    // function executeStaticCall(
-    //     address to,
-    //     bytes memory data,
-    //     uint256 txGas
-    // ) internal view returns (bytes memory) {
-    //     (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
+    /**
+     * @dev perform staticcall using operation 3
+     * @param to The address on which staticcall is executed
+     * @param data The data to be sent with the call
+     * @param txGas The amount of gas for performing staticcall
+     * @return The data from the call
+     */
+    function executeStaticCall(
+        address to,
+        bytes memory data,
+        uint256 txGas
+    ) internal view returns (bytes memory) {
+        (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
 
-    //     if (!success) {
-    //         ErrorHandlerLib.revertWithParsedError(result);
-    //     }
+        if (!success) {
+            ErrorHandlerLib.revertWithParsedError(result);
+        }
 
-    //     return result;
-    // }
+        return result;
+    }
 
     /**
      * @dev perform delegatecall using operation 4
@@ -146,7 +155,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
      * @param txGas The amount of gas for performing delegatecall
      * @return The data from the call
      */
-     /*
     function executeDelegateCall(
         address to,
         bytes memory data,
@@ -161,7 +169,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         return result;
     }
-    */
 
     /**
      * @dev perform contract creation using operation 1
