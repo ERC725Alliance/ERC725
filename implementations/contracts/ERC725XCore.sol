@@ -44,19 +44,12 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         // CALL
         if (_operation == OPERATION_CALL) {
 
-            if (_data.length > 0) {
-                require(_to.isContract(), "ERC725X: call to non-contract");
-            }
-
             result = executeCall(_to, _value, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            if (_data.length > 0) {
-                require(_to.isContract(), "ERC725X: static call to non-contract");
-            }
             
             result = executeStaticCall(_to, _data, txGas);
 
@@ -64,9 +57,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
-            if (_data.length > 0) {
-                require(_to.isContract(), "ERC725X: delegate call to non-contract");
-            }
 
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
