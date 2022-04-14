@@ -8,7 +8,6 @@ import "./constants.sol";
 import "./interfaces/IERC725X.sol";
 
 // libraries
-import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "solidity-bytes-utils/contracts/BytesLib.sol";
 import "./utils/ErrorHandlerLib.sol";
@@ -25,7 +24,6 @@ import "./utils/OwnableUnset.sol";
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
-    using Address for address;
     /* Public functions */
 
     /**
