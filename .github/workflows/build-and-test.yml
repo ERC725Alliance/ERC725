@@ -51,3 +51,7 @@ jobs:
         uses: romeovs/lcov-reporter-action@v0.2.16
         with:
           lcov-file: ./implementations/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 📊 Solidity code coverage
+          filter-changed-files: true
+          delete-old-comments: true
