@@ -41,12 +41,12 @@ jobs:
       - name: Run Tests (with Solidity coverage)
         run: npm run test:coverage
 
-      - name: Debug
-        run: |
-          cat coverage/lcov.info | npx coveralls
+      # - name: Debug
+      #   run: |
+      #     cat coverage/lcov.info | npx coveralls
 
-      # - name: Coverall
-      #   uses: coverallsapp/github-action@master
-      #   with:
-      #     path-to-lcov: ./output/coverage/lcov.info
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coverall
+        uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: ./implementations/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
