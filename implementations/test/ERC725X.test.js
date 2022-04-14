@@ -85,13 +85,7 @@ contract("ERC725X", (accounts) => {
       let initialContractBalance = await web3.eth.getBalance(erc725X.address);
       let initialRecipientBalance = await web3.eth.getBalance(recipient);
 
-      let receipt = await erc725X.execute(
-        OPERATION_TYPE.CALL,
-        recipient,
-        amount,
-        "0x"
-      );
-      console.log("receipt (transfer): ", receipt);
+      await erc725X.execute(OPERATION_TYPE.CALL, recipient, amount, "0x");
 
       let newContractBalance = await web3.eth.getBalance(erc725X.address);
       let newRecipientBalance = await web3.eth.getBalance(recipient);
@@ -157,25 +151,19 @@ contract("ERC725X", (accounts) => {
       context("caller", () => {
         it("should pass if caller is the owner", async () => {
           let counter = await CounterContract.new();
-
           let initialValue = await counter.get();
           let abi = counter.contract.methods.increment().encodeABI();
-
           await erc725X.execute(OPERATION_TYPE.CALL, counter.address, 0, abi, {
             from: owner,
           });
-
           let newValue = await counter.get();
-
           assert.isTrue(
             new BN(initialValue).add(new BN(1)).eq(new BN(newValue))
           );
         });
-
         it("should fail if caller is not the owner", async () => {
           let counter = await CounterContract.new();
           let abi = counter.contract.methods.increment().encodeABI();
-
           await expectRevert(
             erc725X.execute(OPERATION_TYPE.CALL, counter.address, 0, abi, {
               from: nonOwner,
@@ -184,17 +172,15 @@ contract("ERC725X", (accounts) => {
           );
         });
       });
-
       context(
         "when calling a function that changes the state of the contract called",
         () => {
           it("should have changed the contract state", async () => {
             let counter = await CounterContract.new();
-
             let initialValue = await counter.get();
             let abi = counter.contract.methods.increment().encodeABI();
 
-            let receipt = await erc725X.execute(
+            await erc725X.execute(
               OPERATION_TYPE.CALL,
               counter.address,
               0,
@@ -203,23 +189,19 @@ contract("ERC725X", (accounts) => {
                 from: owner,
               }
             );
-            console.log("receipt (state change): ", receipt);
 
             let newValue = await counter.get();
-
             assert.isTrue(
               new BN(initialValue).add(new BN(1)).eq(new BN(newValue))
             );
           });
         }
       );
-
       context("when calling a function on a contract that reverts", () => {
         it("Should revert with a error string while executing a call on a revertable function", async () => {
           abi = returnTest.contract.methods
             .functionThatRevertsWithErrorString("Yamen")
             .encodeABI();
-
           await expectRevert(
             erc725X.execute(OPERATION_TYPE.CALL, returnTest.address, 0, abi, {
               from: owner,
@@ -227,16 +209,13 @@ contract("ERC725X", (accounts) => {
             "Yamen"
           );
         });
-
         it("Should revert with a custom error while executing a call on a revertable function", async () => {
           abi = returnTest.contract.methods
             .functionThatRevertsWithCustomError()
             .encodeABI();
-
           const expectedError = ethers.utils
             .keccak256(ethers.utils.toUtf8Bytes("Bang()"))
             .slice(0, 10);
-
           await expectRevertWithCustomError(
             erc725X.execute(OPERATION_TYPE.CALL, returnTest.address, 0, abi, {
               from: owner,
@@ -245,16 +224,13 @@ contract("ERC725X", (accounts) => {
           );
         });
       });
-
       context("when calling a function in a contract that returns", () => {
         it("Should return the data", async () => {
           let names1 = ["Yamen", "Jean", "Fabian"];
           let names2 = ["Yamen"];
-
           abi = returnTest.contract.methods
             .returnSomeStrings(names1, names2)
             .encodeABI();
-
           result = await erc725X.execute.call(
             OPERATION_TYPE.CALL,
             returnTest.address,
@@ -264,7 +240,6 @@ contract("ERC725X", (accounts) => {
               from: owner,
             }
           );
-
           let Result = web3.eth.abi.decodeParameters(
             ["string[]", "string[]"],
             result
@@ -272,7 +247,6 @@ contract("ERC725X", (accounts) => {
           assert.deepEqual(Result[0], names1);
           assert.deepEqual(Result[1], names2);
         });
-
         /** @todo */
         it.skip("Should return an array of struct {Girl} and {Boy} (decoded)", async () => {
           let boys = [{ name: "Yamen", age: 19 }];
@@ -280,11 +254,9 @@ contract("ERC725X", (accounts) => {
             { single: true, age: 54 },
             { single: false, age: 22 },
           ];
-
           abi = returnTest.contract.methods
             .functionThatReturnsBoysAndGirls(boys, girls)
             .encodeABI();
-
           result = await erc725X.execute.call(
             OPERATION_TYPE.CALL,
             returnTest.address,
@@ -294,7 +266,6 @@ contract("ERC725X", (accounts) => {
               from: owner,
             }
           );
-
           let Result = web3.eth.abi.decodeParameters(
             [
               { "Boy[]": { name: "string", age: "uint256" } },
@@ -302,22 +273,15 @@ contract("ERC725X", (accounts) => {
             ],
             result
           );
-
-          /** @todo find a way to decode array of structs in web3.js */
         });
       });
-
-      it("should fail when making a CALL with some bytes payload to an EOA", async () => {
+      it("should allow when making a CALL with some bytes payload, even if `_to` is an EOA", async () => {
         const toAddress = accounts[3];
-
-        await expectRevert(
-          erc725X.execute(
-            OPERATION_TYPE.CALL,
-            toAddress,
-            0,
-            "0xaabbccddeeff112233445566778899"
-          ),
-          "ERC725X: call to non-contract"
+        await erc725X.execute(
+          OPERATION_TYPE.CALL,
+          toAddress,
+          0,
+          "0xaabbccddeeff112233445566778899"
         );
       });
     });
@@ -346,6 +310,7 @@ contract("ERC725X", (accounts) => {
           );
         });
       });
+
       it("allows owner to execute STATICCALL and return data", async () => {
         let nums1 = ["10", "22", "1"];
         let nums2 = ["3"];
@@ -416,14 +381,17 @@ contract("ERC725X", (accounts) => {
         });
       });
 
-      it("should reverts when doing a STATICCALL to an address that is an EOA", async () => {
+      it("should allow making STATICCALL with some bytes `_data` to an EOA address", async () => {
         const target = accounts[4];
 
-        await expectRevert(
-          erc725X.execute(OPERATION_TYPE.STATICCALL, target, 0, "0xaaaaaaaa", {
+        await erc725X.execute(
+          OPERATION_TYPE.STATICCALL,
+          target,
+          0,
+          "0xaabbccddeeff112233445566778899",
+          {
             from: owner,
-          }),
-          "ERC725X: static call to non-contract"
+          }
         );
       });
 
@@ -440,115 +408,99 @@ contract("ERC725X", (accounts) => {
         );
       });
 
-      it("should fail when making a STATICCALL with some bytes payload to an EOA", async () => {
-        const toAddress = accounts[3];
+      context("DELEGATECALL", async () => {
+        it("should allow making a DELEGATECALL with some bytes payload to an EOA", async () => {
+          const toAddress = accounts[3];
 
-        await expectRevert(
-          erc725X.execute(
-            OPERATION_TYPE.STATICCALL,
-            toAddress,
-            0,
-            "0xaabbccddeeff112233445566778899"
-          ),
-          "ERC725X: static call to non-contract"
-        );
-      });
-    });
-
-    context("DELEGATECALL", async () => {
-      it("should fail when making a DELEGATECALL with some bytes payload to an EOA", async () => {
-        const toAddress = accounts[3];
-
-        await expectRevert(
-          erc725X.execute(
+          await erc725X.execute(
             OPERATION_TYPE.DELEGATECALL,
             toAddress,
             0,
             "0xaabbccddeeff112233445566778899"
-          ),
-          "ERC725X: delegate call to non-contract"
-        );
-      });
-      it("allows owner to execute delegatecall", async () => {
-        let Number = 3;
-        let abi = delegateTestsecond.contract.methods
-          .countChange(Number)
-          .encodeABI();
+          );
+        });
 
-        await delegateTest.execute(
-          OPERATION_TYPE.DELEGATECALL,
-          delegateTestsecond.address,
-          0,
-          abi,
-          {
-            from: owner,
-          }
-        );
+        it("allows owner to execute delegatecall", async () => {
+          let Number = 3;
+          let abi = delegateTestsecond.contract.methods
+            .countChange(Number)
+            .encodeABI();
 
-        let Value = await delegateTest.count();
-        assert(Value.toNumber() == Number);
-      });
-
-      it("should fail when caller is not the owner", async () => {
-        let number = 3;
-        let abi = delegateTestsecond.contract.methods
-          .countChange(number)
-          .encodeABI();
-
-        await expectRevert(
-          delegateTest.execute(
+          await delegateTest.execute(
             OPERATION_TYPE.DELEGATECALL,
             delegateTestsecond.address,
             0,
             abi,
             {
-              from: nonOwner,
-            }
-          ),
-          "Ownable: caller is not the owner"
-        );
-      });
-
-      it("Should revert with a error string while executing a delegatecall on a revertable function", async () => {
-        abi = returnTest.contract.methods
-          .functionThatRevertsWithErrorString("Yamen")
-          .encodeABI();
-
-        await expectRevert(
-          erc725X.execute(
-            OPERATION_TYPE.DELEGATECALL,
-            returnTest.address,
-            0,
-            abi,
-            {
               from: owner,
             }
-          ),
-          "Yamen"
-        );
-      });
+          );
 
-      it("Should revert with a custom error while executing a delegatecall on a revertable function", async () => {
-        abi = returnTest.contract.methods
-          .functionThatRevertsWithCustomError()
-          .encodeABI();
+          let Value = await delegateTest.count();
+          assert(Value.toNumber() == Number);
+        });
 
-        const expectedError = ethers.utils
-          .keccak256(ethers.utils.toUtf8Bytes("Bang()"))
-          .slice(0, 10);
+        it("should fail when caller is not the owner", async () => {
+          let number = 3;
+          let abi = delegateTestsecond.contract.methods
+            .countChange(number)
+            .encodeABI();
 
-        await expectRevertWithCustomError(
-          erc725X.execute(
-            OPERATION_TYPE.DELEGATECALL,
-            returnTest.address,
-            0,
-            abi,
-            {
-              from: owner,
-            }
-          ),
-          expectedError
-        );
+          await expectRevert(
+            delegateTest.execute(
+              OPERATION_TYPE.DELEGATECALL,
+              delegateTestsecond.address,
+              0,
+              abi,
+              {
+                from: nonOwner,
+              }
+            ),
+            "Ownable: caller is not the owner"
+          );
+        });
+
+        it("Should revert with a error string while executing a delegatecall on a revertable function", async () => {
+          abi = returnTest.contract.methods
+            .functionThatRevertsWithErrorString("Yamen")
+            .encodeABI();
+
+          await expectRevert(
+            erc725X.execute(
+              OPERATION_TYPE.DELEGATECALL,
+              returnTest.address,
+              0,
+              abi,
+              {
+                from: owner,
+              }
+            ),
+            "Yamen"
+          );
+        });
+
+        it("Should revert with a custom error while executing a delegatecall on a revertable function", async () => {
+          abi = returnTest.contract.methods
+            .functionThatRevertsWithCustomError()
+            .encodeABI();
+
+          const expectedError = ethers.utils
+            .keccak256(ethers.utils.toUtf8Bytes("Bang()"))
+            .slice(0, 10);
+
+          await expectRevertWithCustomError(
+            erc725X.execute(
+              OPERATION_TYPE.DELEGATECALL,
+              returnTest.address,
+              0,
+              abi,
+              {
+                from: owner,
+              }
+            ),
+            expectedError
+          );
+        });
       });
     });
   });
