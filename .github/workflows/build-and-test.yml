@@ -41,12 +41,15 @@ jobs:
       - name: Run Tests (with Solidity coverage)
         run: npm run test:coverage
 
-      # - name: Debug
-      #   run: |
-      #     cat coverage/lcov.info | npx coveralls
-
       - name: Coverall
         uses: coverallsapp/github-action@master
         with:
           path-to-lcov: ./implementations/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: wow-actions/auto-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pullRequestSynchronize: |
+            👋 @{{ author }}
+            Thank you for your PR. Here is a coverage report.
