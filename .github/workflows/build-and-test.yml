@@ -47,9 +47,7 @@ jobs:
           path-to-lcov: ./implementations/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: wow-actions/auto-comment@v1
+      - name: Code coverage report
+        uses: romeovs/lcov-reporter-action@v0.2.16
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          pullRequestSynchronize: |
-            👋 @{{ author }}
-            Thank you for your PR. Here is a coverage report.
+          lcov-file: ./implementations/coverage/lcov.info
