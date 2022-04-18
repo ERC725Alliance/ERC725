@@ -20,7 +20,7 @@ import "./utils/GasLib.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YCore is OwnableUnset, IERC725Y {
+abstract contract ERC725YCore is IERC725Y, OwnableUnset {
     /**
      * @dev Map the keys to their values
      */

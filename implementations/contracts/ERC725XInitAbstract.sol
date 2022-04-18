@@ -13,7 +13,7 @@ import "./ERC725XCore.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XInitAbstract is ERC165, ERC725XCore, Initializable {
+abstract contract ERC725XInitAbstract is Initializable, ERC165, ERC725XCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {

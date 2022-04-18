@@ -13,7 +13,7 @@ import "./ERC725YCore.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YInitAbstract is ERC165, ERC725YCore, Initializable {
+abstract contract ERC725YInitAbstract is Initializable, ERC165, ERC725YCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {

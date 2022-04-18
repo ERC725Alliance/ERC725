@@ -22,7 +22,7 @@ import "./utils/OwnableUnset.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XCore is OwnableUnset, IERC725X {
+abstract contract ERC725XCore is IERC725X, OwnableUnset {
     /* Public functions */
 
     /**
