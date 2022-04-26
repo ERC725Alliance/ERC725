@@ -8,7 +8,6 @@ import "./constants.sol";
 import "./interfaces/IERC725Y.sol";
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "./utils/OwnableUnset.sol";
 
 // libraries
@@ -21,7 +20,7 @@ import "./utils/GasLib.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
+abstract contract ERC725YCore is IERC725Y, OwnableUnset {
     /**
      * @dev Map the keys to their values
      */

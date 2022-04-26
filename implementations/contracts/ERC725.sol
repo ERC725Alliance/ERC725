@@ -19,4 +19,22 @@ contract ERC725 is ERC725X, ERC725Y {
     constructor(address _newOwner) ERC725X(_newOwner) ERC725Y(_newOwner) {}
 
     // NOTE this implementation has not by default: receive() external payable {}
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC725X, ERC725Y)
+        returns (bool)
+    {
+        return
+            interfaceId == _INTERFACEID_ERC725X ||
+            interfaceId == _INTERFACEID_ERC725Y ||
+            super.supportsInterface(interfaceId);
+    }
 }

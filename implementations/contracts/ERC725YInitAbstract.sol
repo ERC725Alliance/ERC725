@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 // modules
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "./ERC725YCore.sol";
 
 /**
@@ -12,13 +13,20 @@ import "./ERC725YCore.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YInitAbstract is ERC725YCore, Initializable {
+abstract contract ERC725YInitAbstract is Initializable, ERC165, ERC725YCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
+    }
 
-        _registerInterface(_INTERFACEID_ERC725Y);
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
     }
 }
