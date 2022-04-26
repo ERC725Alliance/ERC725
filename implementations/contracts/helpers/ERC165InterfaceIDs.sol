@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import "../interfaces/IERC725X.sol";
+import "../interfaces/IERC725Y.sol";
+
 // constants
 import "../constants.sol";
 
