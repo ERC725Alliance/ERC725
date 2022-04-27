@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "../interfaces/IERC725Y.sol";
+import {IERC725Y} from "../interfaces/IERC725Y.sol";
 
 /**
  * @dev Contract used for testing

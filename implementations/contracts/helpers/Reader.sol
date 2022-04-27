@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "../ERC725Y.sol";
+import {ERC725Y} from "../ERC725Y.sol";
 
 contract Reader {
-
     ERC725Y erc725y;
 
     constructor(ERC725Y _erc725y) {

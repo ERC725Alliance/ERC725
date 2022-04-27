@@ -2,11 +2,11 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import "../interfaces/IERC725X.sol";
-import "../interfaces/IERC725Y.sol";
+import {IERC725X} from "../interfaces/IERC725X.sol";
+import {IERC725Y} from "../interfaces/IERC725Y.sol";
 
 // constants
-import "../constants.sol";
+import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "../constants.sol";
 
 /**
  * @dev Contract used to calculate interfacesId
