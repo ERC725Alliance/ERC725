@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// constants
-import "./constants.sol";
-
 // interfaces
-import "./interfaces/IERC725Y.sol";
-
-// modules
-import "./utils/OwnableUnset.sol";
+import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // libraries
-import "./utils/GasLib.sol";
+import {GasLib} from "./utils/GasLib.sol";
+
+// modules
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
 
 /**
  * @title Core implementation of ERC725 Y General key/value store

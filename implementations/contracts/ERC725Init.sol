@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "./ERC725InitAbstract.sol";
+import {ERC725InitAbstract} from "./ERC725InitAbstract.sol";
 
 /**
  * @title Deployable Proxy Implementation of ERC725 bundle

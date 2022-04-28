@@ -2,8 +2,12 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "./ERC725XCore.sol";
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {ERC725XCore} from "./ERC725XCore.sol";
+
+// constants
+import {_INTERFACEID_ERC725X} from "./constants.sol";
 
 /**
  * @title ERC725 X executor

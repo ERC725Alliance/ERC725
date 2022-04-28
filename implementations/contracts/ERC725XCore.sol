@@ -1,19 +1,27 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// constants
-import "./constants.sol";
-
 // interfaces
-import "./interfaces/IERC725X.sol";
+import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
-import "@openzeppelin/contracts/utils/Create2.sol";
-import "solidity-bytes-utils/contracts/BytesLib.sol";
-import "./utils/ErrorHandlerLib.sol";
+import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
+import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
+import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
-import "./utils/OwnableUnset.sol";
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
+
+// constants
+// constants
+// prettier-ignore
+import {
+    OPERATION_CALL, 
+    OPERATION_DELEGATECALL, 
+    OPERATION_STATICCALL, 
+    OPERATION_CREATE, 
+    OPERATION_CREATE2
+} from "./constants.sol";
 
 /**
  * @title Core implementation of ERC725 X executor

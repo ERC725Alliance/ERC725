@@ -2,8 +2,11 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "./ERC725XInitAbstract.sol";
-import "./ERC725YInitAbstract.sol";
+import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
+import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
+
+// constants
+import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 
 /**
  * @title Inheritable Proxy Implementation of ERC725 bundle

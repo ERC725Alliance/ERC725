@@ -2,9 +2,13 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "./ERC725YCore.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {ERC725YCore} from "./ERC725YCore.sol";
+
+// constants
+import {_INTERFACEID_ERC725Y} from "./constants.sol";
 
 /**
  * @title Inheritable Proxy Implementation of ERC725 Y General key/value store
