@@ -34,24 +34,27 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        uint256 txGas = gasleft();
+        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
-        // prettier-ignore
+        uint256 txGas = gasleft();
 
         // CALL
         if (_operation == OPERATION_CALL) {
+
             result = executeCall(_to, _value, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
+            
             result = executeStaticCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
             
@@ -166,6 +169,7 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
         internal
         returns (address newContract)
     {
+        require(deploymentData.length != 0, "no contract bytecode provided");
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }
