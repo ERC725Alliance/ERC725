@@ -69,7 +69,7 @@ abstract contract OwnableUnset is Context {
         _setOwner(newOwner);
     }
 
-    function _setOwner(address newOwner) private {
+    function _setOwner(address newOwner) internal virtual {
         address oldOwner = _owner;
         _owner = newOwner;
         emit OwnershipTransferred(oldOwner, newOwner);
