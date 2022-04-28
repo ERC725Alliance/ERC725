@@ -13,7 +13,15 @@ import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 
 // constants
-import {OPERATION_CALL, OPERATION_DELEGATECALL, OPERATION_STATICCALL, OPERATION_CREATE, OPERATION_CREATE2} from "./constants.sol";
+// constants
+// prettier-ignore
+import {
+    OPERATION_CALL, 
+    OPERATION_DELEGATECALL, 
+    OPERATION_STATICCALL, 
+    OPERATION_CREATE, 
+    OPERATION_CREATE2
+} from "./constants.sol";
 
 /**
  * @title Core implementation of ERC725 X executor
