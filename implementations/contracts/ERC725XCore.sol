@@ -13,7 +13,6 @@ import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 
 // constants
-// constants
 // prettier-ignore
 import {
     OPERATION_CALL, 
@@ -51,14 +50,14 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
 
             result = executeCall(_to, _value, _data, txGas);
 
-            emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
             
             result = executeStaticCall(_to, _data, txGas);
 
-            emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
@@ -66,7 +65,7 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
             
-            emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
