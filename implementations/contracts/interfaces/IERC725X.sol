@@ -25,13 +25,13 @@ interface IERC725X {
      * @param operation The operation used to execute a contract
      * @param to The address where the call is executed
      * @param value The value sent to the created contract address
-     * @param data The data sent with the call
+     * @param selector The first 4 bytes (= function selector) of the data sent with the call
      */
     event Executed(
         uint256 indexed operation,
         address indexed to,
         uint256 indexed value,
-        bytes data
+        bytes4 selector
     );
 
     /**
