@@ -1,18 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// constants
-import "./constants.sol";
-
 // interfaces
-import "./interfaces/IERC725Y.sol";
-
-// modules
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
-import "./utils/OwnableUnset.sol";
+import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // libraries
-import "./utils/GasLib.sol";
+import {GasLib} from "./utils/GasLib.sol";
+
+// modules
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
 
 /**
  * @title Core implementation of ERC725 Y General key/value store
@@ -21,7 +17,7 @@ import "./utils/GasLib.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YCore is OwnableUnset, ERC165Storage, IERC725Y {
+abstract contract ERC725YCore is IERC725Y, OwnableUnset {
     /**
      * @dev Map the keys to their values
      */

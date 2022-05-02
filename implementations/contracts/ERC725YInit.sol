@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "./ERC725YInitAbstract.sol";
+import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
 /**
  * @title Deployable Proxy Implementation of ERC725 Y General key/value store

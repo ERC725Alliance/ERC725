@@ -2,7 +2,12 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "./ERC725XCore.sol";
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {ERC725XCore} from "./ERC725XCore.sol";
+
+// constants
+import {_INTERFACEID_ERC725X} from "./constants.sol";
 
 /**
  * @title ERC725 X executor
@@ -11,7 +16,7 @@ import "./ERC725XCore.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-contract ERC725X is ERC725XCore {
+contract ERC725X is ERC165, ERC725XCore {
     /**
      * @notice Sets the owner of the contract and register ERC725X interfaceId
      * @param _newOwner the owner of the contract
@@ -21,6 +26,14 @@ contract ERC725X is ERC725XCore {
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
-        _registerInterface(_INTERFACEID_ERC725X);
+    }
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 }

@@ -1,20 +1,27 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-// constants
-import "./constants.sol";
-
 // interfaces
-import "./interfaces/IERC725X.sol";
+import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
-import "@openzeppelin/contracts/utils/Create2.sol";
-import "solidity-bytes-utils/contracts/BytesLib.sol";
-import "./utils/ErrorHandlerLib.sol";
+import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
+import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
+import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
-import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
-import "./utils/OwnableUnset.sol";
+import {OwnableUnset} from "./utils/OwnableUnset.sol";
+
+// constants
+// constants
+// prettier-ignore
+import {
+    OPERATION_CALL, 
+    OPERATION_DELEGATECALL, 
+    OPERATION_STATICCALL, 
+    OPERATION_CREATE, 
+    OPERATION_CREATE2
+} from "./constants.sol";
 
 /**
  * @title Core implementation of ERC725 X executor
@@ -23,7 +30,7 @@ import "./utils/OwnableUnset.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
+abstract contract ERC725XCore is IERC725X, OwnableUnset {
     /* Public functions */
 
     /**
@@ -35,24 +42,27 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        uint256 txGas = gasleft();
+        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
-        // prettier-ignore
+        uint256 txGas = gasleft();
 
         // CALL
         if (_operation == OPERATION_CALL) {
+
             result = executeCall(_to, _value, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
+            
             result = executeStaticCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, _data);
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
             
@@ -167,6 +177,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165Storage, IERC725X {
         internal
         returns (address newContract)
     {
+        require(deploymentData.length != 0, "no contract bytecode provided");
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }

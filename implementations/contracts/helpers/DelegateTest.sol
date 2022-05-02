@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "../ERC725X.sol";
+import {ERC725X} from "../ERC725X.sol";
 
 /**
  * @dev Contract used for testing
