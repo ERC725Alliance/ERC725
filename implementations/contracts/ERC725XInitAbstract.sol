@@ -7,9 +7,6 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 
-// constants
-import {_INTERFACEID_ERC725X} from "./constants.sol";
-
 /**
  * @title Inheritable Proxy Implementation of ERC725 X Executor
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -23,14 +20,5 @@ abstract contract ERC725XInitAbstract is Initializable, ERC725XCore {
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
-    }
-
-    /* Overrides functions */
-
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 }

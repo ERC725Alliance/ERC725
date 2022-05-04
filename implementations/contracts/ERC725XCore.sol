@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
@@ -16,6 +17,7 @@ import {OwnableUnset} from "./utils/OwnableUnset.sol";
 // constants
 // prettier-ignore
 import {
+    _INTERFACEID_ERC725X,
     OPERATION_CALL, 
     OPERATION_DELEGATECALL, 
     OPERATION_STATICCALL, 
@@ -179,5 +181,20 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         require(newContract != address(0), "Could not deploy contract");
+    }
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(IERC165, ERC165)
+        returns (bool)
+    {
+        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 }

@@ -7,9 +7,6 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
-// constants
-import {_INTERFACEID_ERC725Y} from "./constants.sol";
-
 /**
  * @title ERC725 Y General key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -27,14 +24,5 @@ contract ERC725Y is ERC725YCore {
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
-    }
-
-    /* Overrides functions */
-
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
     }
 }
