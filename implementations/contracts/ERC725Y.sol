@@ -17,7 +17,7 @@ import {_INTERFACEID_ERC725Y} from "./constants.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-contract ERC725Y is ERC165, ERC725YCore {
+contract ERC725Y is ERC725YCore {
     /**
      * @notice Sets the owner of the contract and register ERC725Y interfaceId
      * @param _newOwner the owner of the contract

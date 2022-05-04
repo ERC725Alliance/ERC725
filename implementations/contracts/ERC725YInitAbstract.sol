@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 // modules
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
@@ -17,7 +16,7 @@ import {_INTERFACEID_ERC725Y} from "./constants.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YInitAbstract is Initializable, ERC165, ERC725YCore {
+abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {

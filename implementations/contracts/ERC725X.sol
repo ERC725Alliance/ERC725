@@ -16,7 +16,7 @@ import {_INTERFACEID_ERC725X} from "./constants.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-contract ERC725X is ERC165, ERC725XCore {
+contract ERC725X is ERC725XCore {
     /**
      * @notice Sets the owner of the contract and register ERC725X interfaceId
      * @param _newOwner the owner of the contract
