@@ -408,6 +408,18 @@ contract("ERC725X", (accounts) => {
         );
       });
 
+      it("should revert when trying to pass some `_value` in a STATICCALL", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.STATICCALL,
+            accounts[5],
+            web3.utils.toWei("3"),
+            "0xaabbccdd"
+          ),
+          "ERC725X: cannot transfer value with operation STATICCALL"
+        );
+      });
+
       context("DELEGATECALL", async () => {
         it("should allow making a DELEGATECALL with some bytes payload to an EOA", async () => {
           const toAddress = accounts[3];
@@ -499,6 +511,18 @@ contract("ERC725X", (accounts) => {
               }
             ),
             expectedError
+          );
+        });
+
+        it("should revert when trying to pass some `_value` in a delegatecall", async () => {
+          await expectRevert(
+            erc725X.execute(
+              OPERATION_TYPE.DELEGATECALL,
+              accounts[5],
+              web3.utils.toWei("3"),
+              "0xaabbccdd"
+            ),
+            "ERC725X: cannot transfer value with operation DELEGATECALL"
           );
         });
       });
