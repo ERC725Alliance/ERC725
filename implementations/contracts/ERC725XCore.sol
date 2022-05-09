@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 // interfaces
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
@@ -10,12 +11,13 @@ import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 
 // constants
-// constants
 // prettier-ignore
 import {
+    _INTERFACEID_ERC725X,
     OPERATION_CALL, 
     OPERATION_DELEGATECALL, 
     OPERATION_STATICCALL, 
@@ -30,7 +32,7 @@ import {
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XCore is IERC725X, OwnableUnset {
+abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /* Public functions */
 
     /**
@@ -42,43 +44,50 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
-
+        
         uint256 txGas = gasleft();
 
         // CALL
         if (_operation == OPERATION_CALL) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             result = executeCall(_to, _value, _data, txGas);
 
-            emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
-        // STATICCALL
+            // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            
+            require(_value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+
             result = executeStaticCall(_to, _data, txGas);
 
-            emit Executed(_operation, _to, _value, _data);
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
-        // DELEGATECALL
+            // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+
+            require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
-            
-            emit Executed(_operation, _to, _value, _data);
+
+            emit Executed(_operation, _to, _value, bytes4(_data));
 
             require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
 
-        // CREATE
+            // CREATE
         } else if (_operation == OPERATION_CREATE) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(_operation, contractAddress, _value);
 
-        // CREATE2
+            // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
 
@@ -86,7 +95,6 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
             result = abi.encodePacked(contractAddress);
 
             emit ContractCreated(_operation, contractAddress, _value);
-    
         } else {
             revert("Wrong operation type");
         }
@@ -183,5 +191,20 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
         }
 
         require(newContract != address(0), "Could not deploy contract");
+    }
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(IERC165, ERC165)
+        returns (bool)
+    {
+        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 }
