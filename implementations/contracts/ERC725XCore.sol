@@ -54,13 +54,15 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
 
         // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
-            
+            require(_value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+
             result = executeStaticCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
         // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+            require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
