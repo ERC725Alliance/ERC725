@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 // modules
 import {ERC725X} from "./ERC725X.sol";
 import {ERC725Y} from "./ERC725Y.sol";
+import {ERC725XCore} from "./ERC725XCore.sol";
+import {ERC725YCore} from "./ERC725YCore.sol";
 
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
@@ -32,7 +34,7 @@ contract ERC725 is ERC725X, ERC725Y {
         public
         view
         virtual
-        override(ERC725X, ERC725Y)
+        override(ERC725XCore, ERC725YCore)
         returns (bool)
     {
         return

@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.0;
 
+// interfaces
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+
 /**
  * @title The interface for ERC725Y General key/value store
  * @dev ERC725Y provides the ability to set arbitrary key value sets that can be changed over time
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-interface IERC725Y {
+interface IERC725Y is IERC165 {
     /**
      * @notice Emitted when data at a key is changed
      * @param key The key which value is set

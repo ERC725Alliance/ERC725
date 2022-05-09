@@ -7,9 +7,6 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 
-// constants
-import {_INTERFACEID_ERC725X} from "./constants.sol";
-
 /**
  * @title Inheritable Proxy Implementation of ERC725 X Executor
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -17,20 +14,11 @@ import {_INTERFACEID_ERC725X} from "./constants.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XInitAbstract is Initializable, ERC165, ERC725XCore {
+abstract contract ERC725XInitAbstract is Initializable, ERC725XCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
         // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
         if (_newOwner != owner()) {
             OwnableUnset.initOwner(_newOwner);
         }
-    }
-
-    /* Overrides functions */
-
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 }

@@ -2,13 +2,18 @@
 pragma solidity ^0.8.0;
 
 // interfaces
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // libraries
 import {GasLib} from "./utils/GasLib.sol";
 
 // modules
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./utils/OwnableUnset.sol";
+
+// constants
+import {_INTERFACEID_ERC725Y} from "./constants.sol";
 
 /**
  * @title Core implementation of ERC725 Y General key/value store
@@ -17,7 +22,7 @@ import {OwnableUnset} from "./utils/OwnableUnset.sol";
  * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
-abstract contract ERC725YCore is IERC725Y, OwnableUnset {
+abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @dev Map the keys to their values
      */
@@ -81,5 +86,20 @@ abstract contract ERC725YCore is IERC725Y, OwnableUnset {
     function _setData(bytes32 key, bytes memory value) internal virtual {
         store[key] = value;
         emit DataChanged(key, value);
+    }
+
+    /* Overrides functions */
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(IERC165, ERC165)
+        returns (bool)
+    {
+        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
     }
 }
