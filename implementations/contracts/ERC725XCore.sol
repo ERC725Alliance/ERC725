@@ -44,24 +44,30 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
-
+        
         uint256 txGas = gasleft();
 
         // CALL
         if (_operation == OPERATION_CALL) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             result = executeCall(_to, _value, _data, txGas);
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
             // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
+            require(_value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+
             result = executeStaticCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
             // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
+
+            require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
+
             address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
 
@@ -71,6 +77,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
@@ -78,6 +86,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
 
