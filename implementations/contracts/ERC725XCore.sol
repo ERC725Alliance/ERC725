@@ -41,12 +41,12 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
-
+        
         uint256 txGas = gasleft();
 
         // CALL
         if (_operation == OPERATION_CALL) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             result = executeCall(_to, _value, _data, txGas);
 
@@ -73,6 +73,8 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
 
         // CREATE
         } else if (_operation == OPERATION_CREATE) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             address contractAddress = performCreate(_value, _data);
             result = abi.encodePacked(contractAddress);
 
@@ -80,6 +82,8 @@ abstract contract ERC725XCore is IERC725X, OwnableUnset {
 
         // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
             bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
 
