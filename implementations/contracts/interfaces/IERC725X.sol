@@ -15,7 +15,7 @@ interface IERC725X is IERC165 {
      * @notice Emitted when a contract is created
      * @param operation The operation used to create a contract
      * @param contractAddress The created contract address
-     * @param value The value sent to the created contract address
+     * @param value The amount of native tokens (in Wei) sent to the created contract address
      */
     event ContractCreated(
         uint256 indexed operation,
@@ -27,7 +27,7 @@ interface IERC725X is IERC165 {
      * @notice Emitted when a contract executed.
      * @param operation The operation used to execute a contract
      * @param to The address where the call is executed
-     * @param value The value sent to the created contract address
+     * @param value The amount of native tokens transferred with the call (in Wei).
      * @param selector The first 4 bytes (= function selector) of the data sent with the call
      */
     event Executed(
@@ -40,8 +40,8 @@ interface IERC725X is IERC165 {
     /**
      * @param operationType The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4
      * @param to The smart contract or address to interact with, `to` will be unused if a contract is created (operation 1 and 2)
-     * @param value The value to transfer
-     * @param data The call data, or the contract data to deploy
+     * @param value The amount of native tokens to transfer (in Wei).
+     * @param data The call data, or the bytecode of the contract to deploy
      * @dev Executes any other smart contract.
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
