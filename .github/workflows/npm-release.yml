@@ -7,7 +7,8 @@ on:
       - "main"
 
 jobs:
-  npm-release:
+  release:
+    name: 📦 Create GitHub release and publish to NPM
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -15,22 +16,57 @@ jobs:
 
     steps:
       # step 1: checkout to the correct branch (which one?)
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       # step 2: setup Node.js to version 16
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
+
+      # all these steps should only happen if
+      # the version in package.json has increased
+      # and we are pushing to main
+      - name: 🔍 Check if version in package.json has changed
+        uses: EndBug/version-check@v1
+        if: github.event_name == 'push'
+        id: PACKAGE_VERSION_INCREASED
+
+      - name: 📝 Set version
+        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        run: |
+          PACKAGE_VERSION="v$(node -pe "require('./package.json').version")"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       # step 3: install npm dependencies
+      - name: 🧰 Install dependencies
+        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        run: npm install -g truffle && npm ci
 
       # Step 4: compile + test the contracts.
       # Ensure there are no errors or tests failing :)
+      - name: 🛠 Build
+        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        run: npx truffle compile --all
 
-      # all these other steps should only happen if
-      # the version in package.json has increased
-      # and we are pushing to main
+      - name: 🧪 Test
+        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        run: npm test
 
       # step 5: create a new release on Github
-      #   5.1) setup git config
-      #   5.2) grab the version from package.json
       #   5.3) create + push a git tag
+      - name: 🏷 Create and push Git Tag
+        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        run: |
+          git config --global user.email "release@lukso.network" # 
+          git config --global user.name "LUKSO bot"
+          git tag -a ${{ env.PACKAGE_VERSION }} Head~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
+          git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
 
       # step 6: publish on NPM
       # run the npm release script. This will:
