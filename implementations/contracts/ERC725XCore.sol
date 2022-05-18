@@ -12,7 +12,7 @@ import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
 // prettier-ignore
@@ -44,7 +44,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        
         uint256 txGas = gasleft();
 
         // CALL
@@ -65,7 +64,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
-
             require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
             address currentOwner = owner();
