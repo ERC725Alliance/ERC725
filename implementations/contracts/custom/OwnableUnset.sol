@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import "@openzeppelin/contracts/utils/Context.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
 /**
  * @dev Modified version of ERC173 with no constructor, instead should call `initOwner` function
