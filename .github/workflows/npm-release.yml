@@ -1,0 +1,40 @@
+# This workflow create a new git tag and release a new version of the smart contracts on npm
+name: NPM Release
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  npm-release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: implementations
+
+    steps:
+      # step 1: checkout to the correct branch (which one?)
+
+      # step 2: setup Node.js to version 16
+
+      # step 3: install npm dependencies
+
+      # Step 4: compile + test the contracts.
+      # Ensure there are no errors or tests failing :)
+
+      # all these other steps should only happen if
+      # the version in package.json has increased
+      # and we are pushing to main
+
+      # step 5: create a new release on Github
+      #   5.1) setup git config
+      #   5.2) grab the version from package.json
+      #   5.3) create + push a git tag
+
+      # step 6: publish on NPM
+      # run the npm release script. This will:
+      #   1) compile all the contracts (to be removed)
+      #   2) test all the contracts (to be removed)
+      #   3) minify the npm package with our custom node.js minifier script
+      #   4) run npm publish
