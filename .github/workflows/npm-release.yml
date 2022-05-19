@@ -3,9 +3,6 @@ name: NPM Release
 
 on:
   # TEST
-  pull_request:
-    branches:
-      - "develop"
   push:
     branches:
       - "ci/npm-release"
@@ -42,7 +39,7 @@ jobs:
       #   - we are pushing to main
       - name: 🔍 Check if version in package.json has changed
         uses: EndBug/version-check@v1
-        if: github.event_name == 'push'
+        # if: github.event_name == 'push'
         id: PACKAGE_VERSION_INCREASED
         with:
           file-name: implementations/package.json
