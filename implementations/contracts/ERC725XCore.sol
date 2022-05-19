@@ -77,6 +77,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {
+
+            require(to == address(0), "ERC725X: CREATE operations require the receiver address to be empty");
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             address contractAddress = performCreate(_value, _data);
@@ -86,6 +88,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            
+            require(to == address(0), "ERC725X: CREATE operations require the receiver address to be empty");
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
