@@ -3,6 +3,9 @@ name: NPM Release
 
 on:
   # TEST
+  pull_request:
+    branches:
+      - "develop"
   push:
     branches:
       - "ci/npm-release"
@@ -64,20 +67,18 @@ jobs:
         run: npm test
 
       # step 5: create a new release on Github
-
-      #   5.1) create + push a git tag
+      # 5.1) create + push a git tag
       - name: 🏷 Create and push Git Tag
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        # TESTING
         run: |
-          git config --global user.email "release@lukso.network" # 
+          git config --global user.email "release@lukso.network" #
           git config --global user.name "LUKSO bot"
           git tag -a ${{ env.PACKAGE_VERSION }} Head~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
-          
-        # TESTING
           git tag --list
-          
-        # COMMENTED FOR TESTING
-        # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
+
+      # COMMENTED FOR TESTING
+      # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
 
       #   5.2) extract release note information
       - name: 📝 Extract release notes from CHANGELOG
@@ -95,7 +96,7 @@ jobs:
         run: |
           echo ${PR_BODY}|cat - implementations/RELEASENOTES.md > /tmp/out && mv /tmp/out implementations/RELEASENOTES.md
 
-       # TEST
+      # TEST
       - name: Test Release Note
         run: cat implementations/RELEASENOTES.md
 
