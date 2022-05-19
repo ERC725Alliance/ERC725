@@ -3,9 +3,9 @@ name: NPM Release
 
 on:
   # TEST
-  pull_request:
+  push:
     branches:
-      - "develop"
+      - "ci/npm-release"
   # UNCOMMENT THIS WHEN READY
   # push:
   #   branches:
