@@ -43,8 +43,9 @@ jobs:
       - name: 🔍 Check if version in package.json has changed
         uses: EndBug/version-check@v1
         if: github.event_name == 'push'
-        file-name: implementations/package.json
         id: PACKAGE_VERSION_INCREASED
+        with:
+          file-name: implementations/package.json
 
       - name: 📝 Set version
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
