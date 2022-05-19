@@ -40,6 +40,7 @@ jobs:
       - name: 🔍 Check if version in package.json has changed
         uses: EndBug/version-check@v1
         if: github.event_name == 'push'
+        file-name: implementations/package.json
         id: PACKAGE_VERSION_INCREASED
 
       - name: 📝 Set version
@@ -84,18 +85,19 @@ jobs:
         id: extract-release-notes
         uses: ffurrer2/extract-release-notes@v1
         with:
-          release_notes_file: RELEASENOTES.md
+          changelog_file: implementations/CHANGELOG.md
+          release_notes_file: implementations/RELEASENOTES.md
 
       - name: Add PR body to Release Notes
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
         env:
           PR_BODY: ${{ steps.findPR.outputs.body }}
         run: |
-          echo ${PR_BODY}|cat - RELEASENOTES.md > /tmp/out && mv /tmp/out RELEASENOTES.md
+          echo ${PR_BODY}|cat - implementations/RELEASENOTES.md > /tmp/out && mv /tmp/out implementations/RELEASENOTES.md
 
        # TEST
       - name: Test Release Note
-        run: cat RELEASENOTES.md
+        run: cat implementations/RELEASENOTES.md
 
       # COMMENTED FOR TESTING
       #   5.3) create the new release
@@ -103,7 +105,7 @@ jobs:
       #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
       #   uses: ncipollo/release-action@v1
       #   with:
-      #     bodyFile: "RELEASENOTES.md"
+      #     bodyFile: "implementations/RELEASENOTES.md"
       #     token: ${{ secrets.GITHUB_TOKEN }}
       #     tag: ${{ env.PACKAGE_VERSION }}
 
