@@ -42,7 +42,7 @@ jobs:
         # if: github.event_name == 'push'
         id: PACKAGE_VERSION_INCREASED
         with:
-          file-name: implementations/package.json
+          file-name: ./implementations/package.json
 
       - name: 📝 Set version
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
