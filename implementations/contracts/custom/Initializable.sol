@@ -59,12 +59,12 @@ abstract contract Initializable {
      * @dev Indicates that the contract has been initialized.
      * @custom:oz-retyped-from bool
      */
-    uint8 public initialized;
+    uint8 private _initialized;
 
     /**
      * @dev Indicates that the contract is in the process of being initialized.
      */
-    bool public initializing;
+    bool private _initializing;
 
     /**
      * @dev Triggered when the contract has been initialized or reinitialized.
@@ -78,11 +78,11 @@ abstract contract Initializable {
     modifier initializer() {
         bool isTopLevelCall = _setInitializedVersion(1);
         if (isTopLevelCall) {
-            initializing = true;
+            _initializing = true;
         }
         _;
         if (isTopLevelCall) {
-            initializing = false;
+            _initializing = false;
             emit Initialized(1);
         }
     }
@@ -102,11 +102,11 @@ abstract contract Initializable {
     modifier reinitializer(uint8 version) {
         bool isTopLevelCall = _setInitializedVersion(version);
         if (isTopLevelCall) {
-            initializing = true;
+            _initializing = true;
         }
         _;
         if (isTopLevelCall) {
-            initializing = false;
+            _initializing = false;
             emit Initialized(version);
         }
     }
@@ -116,8 +116,22 @@ abstract contract Initializable {
      * {initializer} and {reinitializer} modifiers, directly or indirectly.
      */
     modifier onlyInitializing() {
-        require(initializing, "Initializable: contract is not initializing");
+        require(_initializing, "Initializable: contract is not initializing");
         _;
+    }
+
+    /**
+     * @dev Returns that the contract has been initialized.
+     */
+    function initialized() public view virtual returns (uint8) {
+        return _initialized;
+    }
+
+    /**
+     * @dev Returns that the contract is in the process of being initialized.
+     */
+    function initializing() public view virtual returns (bool) {
+        return _initializing;
     }
 
     /**
@@ -131,18 +145,18 @@ abstract contract Initializable {
     }
 
     function _setInitializedVersion(uint8 version) private returns (bool) {
-        // If the contract is initializing we ignore whether initialized is set in order to support multiple
+        // If the contract is initializing we ignore whether _initialized is set in order to support multiple
         // inheritance patterns, but we only do this in the context of a constructor, and for the lowest level
         // of initializers, because in other contexts the contract may have been reentered.
-        if (initializing) {
+        if (_initializing) {
             require(
                 version == 1 && !Address.isContract(address(this)),
                 "Initializable: contract is already initialized"
             );
             return false;
         } else {
-            require(initialized < version, "Initializable: contract is already initialized");
-            initialized = version;
+            require(_initialized < version, "Initializable: contract is already initialized");
+            _initialized = version;
             return true;
         }
     }
