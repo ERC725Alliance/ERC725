@@ -44,7 +44,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        
         uint256 txGas = gasleft();
 
         // CALL
@@ -65,7 +64,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // DELEGATECALL
         } else if (_operation == OPERATION_DELEGATECALL) {
-
             require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
             address currentOwner = owner();
@@ -77,6 +75,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE
         } else if (_operation == OPERATION_CREATE) {
+            require(
+                _to == address(0),
+                "ERC725X: CREATE operations require the receiver address to be empty"
+            );
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             address contractAddress = performCreate(_value, _data);
@@ -86,6 +88,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            require(
+                _to == address(0),
+                "ERC725X: CREATE operations require the receiver address to be empty"
+            );
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
