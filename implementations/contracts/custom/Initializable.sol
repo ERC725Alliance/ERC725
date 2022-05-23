@@ -3,6 +3,9 @@
 
 pragma solidity ^0.8.2;
 
+// This contract is a modified version of OpenZeppelin implementation, where we add two getter functions
+// for `_initialized` and `_initializing` to know the initialize state of the contract.
+
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 /**
