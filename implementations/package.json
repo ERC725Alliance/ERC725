@@ -32,7 +32,7 @@
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.1",
+    "@openzeppelin/contracts": "^4.6.0",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
