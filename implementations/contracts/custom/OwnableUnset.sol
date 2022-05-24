@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // This contract is a modified version of OpenZeppelin implementation, where we modify the visibility of
-// `_setOwner` function to internal and use `_setOwner` function instead of constructor.
+// which changes `_setOwner()` to internal and to be used in contract implementations, instead of setting the owner in the constructor.
 
 // modules
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
