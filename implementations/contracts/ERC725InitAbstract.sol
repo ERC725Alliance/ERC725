@@ -18,9 +18,7 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  */
 abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
     function _initialize(address _newOwner) internal virtual onlyInitializing {
-        if (_newOwner != owner()) {
-            OwnableUnset.initOwner(_newOwner);
-        }
+        OwnableUnset._setOwner(_newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}

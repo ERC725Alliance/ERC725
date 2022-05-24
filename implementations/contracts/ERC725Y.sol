@@ -19,9 +19,6 @@ contract ERC725Y is ERC725YCore {
      * @param _newOwner the owner of the contract
      */
     constructor(address _newOwner) {
-        // This is necessary to prevent a contract that implements both ERC725X and ERC725Y to call both constructors
-        if (_newOwner != owner()) {
-            OwnableUnset.initOwner(_newOwner);
-        }
+        OwnableUnset._setOwner(_newOwner);
     }
 }
