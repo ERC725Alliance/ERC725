@@ -21,9 +21,7 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      */
     // solhint-disable no-empty-blocks
     constructor(address _newOwner) {
-        if (_newOwner != owner()) {
-            OwnableUnset.initOwner(_newOwner);
-        }
+        OwnableUnset._setOwner(_newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
