@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// This contract is a modified version of OpenZeppelin implementation, where we modify the visibility of
+// `_setOwner` function to internal and use `_setOwner` function instead of constructor.
+
 // modules
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
