@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
@@ -43,6 +44,6 @@ contract ERC725 is ERC725XCore, ERC725YCore {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||
-            super.supportsInterface(interfaceId);
+            ERC165.supportsInterface(interfaceId);
     }
 }
