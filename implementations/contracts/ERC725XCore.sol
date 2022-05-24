@@ -103,13 +103,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /* Internal functions */
 
     /**
-     * @dev perform staticcall using operation 3
+     * @dev perform call using operation 0
      * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
      *
-     * @param to The address on which staticcall is executed
+     * @param to The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing staticcall
+     * @param txGas The amount of gas for performing call
      * @return The data from the call
      */
     function executeCall(
