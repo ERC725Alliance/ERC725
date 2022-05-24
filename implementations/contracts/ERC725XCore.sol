@@ -211,6 +211,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         override(IERC165, ERC165)
         returns (bool)
     {
-        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
+        return interfaceId == _INTERFACEID_ERC725X || ERC165.supportsInterface(interfaceId);
     }
 }
