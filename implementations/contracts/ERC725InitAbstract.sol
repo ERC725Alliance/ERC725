@@ -38,6 +38,6 @@ abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore 
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||
-            ERC165.supportsInterface(interfaceId);
+            super.supportsInterface(interfaceId);
     }
 }
