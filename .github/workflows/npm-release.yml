@@ -94,11 +94,11 @@ jobs:
         env:
           PR_BODY: ${{ steps.findPR.outputs.body }}
         run: |
-          echo ${PR_BODY}|cat - implementations/RELEASENOTES.md > /tmp/out && mv /tmp/out implementations/RELEASENOTES.md
+          echo ${PR_BODY} | cat - RELEASENOTES.md > /tmp/out && mv /tmp/out RELEASENOTES.md
 
       # TEST
       - name: Test Release Note
-        run: cat implementations/RELEASENOTES.md
+        run: cat RELEASENOTES.md
 
       # UNCOMMENT FOR PRODUCTION
       #   5.3) create the new release
