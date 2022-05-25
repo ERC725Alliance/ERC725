@@ -21,11 +21,11 @@ jobs:
         working-directory: implementations
 
     steps:
-      - name: Ensure main branch
-        if: github.ref != 'refs/heads/main'
-        run: |-
-          echo "Not running on main - exit"
-          exit 1
+      # - name: Ensure main branch
+      #   if: github.ref != 'refs/heads/main'
+      #   run: |-
+      #     echo "Not running on main - exit"
+      #     exit 1
 
       # step 1: checkout to the correct branch
       - uses: actions/checkout@v2
