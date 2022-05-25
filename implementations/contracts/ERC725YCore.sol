@@ -10,7 +10,7 @@ import {GasLib} from "./utils/GasLib.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
 import {_INTERFACEID_ERC725Y} from "./constants.sol";

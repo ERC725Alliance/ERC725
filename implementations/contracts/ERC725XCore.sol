@@ -12,7 +12,7 @@ import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./utils/OwnableUnset.sol";
+import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
 // prettier-ignore
@@ -44,7 +44,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 _value,
         bytes calldata _data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
-        
         uint256 txGas = gasleft();
 
         // CALL
@@ -55,7 +54,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
-            // STATICCALL
+        // STATICCALL
         } else if (_operation == OPERATION_STATICCALL) {
             require(_value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
 
@@ -63,20 +62,33 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
-            // DELEGATECALL
+        // DELEGATECALL
+        // WARNING!
+        // delegatecall is a dangerous operation type!
+        //
+        // delegate allows to call another deployed contract and use its functions
+        // to update the state of the current calling contract
+        // 
+        // this can lead to unexpected behaviour on the contract storage, such as:
+        //
+        // - updating any state variables (even if these are protected)
+        // - update the contract owner
+        // - run selfdestruct in the context of this contract 
+        //
+        // use with EXTRA CAUTION
         } else if (_operation == OPERATION_DELEGATECALL) {
-
             require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
-            address currentOwner = owner();
             result = executeDelegateCall(_to, _data, txGas);
 
             emit Executed(_operation, _to, _value, bytes4(_data));
 
-            require(owner() == currentOwner, "Delegate call is not allowed to modify the owner!");
-
-            // CREATE
+        // CREATE
         } else if (_operation == OPERATION_CREATE) {
+            require(
+                _to == address(0),
+                "ERC725X: CREATE operations require the receiver address to be empty"
+            );
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             address contractAddress = performCreate(_value, _data);
@@ -84,8 +96,12 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             emit ContractCreated(_operation, contractAddress, _value);
 
-            // CREATE2
+        // CREATE2
         } else if (_operation == OPERATION_CREATE2) {
+            require(
+                _to == address(0),
+                "ERC725X: CREATE operations require the receiver address to be empty"
+            );
             require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
 
             bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
@@ -103,13 +119,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /* Internal functions */
 
     /**
-     * @dev perform staticcall using operation 3
+     * @dev perform call using operation 0
      * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
      *
-     * @param to The address on which staticcall is executed
+     * @param to The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing staticcall
+     * @param txGas The amount of gas for performing call
      * @return The data from the call
      */
     function executeCall(

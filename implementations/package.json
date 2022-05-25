@@ -1,6 +1,6 @@
 {
   "name": "@erc725/smart-contracts",
-  "version": "3.1.0",
+  "version": "3.0.3",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -25,6 +25,7 @@
   "scripts": {
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "truffle test",
+    "test:coverage": "truffle run coverage",
     "solc": "sh solc.sh",
     "release": "truffle compile --all; npm run test; npm run package; npm publish",
     "package": "node reduce-artifacts.js"
@@ -32,12 +33,13 @@
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.1",
+    "@openzeppelin/contracts": "^4.6.0",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
     "@truffle/config": "^1.3.12",
     "chai": "^4.2.0",
+    "coveralls": "^3.1.1",
     "eth-create2-calculator": "^1.1.5",
     "eth-gas-reporter": "^0.2.19",
     "openzeppelin-test-helpers": "^0.4.2",
@@ -46,6 +48,7 @@
     "solc": "^0.4.26",
     "solhint": "^3.3.6",
     "standard-version": "^9.5.0",
+    "solidity-coverage": "^0.7.20",
     "truffle": "^5.2.5"
   },
   "prettier": {
