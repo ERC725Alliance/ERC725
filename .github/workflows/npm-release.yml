@@ -42,6 +42,7 @@ jobs:
         # if: github.event_name == 'push'
         id: PACKAGE_VERSION_INCREASED
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           file-name: ./implementations/package.json
 
       - name: 📝 Set version
