@@ -41,9 +41,9 @@ jobs:
         uses: EndBug/version-check@v1
         # if: github.event_name == 'push'
         id: PACKAGE_VERSION_INCREASED
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          file-name: ./implementations/package.json
+        # with:
+        # token: ${{ secrets.GITHUB_TOKEN }}
+        # file-name: ./implementations/package.json
 
       - name: 📝 Set version
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
