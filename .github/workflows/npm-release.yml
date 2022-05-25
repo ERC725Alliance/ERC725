@@ -46,59 +46,63 @@ jobs:
           diff-search: true
           file-name: ./implementations/package.json
 
-      - name: 📝 Set version
+      - name: Test if version increased
         if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        run: |
-          PACKAGE_VERSION="v$(node -pe "require('./package.json').version")"
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+        run: echo "version has increased :)"
 
-      # step 3: install npm dependencies
-      - name: 🧰 Install dependencies
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        run: npm install -g truffle && npm ci
+      # - name: 📝 Set version
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   run: |
+      #     PACKAGE_VERSION="v$(node -pe "require('./package.json').version")"
+      #     echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
-      # Step 4: compile + test the contracts.
-      - name: 🛠 Build
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        run: truffle compile --all
+      # # step 3: install npm dependencies
+      # - name: 🧰 Install dependencies
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   run: npm install -g truffle && npm ci
 
-      - name: 🧪 Test
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        run: npm test
+      # # Step 4: compile + test the contracts.
+      # - name: 🛠 Build
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   run: truffle compile --all
 
-      # step 5: create a new release on Github
-      # 5.1) create + push a git tag
-      - name: 🏷 Create and push Git Tag
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        # TESTING
-        run: |
-          git config --global user.email "release@lukso.network" #
-          git config --global user.name "LUKSO bot"
-          git tag -a ${{ env.PACKAGE_VERSION }} Head~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
-          git tag --list
+      # - name: 🧪 Test
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   run: npm test
 
-      # COMMENTED FOR TESTING
-      # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
+      # # step 5: create a new release on Github
+      # # 5.1) create + push a git tag
+      # - name: 🏷 Create and push Git Tag
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   # TESTING
+      #   run: |
+      #     git config --global user.email "release@lukso.network" #
+      #     git config --global user.name "LUKSO bot"
+      #     git tag -a ${{ env.PACKAGE_VERSION }} Head~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
+      #     git tag --list
 
-      #   5.2) extract release note information
-      - name: 📝 Extract release notes from CHANGELOG
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        id: extract-release-notes
-        uses: ffurrer2/extract-release-notes@v1
-        with:
-          changelog_file: implementations/CHANGELOG.md
-          release_notes_file: implementations/RELEASENOTES.md
+      # # COMMENTED FOR TESTING
+      # # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
 
-      - name: Add PR body to Release Notes
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        env:
-          PR_BODY: ${{ steps.findPR.outputs.body }}
-        run: |
-          echo ${PR_BODY}|cat - implementations/RELEASENOTES.md > /tmp/out && mv /tmp/out implementations/RELEASENOTES.md
+      # #   5.2) extract release note information
+      # - name: 📝 Extract release notes from CHANGELOG
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   id: extract-release-notes
+      #   uses: ffurrer2/extract-release-notes@v1
+      #   with:
+      #     changelog_file: implementations/CHANGELOG.md
+      #     release_notes_file: implementations/RELEASENOTES.md
 
-      # TEST
-      - name: Test Release Note
-        run: cat implementations/RELEASENOTES.md
+      # - name: Add PR body to Release Notes
+      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   env:
+      #     PR_BODY: ${{ steps.findPR.outputs.body }}
+      #   run: |
+      #     echo ${PR_BODY}|cat - implementations/RELEASENOTES.md > /tmp/out && mv /tmp/out implementations/RELEASENOTES.md
+
+      # # TEST
+      # - name: Test Release Note
+      #   run: cat implementations/RELEASENOTES.md
 
       # COMMENTED FOR TESTING
       #   5.3) create the new release
