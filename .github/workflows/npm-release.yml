@@ -3,6 +3,7 @@ name: NPM Release
 
 on:
   # TEST
+  workflow_dispatch:
   push:
     branches:
       - "ci/npm-release"
@@ -20,7 +21,13 @@ jobs:
         working-directory: implementations
 
     steps:
-      # step 1: checkout to the correct branch (which one?)
+      - name: Ensure main branch
+        if: github.ref != 'refs/heads/main'
+        run: |-
+          echo "Not running on main - exit"
+          exit 1
+
+      # step 1: checkout to the correct branch
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -39,50 +46,48 @@ jobs:
       #   - we are pushing to main
       - name: 🔍 Check if version in package.json has changed
         uses: EndBug/version-check@v1
-        # if: github.event_name == 'push'
+        if: github.event_name == 'push'
         id: PACKAGE_VERSION_INCREASED
         with:
-          # token: ${{ secrets.GITHUB_TOKEN }}
           diff-search: true
           file-name: ./implementations/package.json
 
+      - name: 🔄 Check if should release
+        run: echo "SHOULD_RELEASE=${{ steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' }}" >> $GITHUB_ENV
+
       - name: 📝 Set version
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         run: |
           PACKAGE_VERSION="v$(node -pe "require('./package.json').version")"
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       # step 3: install npm dependencies
       - name: 🧰 Install dependencies
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         run: npm install -g truffle && npm ci
 
       # Step 4: compile + test the contracts.
       - name: 🛠 Build
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         run: truffle compile --all
 
       - name: 🧪 Test
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         run: npm test
 
       # step 5: create a new release on Github
       # 5.1) create + push a git tag
       - name: 🏷 Create and push Git Tag
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
-        # TESTING
+        if: env.SHOULD_RELEASE == 'true'
         run: |
           git config --global user.email "release@lukso.network" #
           git config --global user.name "LUKSO bot"
           git tag -a ${{ env.PACKAGE_VERSION }} HEAD~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
-          git tag --list
+        # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
 
-      # UNCOMMENT FOR PRODUCTION
-      # # git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
-
-      #   5.2) extract release note information
+      # 5.2) extract release note information
       - name: 📝 Extract release notes from CHANGELOG
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         id: extract-release-notes
         uses: ffurrer2/extract-release-notes@v1
         with:
@@ -90,31 +95,24 @@ jobs:
           release_notes_file: implementations/RELEASENOTES.md
 
       - name: Add PR body to Release Notes
-        if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+        if: env.SHOULD_RELEASE == 'true'
         env:
           PR_BODY: ${{ steps.findPR.outputs.body }}
         run: |
           echo ${PR_BODY} | cat - RELEASENOTES.md > /tmp/out && mv /tmp/out RELEASENOTES.md
 
-      # TEST
-      - name: Test Release Note
-        run: cat RELEASENOTES.md
-
-      # UNCOMMENT FOR PRODUCTION
-      #   5.3) create the new release
+      # 5.3) create the new release
       # - name: 🚀 Create Github release
-      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   if: env.SHOULD_RELEASE == 'true'
       #   uses: ncipollo/release-action@v1
       #   with:
       #     bodyFile: "implementations/RELEASENOTES.md"
       #     token: ${{ secrets.GITHUB_TOKEN }}
       #     tag: ${{ env.PACKAGE_VERSION }}
 
-      # UNCOMMENT FOR PRODUCTION
-
-      # step 6: publish to NPM
+      # # step 6: publish to NPM
       # - name: 📦 Publish to NPM
-      #   if: steps.PACKAGE_VERSION_INCREASED.outputs.changed == 'true'
+      #   if: env.SHOULD_RELEASE == 'true'
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       #   # minify the npm package with custom node.js minifier script
