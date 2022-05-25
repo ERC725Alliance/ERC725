@@ -43,6 +43,7 @@ jobs:
         id: PACKAGE_VERSION_INCREASED
         with:
           # token: ${{ secrets.GITHUB_TOKEN }}
+          diff-search: true
           file-name: ./implementations/package.json
 
       - name: 📝 Set version
