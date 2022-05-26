@@ -77,7 +77,7 @@ jobs:
       - name: 🏷 Create and push Git Tag
         if: env.SHOULD_RELEASE == 'true'
         run: |
-          git config --global user.email "release@lukso.network" #
+          git config --global user.email "release@lukso.network"
           git config --global user.name "LUKSO bot"
           git tag -a ${{ env.PACKAGE_VERSION }} HEAD~ -m "Release Version ${{ env.PACKAGE_VERSION }} [CI]"
           git push --set-upstream origin tag ${{ env.PACKAGE_VERSION }}
@@ -107,7 +107,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.PACKAGE_VERSION }}
 
-      # # step 6: publish to NPM
+      # step 6: publish to NPM
       - name: 📦 Publish to NPM
         if: env.SHOULD_RELEASE == 'true'
         env:
