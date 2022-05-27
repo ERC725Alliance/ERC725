@@ -85,7 +85,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     function _setData(bytes32 key, bytes memory value) internal virtual {
         store[key] = value;
-        emit DataChanged(key, value);
+        emit DataChanged(key);
     }
 
     /* Overrides functions */
