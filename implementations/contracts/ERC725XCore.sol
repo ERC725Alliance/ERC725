@@ -202,6 +202,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         returns (address newContract)
     {
         require(deploymentData.length != 0, "no contract bytecode provided");
+
+        // solhint-disable no-inline-assembly
         assembly {
             newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
         }

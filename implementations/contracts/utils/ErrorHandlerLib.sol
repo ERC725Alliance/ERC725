@@ -18,12 +18,14 @@ library ErrorHandlerLib {
     {
         if (error.length > 0) {
             // the call reverted with a error string or a custom error
+            // solhint-disable no-inline-assembly
             assembly {
                 let error_size := mload(error)
                 revert(add(32, error), error_size)
             }
         } else {
             // there was no error payload, revert with empty payload
+            // solhint-disable reason-string
             revert();
         }
     }

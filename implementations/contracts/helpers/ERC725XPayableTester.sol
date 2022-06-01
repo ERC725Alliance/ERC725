@@ -12,7 +12,9 @@ import "../ERC725X.sol";
  */
 contract ERC725XPayableTester is ERC725X {
 
+    // solhint-disable no-empty-blocks
     constructor(address _newOwner) ERC725X(_newOwner) {}
     
+    // solhint-disable no-empty-blocks
     receive() external payable {}
 }
