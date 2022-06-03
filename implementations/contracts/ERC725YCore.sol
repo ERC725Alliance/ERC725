@@ -39,13 +39,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32 key, bytes memory value) public virtual override onlyOwner {
-        _setData(key, value);
-    }
-
-    /**
-     * @inheritdoc IERC725Y
-     */
     function getData(bytes32[] memory keys)
         public
         view
@@ -60,6 +53,13 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         }
 
         return values;
+    }
+
+    /**
+     * @inheritdoc IERC725Y
+     */
+    function setData(bytes32 key, bytes memory value) public virtual override onlyOwner {
+        _setData(key, value);
     }
 
     /**

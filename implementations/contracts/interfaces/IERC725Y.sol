@@ -25,6 +25,13 @@ interface IERC725Y is IERC165 {
     function getData(bytes32 key) external view returns (bytes memory value);
 
     /**
+     * @notice Gets array of data at multiple given keys
+     * @param keys The array of keys which values to retrieve
+     * @return values The array of data stored at multiple keys
+     */
+    function getData(bytes32[] memory keys) external view returns (bytes[] memory values);
+
+    /**
      * @notice Sets singular data at a given `key`
      * @param key The key which value to retrieve
      * @param value The value to set
@@ -33,13 +40,6 @@ interface IERC725Y is IERC165 {
      * Emits a {DataChanged} event.
      */
     function setData(bytes32 key, bytes memory value) external;
-
-    /**
-     * @notice Gets array of data at multiple given keys
-     * @param keys The array of keys which values to retrieve
-     * @return values The array of data stored at multiple keys
-     */
-    function getData(bytes32[] memory keys) external view returns (bytes[] memory values);
 
     /**
      * @param keys The array of keys which values to set
