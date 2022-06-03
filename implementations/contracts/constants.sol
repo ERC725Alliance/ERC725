@@ -15,5 +15,5 @@ uint256 constant OPERATION_STATICCALL = 3;
 uint256 constant OPERATION_DELEGATECALL = 4;
 
 // ERC725Y overloaded function selectors
-bytes4 constant SETDATA_SINGLE_SELECTOR = bytes4(keccak256("setData(bytes32,bytes)"));
-bytes4 constant SETDATA_MULTIPLE_SELECTOR = bytes4(keccak256("setData(bytes32[],bytes[])"));
+bytes4 constant SETDATA_SELECTOR = bytes4(keccak256("setData(bytes32,bytes)"));
+bytes4 constant SETDATA_ARRAY_SELECTOR = bytes4(keccak256("setData(bytes32[],bytes[])"));
