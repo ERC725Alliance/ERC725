@@ -39,78 +39,78 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @inheritdoc IERC725X
      */
     function execute(
-        uint256 _operation,
-        address _to,
-        uint256 _value,
-        bytes calldata _data
+        uint256 operation,
+        address to,
+        uint256 value,
+        bytes calldata data
     ) public payable virtual override onlyOwner returns (bytes memory result) {
         uint256 txGas = gasleft();
 
         // CALL
-        if (_operation == OPERATION_CALL) {
-            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+        if (operation == OPERATION_CALL) {
+            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
 
-            result = executeCall(_to, _value, _data, txGas);
+            result = executeCall(to, value, data, txGas);
 
-            emit Executed(_operation, _to, _value, bytes4(_data));
+            emit Executed(operation, to, value, bytes4(data));
 
-        // STATICCALL
-        } else if (_operation == OPERATION_STATICCALL) {
-            require(_value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+            // STATICCALL
+        } else if (operation == OPERATION_STATICCALL) {
+            require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
 
-            result = executeStaticCall(_to, _data, txGas);
+            result = executeStaticCall(to, data, txGas);
 
-            emit Executed(_operation, _to, _value, bytes4(_data));
+            emit Executed(operation, to, value, bytes4(data));
 
-        // DELEGATECALL
-        // WARNING!
-        // delegatecall is a dangerous operation type!
-        //
-        // delegate allows to call another deployed contract and use its functions
-        // to update the state of the current calling contract
-        // 
-        // this can lead to unexpected behaviour on the contract storage, such as:
-        //
-        // - updating any state variables (even if these are protected)
-        // - update the contract owner
-        // - run selfdestruct in the context of this contract 
-        //
-        // use with EXTRA CAUTION
-        } else if (_operation == OPERATION_DELEGATECALL) {
-            require(_value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
+            // DELEGATECALL
+            // WARNING!
+            // delegatecall is a dangerous operation type!
+            //
+            // delegate allows to call another deployed contract and use its functions
+            // to update the state of the current calling contract
+            //
+            // this can lead to unexpected behaviour on the contract storage, such as:
+            //
+            // - updating any state variables (even if these are protected)
+            // - update the contract owner
+            // - run selfdestruct in the context of this contract
+            //
+            // use with EXTRA CAUTION
+        } else if (operation == OPERATION_DELEGATECALL) {
+            require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
-            result = executeDelegateCall(_to, _data, txGas);
+            result = executeDelegateCall(to, data, txGas);
 
-            emit Executed(_operation, _to, _value, bytes4(_data));
+            emit Executed(operation, to, value, bytes4(data));
 
-        // CREATE
-        } else if (_operation == OPERATION_CREATE) {
+            // CREATE
+        } else if (operation == OPERATION_CREATE) {
             require(
-                _to == address(0),
+                to == address(0),
                 "ERC725X: CREATE operations require the receiver address to be empty"
             );
-            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
 
-            address contractAddress = performCreate(_value, _data);
+            address contractAddress = performCreate(value, data);
             result = abi.encodePacked(contractAddress);
 
-            emit ContractCreated(_operation, contractAddress, _value);
+            emit ContractCreated(operation, contractAddress, value);
 
-        // CREATE2
-        } else if (_operation == OPERATION_CREATE2) {
+            // CREATE2
+        } else if (operation == OPERATION_CREATE2) {
             require(
-                _to == address(0),
+                to == address(0),
                 "ERC725X: CREATE operations require the receiver address to be empty"
             );
-            require(address(this).balance >= _value, "ERC725X: insufficient balance for call");
+            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
 
-            bytes32 salt = BytesLib.toBytes32(_data, _data.length - 32);
-            bytes memory data = BytesLib.slice(_data, 0, _data.length - 32);
+            bytes32 salt = BytesLib.toBytes32(data, data.length - 32);
+            bytes memory bytecode = BytesLib.slice(data, 0, data.length - 32);
 
-            address contractAddress = Create2.deploy(_value, salt, data);
+            address contractAddress = Create2.deploy(value, salt, bytecode);
             result = abi.encodePacked(contractAddress);
 
-            emit ContractCreated(_operation, contractAddress, _value);
+            emit ContractCreated(operation, contractAddress, value);
         } else {
             revert("Wrong operation type");
         }
@@ -214,7 +214,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /* Overrides functions */
 
     /**
-     * @dev See {IERC165-supportsInterface}.
+     * @inheritdoc ERC165
      */
     function supportsInterface(bytes4 interfaceId)
         public

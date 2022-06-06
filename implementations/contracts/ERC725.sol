@@ -18,11 +18,10 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 contract ERC725 is ERC725XCore, ERC725YCore {
     /**
      * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract
+     * @param newOwner the owner of the contract
      */
-    // solhint-disable no-empty-blocks
-    constructor(address _newOwner) {
-        OwnableUnset._setOwner(_newOwner);
+    constructor(address newOwner) {
+        OwnableUnset._setOwner(newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
@@ -30,7 +29,7 @@ contract ERC725 is ERC725XCore, ERC725YCore {
     /* Overrides functions */
 
     /**
-     * @dev See {IERC165-supportsInterface}.
+     * @inheritdoc ERC165
      */
     function supportsInterface(bytes4 interfaceId)
         public
