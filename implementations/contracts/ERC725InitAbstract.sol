@@ -17,8 +17,8 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
 abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
-    function _initialize(address _newOwner) internal virtual onlyInitializing {
-        OwnableUnset._setOwner(_newOwner);
+    function _initialize(address newOwner) internal virtual onlyInitializing {
+        OwnableUnset._setOwner(newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
@@ -26,7 +26,7 @@ abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore 
     /* Overrides functions */
 
     /**
-     * @dev See {IERC165-supportsInterface}.
+     * @inheritdoc ERC165
      */
     function supportsInterface(bytes4 interfaceId)
         public

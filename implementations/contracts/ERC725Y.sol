@@ -9,16 +9,16 @@ import {ERC725YCore} from "./ERC725YCore.sol";
 /**
  * @title ERC725 Y General key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Contract module which provides the ability to set arbitrary key value sets that can be changed over time
- * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
+ * @dev Contract module which provides the ability to set arbitrary dataKey/dataValue sets that can be changed over time
+ * It is intended to standardise certain dataKeys dataValue pairs to allow automated retrievals and interactions
  * from interfaces and other smart contracts
  */
 contract ERC725Y is ERC725YCore {
     /**
-     * @notice Sets the owner of the contract and register ERC725Y interfaceId
-     * @param _newOwner the owner of the contract
+     * @notice Sets the owner of the contract
+     * @param newOwner the owner of the contract
      */
-    constructor(address _newOwner) {
-        OwnableUnset._setOwner(_newOwner);
+    constructor(address newOwner) {
+        OwnableUnset._setOwner(newOwner);
     }
 }

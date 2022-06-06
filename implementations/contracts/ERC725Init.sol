@@ -12,10 +12,10 @@ import {ERC725InitAbstract} from "./ERC725InitAbstract.sol";
 contract ERC725Init is ERC725InitAbstract {
     /**
      * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract
+     * @param newOwner the owner of the contract
      */
-    function initialize(address _newOwner) public virtual initializer {
-        ERC725InitAbstract._initialize(_newOwner);
+    function initialize(address newOwner) public virtual initializer {
+        ERC725InitAbstract._initialize(newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
