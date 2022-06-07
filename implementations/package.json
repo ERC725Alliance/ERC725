@@ -1,6 +1,6 @@
 {
   "name": "@erc725/smart-contracts",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -27,7 +27,7 @@
     "test": "truffle test",
     "test:coverage": "truffle run coverage",
     "solc": "sh solc.sh",
-    "release": "truffle compile --all; npm run test; npm run package; npm publish",
+    "release": "truffle compile --all; npm run package && standard-version",
     "package": "node reduce-artifacts.js"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
@@ -47,8 +47,8 @@
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solc": "^0.4.26",
     "solhint": "^3.3.6",
-    "standard-version": "^9.5.0",
     "solidity-coverage": "^0.7.20",
+    "standard-version": "^9.3.1",
     "truffle": "^5.2.5"
   },
   "prettier": {
