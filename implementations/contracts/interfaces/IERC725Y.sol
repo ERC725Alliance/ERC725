@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 /**
- * @title The interface for ERC725Y General key/value store
- * @dev ERC725Y provides the ability to set arbitrary key value sets that can be changed over time
- * It is intended to standardise certain keys value pairs to allow automated retrievals and interactions
- * from interfaces and other smart contracts
+ * @title The interface for ERC725Y General data key/value store
+ * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time
+ * It is intended to standardise certain data key/value pairs to allow automated read and writes
+ * from/to the contract storage
  */
 interface IERC725Y is IERC165 {
     /**
