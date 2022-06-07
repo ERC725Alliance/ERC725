@@ -1,19 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// This contract is a modified version of OpenZeppelin implementation, where we modify the visibility of
-// which changes `_setOwner()` to internal and to be used in contract implementations, instead of setting the owner in the constructor.
-// We also remove {Context} contract
-
 /**
- * @dev Modified version of ERC173 with no constructor, instead should call `_setOwner` function
- * Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
+ * @title OwnableUnset
+ * @dev modified version of OpenZeppelin implementation, where:
+ * - _setOwner(address) function is internal, so this function can be used in constructor
+ * of contracts implementation (instead of using transferOwnership(address)
+ * - the contract does not inherit from Context contract
  */
 abstract contract OwnableUnset {
     address private _owner;
