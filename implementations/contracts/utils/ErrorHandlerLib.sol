@@ -14,7 +14,6 @@ library ErrorHandlerLib {
     function revertWithParsedError(bytes memory error)
         internal
         pure
-        returns (string memory)
     {
         if (error.length > 0) {
             // the call reverted with a error string or a custom error
