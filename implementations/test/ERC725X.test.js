@@ -572,6 +572,19 @@ contract("ERC725X", (accounts) => {
         );
       });
 
+      it("should revert when `to` is not the zero address when using CREATE", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.CREATE,
+            accounts[5],
+            0,
+            bytecode,
+            { from: owner }
+          ),
+          "ERC725X: CREATE operations require the receiver address to be empty"
+        )
+      })
+
       it("should have emitted a ContractCreated", async () => {
         let receipt = await erc725X.execute(
           OPERATION_TYPE.CREATE,
@@ -652,6 +665,21 @@ contract("ERC725X", (accounts) => {
           web3.utils.toChecksumAddress(createdContractAddress) == precomputed
         );
       });
+
+      it("should revert when `to` is not the zero address when using CREATE2", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.CREATE2,
+            accounts[5],
+            0,
+            data,
+            {
+              from: owner,
+            }
+          ),
+          "ERC725X: CREATE operations require the receiver address to be empty"
+        )
+      })
     });
   });
 });

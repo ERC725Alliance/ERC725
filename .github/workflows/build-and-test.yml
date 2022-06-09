@@ -38,5 +38,22 @@ jobs:
       - name: Compile contracts
         run: truffle compile --all
 
-      - name: Run Tests
-        run: npm test
+      - name: Run Tests (with Solidity coverage)
+        run: npm run test:coverage
+
+      - name: Coverall
+        uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: ./implementations/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO: fix authentication token to enable auto-comment in PRs opened from forks
+
+      # - name: Code coverage report
+      #   uses: romeovs/lcov-reporter-action@v0.2.16
+      #   with:
+      #     lcov-file: ./implementations/coverage/lcov.info
+      #     github-token: ${{ secrets.LUKSO_DEVOPS_TOKEN }}
+      #     title: 📊 Solidity code coverage
+      #     filter-changed-files: true
+      #     delete-old-comments: true

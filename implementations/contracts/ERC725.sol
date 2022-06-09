@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {ERC725X} from "./ERC725X.sol";
-import {ERC725Y} from "./ERC725Y.sol";
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
@@ -15,20 +15,21 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725X and ERC725Y together into one smart contract
  */
-contract ERC725 is ERC725X, ERC725Y {
+contract ERC725 is ERC725XCore, ERC725YCore {
     /**
      * @notice Sets the owner of the contract
-     * @param _newOwner the owner of the contract
+     * @param newOwner the owner of the contract
      */
-    // solhint-disable no-empty-blocks
-    constructor(address _newOwner) ERC725X(_newOwner) ERC725Y(_newOwner) {}
+    constructor(address newOwner) {
+        OwnableUnset._setOwner(newOwner);
+    }
 
     // NOTE this implementation has not by default: receive() external payable {}
 
     /* Overrides functions */
 
     /**
-     * @dev See {IERC165-supportsInterface}.
+     * @inheritdoc ERC165
      */
     function supportsInterface(bytes4 interfaceId)
         public

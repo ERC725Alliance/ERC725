@@ -1,26 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// modules
-import "@openzeppelin/contracts/utils/Context.sol";
-
 /**
- * @dev Modified version of ERC173 with no constructor, instead should call `initOwner` function
- * Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * By default, the owner account will be the one that deploys the contract. This
- * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
+ * @title OwnableUnset
+ * @dev modified version of OpenZeppelin implementation, where:
+ * - _setOwner(address) function is internal, so this function can be used in constructor
+ * of contracts implementation (instead of using transferOwnership(address)
+ * - the contract does not inherit from Context contract
  */
-abstract contract OwnableUnset is Context {
+abstract contract OwnableUnset {
     address private _owner;
-
-    bool private _initiatedOwner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
@@ -35,18 +24,8 @@ abstract contract OwnableUnset is Context {
      * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
-        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        require(owner() == msg.sender, "Ownable: caller is not the owner");
         _;
-    }
-
-    /**
-     * @dev initiate the owner for the contract
-     * It can be called once
-     */
-    function initOwner(address newOwner) internal {
-        require(!_initiatedOwner, "Ownable: owner can only be initiated once");
-        _initiatedOwner = true;
-        _setOwner(newOwner);
     }
 
     /**
@@ -69,9 +48,15 @@ abstract contract OwnableUnset is Context {
         _setOwner(newOwner);
     }
 
+    /**
+     * @dev Changes the owner if `newOwner` and oldOwner are different
+     * This pattern is useful in inheritance.
+     */
     function _setOwner(address newOwner) internal virtual {
-        address oldOwner = _owner;
-        _owner = newOwner;
-        emit OwnershipTransferred(oldOwner, newOwner);
+        if (newOwner != owner()) {
+            address oldOwner = _owner;
+            _owner = newOwner;
+            emit OwnershipTransferred(oldOwner, newOwner);
+        }
     }
 }
