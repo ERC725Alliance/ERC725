@@ -54,7 +54,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     {
         dataValues = new bytes[](dataKeys.length);
 
-        for (uint256 i = 0; i < dataKeys.length; i = GasLib.unchecked_inc(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = GasLib.uncheckedIncrement(i)) {
             dataValues[i] = _getData(dataKeys[i]);
         }
 
@@ -78,7 +78,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         onlyOwner
     {
         require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < dataKeys.length; i = GasLib.unchecked_inc(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = GasLib.uncheckedIncrement(i)) {
             _setData(dataKeys[i], dataValues[i]);
         }
     }
