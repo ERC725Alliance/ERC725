@@ -3,26 +3,35 @@ pragma solidity ^0.8.0;
 
 // interfaces
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import {IERC725Y} from "./interfaces/IERC725Y.sol";
+import {IERC725Y} from "../interfaces/IERC725Y.sol";
 
 // libraries
-import {GasLib} from "./utils/GasLib.sol";
+import {GasLib} from "../utils/GasLib.sol";
 
 // modules
+import {Initializable} from "../custom/Initializable.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {OwnableUnset} from "../custom/OwnableUnset.sol";
 
 // constants
-import {_INTERFACEID_ERC725Y} from "./constants.sol";
+import {_INTERFACEID_ERC725Y} from "../constants.sol";
 
 /**
- * @title Core implementation of ERC725Y General data key/value store
+ * @title Inheritable Proxy Implementation of ERC725Y General data key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Contract module which provides the ability to set arbitrary data key/value pairs that can be changed over time
  * It is intended to standardise certain data key/value pairs to allow automated read and writes
  * from/to the contract storage
  */
-abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
+abstract contract ERC725YInit is Initializable, OwnableUnset, ERC165, IERC725Y {
+    /**
+     * @notice Sets the owner of the contract
+     * @param newOwner the owner of the contract
+     */
+    function _initialize_ERC725Y(address newOwner) internal virtual onlyInitializing {
+        OwnableUnset._setOwner(newOwner);
+    }
+
     /**
      * @dev Map the dataKeys to their dataValues
      */

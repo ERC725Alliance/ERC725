@@ -3,16 +3,17 @@ pragma solidity ^0.8.0;
 
 // interfaces
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import {IERC725X} from "./interfaces/IERC725X.sol";
+import {IERC725X} from "../interfaces/IERC725X.sol";
 
 // libraries
 import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
-import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
+import {ErrorHandlerLib} from "../utils/ErrorHandlerLib.sol";
 
 // modules
+import {Initializable} from "../custom/Initializable.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {OwnableUnset} from "../custom/OwnableUnset.sol";
 
 // constants
 // prettier-ignore
@@ -23,7 +24,7 @@ import {
     OPERATION_STATICCALL, 
     OPERATION_CREATE, 
     OPERATION_CREATE2
-} from "./constants.sol";
+} from "../constants.sol";
 
 /**
  * @title Core implementation of ERC725 X executor
@@ -32,7 +33,15 @@ import {
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
+abstract contract ERC725XInit is Initializable, OwnableUnset, ERC165, IERC725X {
+    /**
+     * @notice Sets the owner of the contract
+     * @param newOwner the owner of the contract
+     */
+    function _initialize_ERC725X(address newOwner) internal virtual onlyInitializing {
+        OwnableUnset._setOwner(newOwner);
+    }
+
     /* Public functions */
 
     /**
