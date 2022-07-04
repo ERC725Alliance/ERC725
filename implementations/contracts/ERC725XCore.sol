@@ -7,8 +7,8 @@ import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
 import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
-import {ErrorHandlerLib} from "./utils/ErrorHandlerLib.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
@@ -126,22 +126,18 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
      * @param txGas The amount of gas for performing call
-     * @return The data from the call
+     * @return result The data from the call
      */
     function executeCall(
         address to,
         uint256 value,
         bytes memory data,
         uint256 txGas
-    ) internal returns (bytes memory) {
+    ) internal returns (bytes memory result) {
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory result) = to.call{gas: txGas, value: value}(data);
+        (bool success, bytes memory returnedData) = to.call{gas: txGas, value: value}(data);
 
-        if (!success) {
-            ErrorHandlerLib.revertWithParsedError(result);
-        }
-
-        return result;
+        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
     }
 
     /**
@@ -149,20 +145,16 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param to The address on which staticcall is executed
      * @param data The data to be sent with the call
      * @param txGas The amount of gas for performing staticcall
-     * @return The data from the call
+     * @return result The data from the call
      */
     function executeStaticCall(
         address to,
         bytes memory data,
         uint256 txGas
-    ) internal view returns (bytes memory) {
-        (bool success, bytes memory result) = to.staticcall{gas: txGas}(data);
+    ) internal view returns (bytes memory result) {
+        (bool success, bytes memory returnedData) = to.staticcall{gas: txGas}(data);
 
-        if (!success) {
-            ErrorHandlerLib.revertWithParsedError(result);
-        }
-
-        return result;
+        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
     }
 
     /**
@@ -172,21 +164,17 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param to The address on which delegatecall is executed
      * @param data The data to be sent with the call
      * @param txGas The amount of gas for performing delegatecall
-     * @return The data from the call
+     * @return result The data from the call
      */
     function executeDelegateCall(
         address to,
         bytes memory data,
         uint256 txGas
-    ) internal returns (bytes memory) {
+    ) internal returns (bytes memory result) {
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory result) = to.delegatecall{gas: txGas}(data);
+        (bool success, bytes memory returnedData) = to.delegatecall{gas: txGas}(data);
 
-        if (!success) {
-            ErrorHandlerLib.revertWithParsedError(result);
-        }
-
-        return result;
+        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
     }
 
     /**
