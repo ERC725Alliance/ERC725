@@ -135,9 +135,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 txGas
     ) internal returns (bytes memory result) {
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnedData) = to.call{gas: txGas, value: value}(data);
+        (bool success, bytes memory returnData) = to.call{gas: txGas, value: value}(data);
 
-        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknow Error");
     }
 
     /**
@@ -152,9 +152,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes memory data,
         uint256 txGas
     ) internal view returns (bytes memory result) {
-        (bool success, bytes memory returnedData) = to.staticcall{gas: txGas}(data);
+        (bool success, bytes memory returnData) = to.staticcall{gas: txGas}(data);
 
-        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknow Error");
     }
 
     /**
@@ -172,9 +172,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 txGas
     ) internal returns (bytes memory result) {
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnedData) = to.delegatecall{gas: txGas}(data);
+        (bool success, bytes memory returnData) = to.delegatecall{gas: txGas}(data);
 
-        result = Address.verifyCallResult(success, returnedData, "ERC725X: Unknow Error");
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknow Error");
     }
 
     /**
