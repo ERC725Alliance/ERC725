@@ -12,6 +12,14 @@ import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
  * from/to the contract storage
  */
 contract ERC725YInit is ERC725YInitAbstract {
+
+    /**
+     * @dev Deploy + lock base contract deployment on deployment
+     */
+    constructor() {
+        _disableInitializers();
+    }
+    
     /**
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
