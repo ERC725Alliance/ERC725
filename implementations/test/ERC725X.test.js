@@ -9,6 +9,8 @@ const { INTERFACE_ID, OPERATION_TYPE } = require("../constants");
 const { expectRevertWithCustomError } = require("./helpers");
 
 const ERC725X = artifacts.require("ERC725X");
+const ERC725XInit = artifacts.require("ERC725XInit");
+
 const ERC725XPayableTester = artifacts.require("ERC725XPayableTester");
 const CounterContract = artifacts.require("Counter");
 const ReturnTest = artifacts.require("ReturnTest");
@@ -574,16 +576,12 @@ contract("ERC725X", (accounts) => {
 
       it("should revert when `to` is not the zero address when using CREATE", async () => {
         await expectRevert(
-          erc725X.execute(
-            OPERATION_TYPE.CREATE,
-            accounts[5],
-            0,
-            bytecode,
-            { from: owner }
-          ),
+          erc725X.execute(OPERATION_TYPE.CREATE, accounts[5], 0, bytecode, {
+            from: owner,
+          }),
           "ERC725X: CREATE operations require the receiver address to be empty"
-        )
-      })
+        );
+      });
 
       it("should have emitted a ContractCreated", async () => {
         let receipt = await erc725X.execute(
@@ -668,18 +666,36 @@ contract("ERC725X", (accounts) => {
 
       it("should revert when `to` is not the zero address when using CREATE2", async () => {
         await expectRevert(
-          erc725X.execute(
-            OPERATION_TYPE.CREATE2,
-            accounts[5],
-            0,
-            data,
-            {
-              from: owner,
-            }
-          ),
+          erc725X.execute(OPERATION_TYPE.CREATE2, accounts[5], 0, data, {
+            from: owner,
+          }),
           "ERC725X: CREATE operations require the receiver address to be empty"
-        )
-      })
+        );
+      });
+    });
+  });
+});
+
+contract("ERC725XInit", (accounts) => {
+  context("after deploying the base contract", async () => {
+    before(async () => {
+      erc725XInit = await ERC725XInit.new();
+    });
+    it("should have initialized (= locked) the base contract", async () => {
+      const isInitialized = await erc725XInit.initialized.call();
+      assert.equal(isInitialized.toNumber(), 255);
+    });
+
+    it("should have set the owner of the base contract as the zero-address", async () => {
+      const owner = await erc725XInit.owner.call();
+      assert.equal(owner, "0x0000000000000000000000000000000000000000");
+    });
+
+    it("should not be possible to call `initialize(...)` on the base contract", async () => {
+      await expectRevert(
+        erc725XInit.initialize(accounts[0], { from: accounts[0] }),
+        "Initializable: contract is already initialized"
+      );
     });
   });
 });
