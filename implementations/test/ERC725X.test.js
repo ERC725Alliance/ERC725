@@ -698,4 +698,16 @@ contract("ERC725XInit", (accounts) => {
       );
     });
   });
+
+    context("ERC165", async () => {
+    before(async () => {
+     erc725XInit = await ERC725XInit.new();
+    });
+    it("Supports ERC165", async () => {
+      assert.isTrue(await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC165));
+    });
+    it("Supports ERC725X", async () => {
+      assert.isTrue(await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC725X));
+    });
+  });
 });
