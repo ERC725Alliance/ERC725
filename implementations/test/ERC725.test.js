@@ -8,8 +8,8 @@ const ERC725 = artifacts.require("ERC725");
 const ERC725Init = artifacts.require("ERC725Init");
 
 contract("ERC725", (accounts) => {
-    const nonOwner = accounts[1];
-    const owner = accounts[0];
+  const nonOwner = accounts[1];
+  const owner = accounts[0];
 
   let erc725;
 
@@ -33,8 +33,8 @@ contract("ERC725", (accounts) => {
     it("Supports ERC725X", async () => {
       assert.isTrue(await erc725.supportsInterface.call(INTERFACE_ID.ERC725X));
     });
-      
-      it("Supports ERC725Y", async () => {
+
+    it("Supports ERC725Y", async () => {
       assert.isTrue(await erc725.supportsInterface.call(INTERFACE_ID.ERC725Y));
     });
   });
@@ -62,20 +62,26 @@ contract("ERC725Init", (accounts) => {
       );
     });
   });
-    
-    context("ERC165", async () => {
+
+  context("ERC165", async () => {
     before(async () => {
       erc725Init = await ERC725Init.new();
     });
     it("Supports ERC165", async () => {
-      assert.isTrue(await erc725Init.supportsInterface.call(INTERFACE_ID.ERC165));
+      assert.isTrue(
+        await erc725Init.supportsInterface.call(INTERFACE_ID.ERC165)
+      );
     });
     it("Supports ERC725X", async () => {
-      assert.isTrue(await erc725Init.supportsInterface.call(INTERFACE_ID.ERC725X));
+      assert.isTrue(
+        await erc725Init.supportsInterface.call(INTERFACE_ID.ERC725X)
+      );
     });
-      
-      it("Supports ERC725Y", async () => {
-      assert.isTrue(await erc725Init.supportsInterface.call(INTERFACE_ID.ERC725Y));
+
+    it("Supports ERC725Y", async () => {
+      assert.isTrue(
+        await erc725Init.supportsInterface.call(INTERFACE_ID.ERC725Y)
+      );
     });
   });
 });

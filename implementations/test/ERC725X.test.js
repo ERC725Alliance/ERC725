@@ -592,18 +592,30 @@ contract("ERC725X", (accounts) => {
 
       it("should revert if the account transfers more than its balance on Contract Creation using CREATE", async () => {
         await expectRevert(
-          erc725X.execute(OPERATION_TYPE.CREATE, "0x0000000000000000000000000000000000000000", 1000, bytecode, {
-            from: owner,
-          }),
+          erc725X.execute(
+            OPERATION_TYPE.CREATE,
+            "0x0000000000000000000000000000000000000000",
+            1000,
+            bytecode,
+            {
+              from: owner,
+            }
+          ),
           "ERC725X: insufficient balance for call"
         );
       });
 
-        it("should revert if the bytecode is empty", async () => {
+      it("should revert if the bytecode is empty", async () => {
         await expectRevert(
-          erc725X.execute(OPERATION_TYPE.CREATE, "0x0000000000000000000000000000000000000000", 0, "0x", {
-            from: owner,
-          }),
+          erc725X.execute(
+            OPERATION_TYPE.CREATE,
+            "0x0000000000000000000000000000000000000000",
+            0,
+            "0x",
+            {
+              from: owner,
+            }
+          ),
           "no contract bytecode provided"
         );
       });
@@ -698,11 +710,17 @@ contract("ERC725X", (accounts) => {
         );
       });
 
-        it("should revert if the account transfers more than its balance on Contract Creation using CREATE", async () => {
+      it("should revert if the account transfers more than its balance on Contract Creation using CREATE", async () => {
         await expectRevert(
-          erc725X.execute(OPERATION_TYPE.CREATE2, "0x0000000000000000000000000000000000000000", 1000, data, {
-            from: owner,
-          }),
+          erc725X.execute(
+            OPERATION_TYPE.CREATE2,
+            "0x0000000000000000000000000000000000000000",
+            1000,
+            data,
+            {
+              from: owner,
+            }
+          ),
           "ERC725X: insufficient balance for call"
         );
       });
@@ -733,15 +751,19 @@ contract("ERC725XInit", (accounts) => {
     });
   });
 
-    context("ERC165", async () => {
+  context("ERC165", async () => {
     before(async () => {
-     erc725XInit = await ERC725XInit.new();
+      erc725XInit = await ERC725XInit.new();
     });
     it("Supports ERC165", async () => {
-      assert.isTrue(await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC165));
+      assert.isTrue(
+        await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC165)
+      );
     });
     it("Supports ERC725X", async () => {
-      assert.isTrue(await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC725X));
+      assert.isTrue(
+        await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC725X)
+      );
     });
   });
 });
