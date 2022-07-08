@@ -137,6 +137,13 @@ contract("ERC725X", (accounts) => {
         "ERC725X: insufficient balance for call"
       );
     });
+
+    it("should revert when providing wrong operation type", async () => {
+      await expectRevert(
+        erc725X.execute(6, recipient, 0, "0x"),
+        "Wrong operation type"
+      );
+    });
   });
 
   context("contract interactions", async () => {
@@ -583,6 +590,36 @@ contract("ERC725X", (accounts) => {
         );
       });
 
+      it("should revert if the account transfers more than its balance on Contract Creation using CREATE", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.CREATE,
+            "0x0000000000000000000000000000000000000000",
+            1000,
+            bytecode,
+            {
+              from: owner,
+            }
+          ),
+          "ERC725X: insufficient balance for call"
+        );
+      });
+
+      it("should revert if the bytecode is empty", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.CREATE,
+            "0x0000000000000000000000000000000000000000",
+            0,
+            "0x",
+            {
+              from: owner,
+            }
+          ),
+          "no contract bytecode provided"
+        );
+      });
+
       it("should have emitted a ContractCreated", async () => {
         let receipt = await erc725X.execute(
           OPERATION_TYPE.CREATE,
@@ -672,6 +709,21 @@ contract("ERC725X", (accounts) => {
           "ERC725X: CREATE operations require the receiver address to be empty"
         );
       });
+
+      it("should revert if the account transfers more than its balance on Contract Creation using CREATE", async () => {
+        await expectRevert(
+          erc725X.execute(
+            OPERATION_TYPE.CREATE2,
+            "0x0000000000000000000000000000000000000000",
+            1000,
+            data,
+            {
+              from: owner,
+            }
+          ),
+          "ERC725X: insufficient balance for call"
+        );
+      });
     });
   });
 });
@@ -695,6 +747,22 @@ contract("ERC725XInit", (accounts) => {
       await expectRevert(
         erc725XInit.initialize(accounts[0], { from: accounts[0] }),
         "Initializable: contract is already initialized"
+      );
+    });
+  });
+
+  context("ERC165", async () => {
+    before(async () => {
+      erc725XInit = await ERC725XInit.new();
+    });
+    it("Supports ERC165", async () => {
+      assert.isTrue(
+        await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC165)
+      );
+    });
+    it("Supports ERC725X", async () => {
+      assert.isTrue(
+        await erc725XInit.supportsInterface.call(INTERFACE_ID.ERC725X)
       );
     });
   });
