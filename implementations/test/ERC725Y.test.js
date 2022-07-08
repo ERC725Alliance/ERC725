@@ -1633,4 +1633,21 @@ contract("ERC72YXInit", (accounts) => {
       );
     });
   });
+
+  context("ERC165", async () => {
+    before(async () => {
+      erc725YInit = await ERC725YInit.new();
+    });
+    it("Supports ERC165", async () => {
+      assert.isTrue(
+        await erc725YInit.supportsInterface.call(INTERFACE_ID.ERC165)
+      );
+    });
+
+    it("Supports ERC725Y", async () => {
+      assert.isTrue(
+        await erc725YInit.supportsInterface.call(INTERFACE_ID.ERC725Y)
+      );
+    });
+  });
 });
