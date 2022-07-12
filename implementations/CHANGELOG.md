@@ -2,7 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.1.1](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.1.1) (2022-06-07)
+## [3.1.2](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.1.2) (2022-07-08)
+
+This patch release introduces the important bug fixes, as well as some minor optimizations.
+
+<br>
+
+- **bug fix 1:** :no_entry: The contracts `ERC725XInit` and `ERC725YInit` (to be used as implementation contracts behind proxies) are **now initialized immediately on deployment.**
+
+In previous releases, the `initialize(...)` function needed to be called immediately after deployment, creating a security risk through race conditions. These base implementation contracts are now immediately lock while being deployed, through the use of the [`_disableInitializer(...)`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/8b778fa20d6d76340c5fac1ed66c80273f05b95a/contracts/proxy/utils/Initializable.sol#L131) function from the OpenZeppelin contract [`Initializable.sol`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/utils/Initializable.sol).
+
+This function also ensures that the base contract cannot be re-initialized, for instance when `ERC725XInit`, `ERC725YInit` or `ERC725Init` are used through inheritance. If your contract derives from one of these three contracts, the `initialize(...)` function cannot be called in the parent contract via the most derived `constructor`/`initializer`function.
+
+<br>
+
+- **bug fix 2:** drop support for `ErrorHandlerLib` contract library.
+
+This contract library is now removed from the package, in favour of the [`verifyCallResult(...)`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/8b778fa20d6d76340c5fac1ed66c80273f05b95a/contracts/utils/Address.sol#L219) from the OpenZeppelin [`Address.sol` library](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol).
+
+If you were using this `ErrorHandlerLib` library, we recommend migrating to the function mentioned above from OpenZeppelin.
+
+> **NB:** the `ErrorHandlerLib.revertWithParsedError(...)` function also contained a minor bug, related to ignoring the value returned by the function.
+
+<br>
+
+### Bug Fixes
+
+- ignores return value by ErrorHandlerLib.revertWithParsedError(result) ([#133](https://github.com/ERC725Alliance/ERC725/issues/133)) ([f4d6b83](https://github.com/ERC725Alliance/ERC725/commit/f4d6b83fc92502d76fa302fd123969187650f6ce))
+- lock base `ERC725XInit` and `ERC725YInit` contracts on deployment ([#139](https://github.com/ERC725Alliance/ERC725/issues/139)) ([26a5da5](https://github.com/ERC725Alliance/ERC725/commit/26a5da52ae1f83d78a736c11f45a25ff9b03e672))
+
+<br>
+
+## [3.1.1](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.1.1) (2022-06-07)
 
 This minor release include the following two changes:
 
