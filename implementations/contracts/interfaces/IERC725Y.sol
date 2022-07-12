@@ -13,7 +13,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 interface IERC725Y is IERC165 {
     /**
      * @notice Emitted when data at a key is changed
-     * @param dataKey The key which value is set
+     * @param dataKey The data key which value is set
      */
     event DataChanged(bytes32 indexed dataKey);
 
@@ -25,15 +25,15 @@ interface IERC725Y is IERC165 {
     function getData(bytes32 dataKey) external view returns (bytes memory dataValue);
 
     /**
-     * @notice Gets array of data at multiple given keys
+     * @notice Gets array of data for multiple given keys
      * @param dataKeys The array of keys which values to retrieve
      * @return dataValues The array of data stored at multiple keys
      */
     function getData(bytes32[] memory dataKeys) external view returns (bytes[] memory dataValues);
 
     /**
-     * @notice Sets singular data at a given `dataKey`
-     * @param dataKey The key which value to retrieve
+     * @notice Sets singular data for a given `dataKey`
+     * @param dataKey The key to retrieve stored value
      * @param dataValue The value to set
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
@@ -42,9 +42,9 @@ interface IERC725Y is IERC165 {
     function setData(bytes32 dataKey, bytes memory dataValue) external;
 
     /**
-     * @param dataKeys The array of keys which values to set
+     * @param dataKeys The array of data keys for values to set
      * @param dataValues The array of values to set
-     * @dev Sets array of data at multiple given `dataKeys`
+     * @dev Sets array of data for multiple given `dataKeys`
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
      * Emits a {DataChanged} event.
