@@ -3,6 +3,7 @@ const { expectRevert } = require("openzeppelin-test-helpers");
 const { web3 } = require("openzeppelin-test-helpers/src/setup");
 
 const ERC725Y = artifacts.require("ERC725Y");
+const ERC725YInit = artifacts.require("ERC725YInit");
 const ReaderContract = artifacts.require("Reader");
 
 const ERC725YWriter = artifacts.require("ERC725YWriter");
@@ -1606,6 +1607,47 @@ contract("ERC725Y (from Smart Contract)", (accounts) => {
       await erc725YWriter.setDataComputed(account.address);
       let result = await erc725YReader.callGetData(account.address, key);
       assert.deepEqual(result, value);
+    });
+  });
+});
+
+contract("ERC72YXInit", (accounts) => {
+  context("after deploying the base contract", async () => {
+    before(async () => {
+      erc725YInit = await ERC725YInit.new();
+    });
+    it("should have initialized (= locked) the base contract", async () => {
+      const isInitialized = await erc725YInit.initialized.call();
+      assert.equal(isInitialized.toNumber(), 255);
+    });
+
+    it("should have set the owner of the base contract as the zero-address", async () => {
+      const owner = await erc725YInit.owner.call();
+      assert.equal(owner, "0x0000000000000000000000000000000000000000");
+    });
+
+    it("should not be possible to call `initialize(...)` on the base contract", async () => {
+      await expectRevert(
+        erc725YInit.initialize(accounts[0], { from: accounts[0] }),
+        "Initializable: contract is already initialized"
+      );
+    });
+  });
+
+  context("ERC165", async () => {
+    before(async () => {
+      erc725YInit = await ERC725YInit.new();
+    });
+    it("Supports ERC165", async () => {
+      assert.isTrue(
+        await erc725YInit.supportsInterface.call(INTERFACE_ID.ERC165)
+      );
+    });
+
+    it("Supports ERC725Y", async () => {
+      assert.isTrue(
+        await erc725YInit.supportsInterface.call(INTERFACE_ID.ERC725Y)
+      );
     });
   });
 });

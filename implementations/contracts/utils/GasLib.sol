@@ -8,7 +8,7 @@ library GasLib {
     /**
      * @dev Will return unchecked incremented uint256
      */
-    function unchecked_inc(uint256 i) internal pure returns (uint256) { // solhint-disable func-name-mixedcase
+    function uncheckedIncrement(uint256 i) internal pure returns (uint256) {
         unchecked {
             return i + 1;
         }
