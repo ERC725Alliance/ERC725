@@ -733,10 +733,6 @@ contract("ERC725XInit", (accounts) => {
     before(async () => {
       erc725XInit = await ERC725XInit.new();
     });
-    it("should have initialized (= locked) the base contract", async () => {
-      const isInitialized = await erc725XInit.initialized.call();
-      assert.equal(isInitialized.toNumber(), 255);
-    });
 
     it("should have set the owner of the base contract as the zero-address", async () => {
       const owner = await erc725XInit.owner.call();
