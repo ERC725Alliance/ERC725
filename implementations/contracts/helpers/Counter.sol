@@ -15,6 +15,10 @@ contract Counter {
         count = count + 1;
     }
 
+    function incrementWithValue() public payable {
+        count = count + 1;
+    }
+
     function get() public view returns (uint256) {
         return count;
     }
