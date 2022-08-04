@@ -61,12 +61,12 @@ jobs:
       # step 3: install npm dependencies
       - name: 🧰 Install dependencies
         if: env.SHOULD_RELEASE == 'true'
-        run: npm install -g truffle && npm ci
+        run: npm install hardhat && npm ci
 
       # Step 4: compile + test the contracts.
       - name: 🛠 Build
         if: env.SHOULD_RELEASE == 'true'
-        run: truffle compile --all
+        run: npx hardhat compile --force
 
       - name: 🧪 Test
         if: env.SHOULD_RELEASE == 'true'

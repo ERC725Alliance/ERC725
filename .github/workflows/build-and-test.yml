@@ -26,8 +26,8 @@ jobs:
           cache: "npm"
           cache-dependency-path: implementations/package-lock.json
 
-      - name: Install Truffle
-        run: npm install truffle -g
+      - name: Install Hardhat
+        run: npm install hardhat
 
       - name: Install dependencies
         run: npm install
@@ -36,16 +36,16 @@ jobs:
         run: npm run lint
 
       - name: Compile contracts
-        run: truffle compile --all
+        run: npx hardhat compile
 
-      - name: Run Tests (with Solidity coverage)
-        run: npm run test:coverage
+      - name: Run Tests 
+        run: npm run test
 
-      - name: Coverall
-        uses: coverallsapp/github-action@master
-        with:
-          path-to-lcov: ./implementations/coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Coverall
+      #   uses: coverallsapp/github-action@master
+      #   with:
+      #     path-to-lcov: ./implementations/coverage/lcov.info
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: fix authentication token to enable auto-comment in PRs opened from forks
 
