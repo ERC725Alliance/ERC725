@@ -26,7 +26,7 @@
     "clean": "hardhat clean",
     "package": "hardhat prepare-package",
     "release": "run-s clean build package && standard-version",
-    "solc": "sh solc.sh"
+    "analyse": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
