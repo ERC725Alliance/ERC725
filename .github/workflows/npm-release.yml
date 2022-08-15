@@ -110,10 +110,8 @@ jobs:
       # step 6: publish to NPM
       - name: 📦 Publish to NPM
         if: env.SHOULD_RELEASE == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        # minify the npm package with custom node.js minifier script
-        # before to publish on NPM
         run: |
           npm run package
           npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
