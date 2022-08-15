@@ -23,9 +23,10 @@
     "build": "hardhat compile",
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "hardhat test",
-    "solc": "sh solc.sh",
+    "clean": "hardhat clean",
     "package": "hardhat prepare-package",
-    "release": "hardhat compile --force; npm run standard-version"
+    "release": "run-s clean build package && standard-version",
+    "solc": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
