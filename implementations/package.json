@@ -25,7 +25,7 @@
     "test": "hardhat test",
     "solc": "sh solc.sh",
     "package": "hardhat prepare-package",
-    "release": "npx hardhat compile --force; npm run standard-version"
+    "release": "hardhat compile --force; npm run standard-version"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
