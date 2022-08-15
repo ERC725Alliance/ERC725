@@ -61,16 +61,16 @@ jobs:
       # step 3: install npm dependencies
       - name: 🧰 Install dependencies
         if: env.SHOULD_RELEASE == 'true'
-        run: npm install hardhat && npm ci
+        run: npm ci
 
       # Step 4: compile + test the contracts.
       - name: 🛠 Build
         if: env.SHOULD_RELEASE == 'true'
-        run: npx hardhat compile --force
+        run: npm run build --if-present
 
       - name: 🧪 Test
         if: env.SHOULD_RELEASE == 'true'
-        run: npm test
+        run: npm run test
 
       # step 5: create a new release on Github
       # 5.1) create + push a git tag
