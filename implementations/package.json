@@ -23,8 +23,9 @@
     "test": "test"
   },
   "scripts": {
+    "build": "hardhat compile",
     "lint": "solhint 'contracts/**/*.sol'",
-    "test": "npx hardhat test",
+    "test": "hardhat test",
     "solc": "sh solc.sh",
     "package": "hardhat prepare-package",
     "release": "npx hardhat compile --force; npm run standard-version"

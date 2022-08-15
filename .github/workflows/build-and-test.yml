@@ -33,7 +33,7 @@ jobs:
         run: npm run lint
 
       - name: Compile contracts
-        run: npx hardhat compile
+        run: npm run build --if-present
 
       - name: Run Tests
         run: npm run test
