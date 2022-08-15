@@ -26,14 +26,15 @@
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "npx hardhat test",
     "solc": "sh solc.sh",
+    "package": "hardhat prepare-package",
     "release": "npx hardhat compile --force; npm run standard-version"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
-    "@types/chai": "^4.3.1",
     "@openzeppelin/contracts-upgradeable": "^4.7.1",
+    "@types/chai": "^4.3.1",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
@@ -43,6 +44,7 @@
     "eth-create2-calculator": "^1.1.5",
     "eth-gas-reporter": "^0.2.19",
     "hardhat": "^2.10.1",
+    "hardhat-packager": "^1.4.2",
     "openzeppelin-test-helpers": "^0.4.2",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
