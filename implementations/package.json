@@ -10,11 +10,8 @@
   },
   "files": [
     "contracts/**/*.sol",
+    "artifacts/*.json",
     "!contracts/helpers/*.sol",
-    "artifacts/ILSP*.json",
-    "artifacts/ERC725*.json",
-    "!artifacts/ERC725YReader.json",
-    "!artifacts/ERC725YWriter.json",
     "constants.js",
     "README.md",
     "LICENSE"
@@ -23,17 +20,20 @@
     "test": "test"
   },
   "scripts": {
+    "build": "hardhat compile",
     "lint": "solhint 'contracts/**/*.sol'",
-    "test": "npx hardhat test",
-    "solc": "sh solc.sh",
-    "release": "npx hardhat compile --force; npm run standard-version"
+    "test": "hardhat test",
+    "clean": "hardhat clean",
+    "package": "hardhat prepare-package",
+    "release": "run-s clean build package && standard-version",
+    "analyse": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
-    "@types/chai": "^4.3.1",
     "@openzeppelin/contracts-upgradeable": "^4.7.1",
+    "@types/chai": "^4.3.1",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
@@ -43,13 +43,15 @@
     "eth-create2-calculator": "^1.1.5",
     "eth-gas-reporter": "^0.2.19",
     "hardhat": "^2.10.1",
+    "hardhat-packager": "^1.4.2",
     "openzeppelin-test-helpers": "^0.4.2",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solc": "^0.4.26",
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.20",
-    "standard-version": "^9.3.1"
+    "standard-version": "^9.3.1",
+    "ts-node": "^10.9.1"
   },
   "prettier": {
     "overrides": [

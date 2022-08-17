@@ -26,19 +26,16 @@ jobs:
           cache: "npm"
           cache-dependency-path: implementations/package-lock.json
 
-      - name: Install Hardhat
-        run: npm install hardhat
-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run Solhint Linter
         run: npm run lint
 
       - name: Compile contracts
-        run: npx hardhat compile
+        run: npm run build --if-present
 
-      - name: Run Tests 
+      - name: Run Tests
         run: npm run test
 
       # - name: Coverall
