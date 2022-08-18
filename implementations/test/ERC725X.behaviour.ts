@@ -320,7 +320,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: Unknow Error");
+            ).to.be.revertedWith("ERC725X: Unknown Error");
           });
         });
 
@@ -350,7 +350,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: Unknow Error");
+            ).to.be.revertedWith("ERC725X: Unknown Error");
           });
         });
 
@@ -1650,7 +1650,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: Unknow Error");
+            ).to.be.revertedWith("ERC725X: Unknown Error");
           });
         });
 
