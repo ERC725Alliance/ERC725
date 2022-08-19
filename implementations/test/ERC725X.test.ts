@@ -33,13 +33,27 @@ describe("ERC725X", () => {
     };
 
     describe("when deploying the contract", () => {
-      let context: ERC725XTestContext;
+      it("should revert when giving address(0) as owner", async () => {
+        const accounts = await getNamedAccounts();
 
-      beforeEach(async () => {
-        context = await buildTestContext();
+        const deployParams = {
+          newOwner: ethers.constants.AddressZero,
+        };
+
+        await expect(
+          new ERC725X__factory(accounts.owner).deploy(deployParams.newOwner)
+        ).to.be.revertedWith(
+          "ERC725X: contract owner cannot be the zero address"
+        );
       });
 
-      describe("when initializing the contract", () => {
+      describe("once the contract was deployed", () => {
+        let context: ERC725XTestContext;
+
+        beforeEach(async () => {
+          context = await buildTestContext();
+        });
+
         shouldInitializeLikeERC725X(async () => {
           const { erc725X, deployParams } = context;
           return {
@@ -104,6 +118,14 @@ describe("ERC725X", () => {
 
       beforeEach(async () => {
         context = await buildTestContext();
+      });
+
+      it("should revert when initializing with address(0) as owner", async () => {
+        await expect(
+          context.erc725X["initialize(address)"](ethers.constants.AddressZero)
+        ).to.be.revertedWith(
+          "ERC725X: contract owner cannot be the zero address"
+        );
       });
 
       describe("when initializing the contract", () => {

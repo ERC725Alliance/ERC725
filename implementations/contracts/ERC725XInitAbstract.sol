@@ -15,6 +15,7 @@ import {ERC725XCore} from "./ERC725XCore.sol";
  */
 abstract contract ERC725XInitAbstract is Initializable, ERC725XCore {
     function _initialize(address newOwner) internal virtual onlyInitializing {
+        require(newOwner != address(0), "ERC725X: contract owner cannot be the zero address");
         OwnableUnset._setOwner(newOwner);
     }
 }
