@@ -1,11 +1,6 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
-import {
-  ERC725X,
-  ERC725X__factory,
-  ERC725XInit,
-  ERC725XInit__factory,
-} from "../types";
+import { ERC725X__factory, ERC725XInit__factory } from "../types";
 
 import {
   getNamedAccounts,
