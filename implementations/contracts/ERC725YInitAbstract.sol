@@ -14,8 +14,7 @@ import {ERC725YCore} from "./ERC725YCore.sol";
  * from/to the contract storage
  */
 abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
-        require(newOwner != address(0), "ERC725Y: contract owner cannot be the zero address");
+    function _initialize(address newOwner) internal virtual onlyInitializing notZeroAddressAsOwner(newOwner) {
         OwnableUnset._setOwner(newOwner);
     }
 }

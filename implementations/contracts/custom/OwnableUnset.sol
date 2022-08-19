@@ -29,6 +29,17 @@ abstract contract OwnableUnset {
     }
 
     /**
+     * @dev disallow passing address(0) as parameter 
+     *      intended to be use when setting initial contract owner on deployment
+     *
+     * @param newOwner the address of the contract owner
+     */
+    modifier notZeroAddressAsOwner(address newOwner) {
+        require(newOwner != address(0), "Ownable: contract owner cannot be the zero address");
+        _;
+    }
+
+    /**
      * @dev Leaves the contract without owner. It will not be possible to call
      * `onlyOwner` functions anymore. Can only be called by the current owner.
      *

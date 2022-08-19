@@ -17,7 +17,7 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
 abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
+    function _initialize(address newOwner) internal virtual onlyInitializing notZeroAddressAsOwner(newOwner) {
         OwnableUnset._setOwner(newOwner);
     }
 

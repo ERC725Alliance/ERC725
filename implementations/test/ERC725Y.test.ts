@@ -44,7 +44,7 @@ describe("ERC725Y", () => {
         await expect(
           new ERC725Y__factory(accounts.owner).deploy(deployParams.newOwner)
         ).to.be.revertedWith(
-          "ERC725Y: contract owner cannot be the zero address"
+          "Ownable: contract owner cannot be the zero address"
         );
       });
 
@@ -119,7 +119,7 @@ describe("ERC725Y", () => {
         await expect(
           context.erc725Y["initialize(address)"](ethers.constants.AddressZero)
         ).to.be.revertedWith(
-          "ERC725Y: contract owner cannot be the zero address"
+          "Ownable: contract owner cannot be the zero address"
         );
       });
 
