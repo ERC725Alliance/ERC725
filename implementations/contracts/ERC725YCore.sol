@@ -93,6 +93,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @dev Will return unchecked incremented uint256
+     *      can be used to save gas when iterating over loops
      */
     function _uncheckedIncrement(uint256 i) internal pure returns (uint256) {
         unchecked {
