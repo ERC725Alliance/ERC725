@@ -51,7 +51,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     {
         dataValues = new bytes[](dataKeys.length);
 
-        for (uint256 i = 0; i < dataKeys.length; i = uncheckedIncrement(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             dataValues[i] = _getData(dataKeys[i]);
         }
 
@@ -75,7 +75,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         onlyOwner
     {
         require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < dataKeys.length; i = uncheckedIncrement(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             _setData(dataKeys[i], dataValues[i]);
         }
     }
@@ -94,7 +94,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @dev Will return unchecked incremented uint256
      */
-    function uncheckedIncrement(uint256 i) internal pure returns (uint256) {
+    function _uncheckedIncrement(uint256 i) internal pure returns (uint256) {
         unchecked {
             return i + 1;
         }
