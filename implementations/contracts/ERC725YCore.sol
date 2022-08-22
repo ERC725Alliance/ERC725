@@ -5,9 +5,6 @@ pragma solidity ^0.8.0;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
-// libraries
-import {GasLib} from "./utils/GasLib.sol";
-
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
