@@ -1,15 +1,13 @@
 import { ethers } from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { AddressZero } from "@ethersproject/constants";
 import type { TransactionResponse } from "@ethersproject/abstract-provider";
 
 // types
 import {
   ERC725Y,
-  ERC725Y__factory,
-  ERC725YInit,
-  ERC725YInit__factory,
   ERC725YWriter__factory,
   ERC725YReader__factory,
 } from "../types";

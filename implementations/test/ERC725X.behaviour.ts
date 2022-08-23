@@ -1,17 +1,14 @@
 import { ethers } from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { AddressZero } from "@ethersproject/constants";
 import type { TransactionResponse } from "@ethersproject/abstract-provider";
 
 // types
 import {
   ERC725X,
-  ERC725X__factory,
-  ERC725XInit,
-  ERC725XInit__factory,
   ReceiveTester__factory,
-  ReceiveTester,
   RevertTester__factory,
   NoReceive__factory,
   NonPayableFallbackContract__factory,

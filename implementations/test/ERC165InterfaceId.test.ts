@@ -1,6 +1,6 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { artifacts, ethers } from "hardhat";
+import { ethers } from "hardhat";
 
 import { ERC165InterfaceIDs, ERC165InterfaceIDs__factory } from "../types";
 
