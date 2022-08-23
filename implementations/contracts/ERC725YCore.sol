@@ -5,9 +5,6 @@ pragma solidity ^0.8.0;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
-// libraries
-import {GasLib} from "./utils/GasLib.sol";
-
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
@@ -54,7 +51,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     {
         dataValues = new bytes[](dataKeys.length);
 
-        for (uint256 i = 0; i < dataKeys.length; i = GasLib.uncheckedIncrement(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             dataValues[i] = _getData(dataKeys[i]);
         }
 
@@ -78,7 +75,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         onlyOwner
     {
         require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
-        for (uint256 i = 0; i < dataKeys.length; i = GasLib.uncheckedIncrement(i)) {
+        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             _setData(dataKeys[i], dataValues[i]);
         }
     }
@@ -92,6 +89,16 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     function _setData(bytes32 dataKey, bytes memory dataValue) internal virtual {
         store[dataKey] = dataValue;
         emit DataChanged(dataKey);
+    }
+
+    /**
+     * @dev Will return unchecked incremented uint256
+     *      can be used to save gas when iterating over loops
+     */
+    function _uncheckedIncrement(uint256 i) internal pure returns (uint256) {
+        unchecked {
+            return i + 1;
+        }
     }
 
     /* Overrides functions */
