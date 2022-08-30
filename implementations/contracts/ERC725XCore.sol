@@ -71,8 +71,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         // use with EXTRA CAUTION
         if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
 
-        revert("ERC725X: Unknown operation type");
-    
+        revert("ERC725X: Unknown operation type");    
     }
 
     /* Overrides functions */
@@ -109,7 +108,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         require(address(this).balance >= value, "ERC725X: insufficient balance for CALL");
         
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.call{gas: gasleft(), value: value}(data);
+        (bool success, bytes memory returnData) = to.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
         
         emit Executed(OPERATION_CALL, to, value, bytes4(data));
@@ -130,7 +129,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
         
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.staticcall{gas: gasleft()}(data);
+        (bool success, bytes memory returnData) = to.staticcall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
         
         emit Executed(OPERATION_STATICCALL, to, value, bytes4(data));
@@ -151,7 +150,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
         
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.delegatecall{gas: gasleft()}(data);
+        (bool success, bytes memory returnData) = to.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
         
         emit Executed(OPERATION_DELEGATECALL, to, value, bytes4(data));
@@ -159,7 +158,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev perform contract creation using operation 1
-     *
+     * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
      * @param value The value to be sent to the contract created
      * @param data The contract bytecode to deploy
      * @return newContract The address of the contract created
@@ -183,7 +182,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev perform contract creation using operation 2
-     *
+     * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
      * @param value The value to be sent to the contract created
      * @param data The contract bytecode to deploy
      * @return newContract The address of the contract created
