@@ -90,6 +90,7 @@ export const shouldBehaveLikeERC725X = (
     context = await buildContext();
     provider = ethers.provider;
     abiCoder = new ethers.utils.AbiCoder();
+
     // fund erc725X contract
     valueToSend = ethers.utils.parseEther("50");
     await context.erc725X
@@ -509,7 +510,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for call");
+            ).to.be.revertedWith("ERC725X: insufficient balance for CALL");
           });
         });
       });
@@ -952,7 +953,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("Could not deploy contract");
+            ).to.be.revertedWith("ERC725X: Could not deploy contract");
           });
         });
 
@@ -1051,7 +1052,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for call");
+            ).to.be.revertedWith("ERC725X: insufficient balance for CREATE");
           });
         });
 
@@ -1073,7 +1074,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("Could not deploy contract");
+            ).to.be.revertedWith("ERC725X: Could not deploy contract");
           });
         });
       });
@@ -1405,7 +1406,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for call");
+            ).to.be.revertedWith("ERC725X: insufficient balance for CREATE2");
           });
         });
 
@@ -1917,7 +1918,7 @@ export const shouldBehaveLikeERC725X = (
               txParams.value,
               txParams.data
             )
-        ).to.be.revertedWith("Wrong operation type");
+        ).to.be.revertedWith("ERC725X: Unknown operation type");
       });
     });
   });

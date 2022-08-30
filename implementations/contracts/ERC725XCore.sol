@@ -33,7 +33,6 @@ import {
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
-    /* Public functions */
 
     /**
      * @inheritdoc IERC725X
@@ -42,161 +41,38 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 operation,
         address to,
         uint256 value,
-        bytes calldata data
-    ) public payable virtual override onlyOwner returns (bytes memory result) {
-        uint256 txGas = gasleft();
-
+        bytes memory data
+    ) public payable virtual override onlyOwner returns (bytes memory) {
         // CALL
-        if (operation == OPERATION_CALL) {
-            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
+        if (operation == OPERATION_CALL) return _executeCall(to, value, data);
 
-            result = executeCall(to, value, data, txGas);
+        // Deploy with CREATE
+        if (operation == OPERATION_CREATE) return _deployCreate(to, value, data);
 
-            emit Executed(operation, to, value, bytes4(data));
+        // Deploy with CREATE2
+        if (operation == OPERATION_CREATE2) return _deployCreate2(to, value, data);
+        
+        // STATICCALL
+        if (operation == OPERATION_STATICCALL) return _executeStaticCall(to, value, data);
+        
+        // DELEGATECALL
+        // WARNING!
+        // delegatecall is a dangerous operation type!
+        //
+        // delegate allows to call another deployed contract and use its functions
+        // to update the state of the current calling contract
+        //
+        // this can lead to unexpected behaviour on the contract storage, such as:
+        //
+        // - updating any state variables (even if these are protected)
+        // - update the contract owner
+        // - run selfdestruct in the context of this contract
+        //
+        // use with EXTRA CAUTION
+        if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
 
-            // STATICCALL
-        } else if (operation == OPERATION_STATICCALL) {
-            require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
-
-            result = executeStaticCall(to, data, txGas);
-
-            emit Executed(operation, to, value, bytes4(data));
-
-            // DELEGATECALL
-            // WARNING!
-            // delegatecall is a dangerous operation type!
-            //
-            // delegate allows to call another deployed contract and use its functions
-            // to update the state of the current calling contract
-            //
-            // this can lead to unexpected behaviour on the contract storage, such as:
-            //
-            // - updating any state variables (even if these are protected)
-            // - update the contract owner
-            // - run selfdestruct in the context of this contract
-            //
-            // use with EXTRA CAUTION
-        } else if (operation == OPERATION_DELEGATECALL) {
-            require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
-
-            result = executeDelegateCall(to, data, txGas);
-
-            emit Executed(operation, to, value, bytes4(data));
-
-            // CREATE
-        } else if (operation == OPERATION_CREATE) {
-            require(
-                to == address(0),
-                "ERC725X: CREATE operations require the receiver address to be empty"
-            );
-            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
-
-            address contractAddress = performCreate(value, data);
-            result = abi.encodePacked(contractAddress);
-
-            emit ContractCreated(operation, contractAddress, value);
-
-            // CREATE2
-        } else if (operation == OPERATION_CREATE2) {
-            require(
-                to == address(0),
-                "ERC725X: CREATE operations require the receiver address to be empty"
-            );
-            require(address(this).balance >= value, "ERC725X: insufficient balance for call");
-
-            bytes32 salt = BytesLib.toBytes32(data, data.length - 32);
-            bytes memory bytecode = BytesLib.slice(data, 0, data.length - 32);
-
-            address contractAddress = Create2.deploy(value, salt, bytecode);
-            result = abi.encodePacked(contractAddress);
-
-            emit ContractCreated(operation, contractAddress, value);
-        } else {
-            revert("Wrong operation type");
-        }
-    }
-
-    /* Internal functions */
-
-    /**
-     * @dev perform call using operation 0
-     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
-     *
-     * @param to The address on which call is executed
-     * @param value The value to be sent with the call
-     * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing call
-     * @return result The data from the call
-     */
-    function executeCall(
-        address to,
-        uint256 value,
-        bytes memory data,
-        uint256 txGas
-    ) internal returns (bytes memory result) {
-        // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.call{gas: txGas, value: value}(data);
-
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-    }
-
-    /**
-     * @dev perform staticcall using operation 3
-     * @param to The address on which staticcall is executed
-     * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing staticcall
-     * @return result The data from the call
-     */
-    function executeStaticCall(
-        address to,
-        bytes memory data,
-        uint256 txGas
-    ) internal view returns (bytes memory result) {
-        (bool success, bytes memory returnData) = to.staticcall{gas: txGas}(data);
-
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-    }
-
-    /**
-     * @dev perform delegatecall using operation 4
-     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/base/Executor.sol
-     *
-     * @param to The address on which delegatecall is executed
-     * @param data The data to be sent with the call
-     * @param txGas The amount of gas for performing delegatecall
-     * @return result The data from the call
-     */
-    function executeDelegateCall(
-        address to,
-        bytes memory data,
-        uint256 txGas
-    ) internal returns (bytes memory result) {
-        // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.delegatecall{gas: txGas}(data);
-
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-    }
-
-    /**
-     * @dev perform contract creation using operation 1
-     * Taken from GnosisSafe: https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/CreateCall.sol
-     *
-     * @param value The value to be sent to the contract created
-     * @param deploymentData The contract bytecode to deploy
-     * @return newContract The address of the contract created
-     */
-    function performCreate(uint256 value, bytes memory deploymentData)
-        internal
-        returns (address newContract)
-    {
-        require(deploymentData.length != 0, "no contract bytecode provided");
-
-        // solhint-disable no-inline-assembly
-        assembly {
-            newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))
-        }
-
-        require(newContract != address(0), "Could not deploy contract");
+        revert("ERC725X: Unknown operation type");
+    
     }
 
     /* Overrides functions */
@@ -213,4 +89,117 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
+
+
+    /* Internal functions */
+
+    /**
+     * @dev perform call using operation 0
+     *
+     * @param to The address on which call is executed
+     * @param value The value to be sent with the call
+     * @param data The data to be sent with the call
+     * @return result The data from the call
+     */
+    function _executeCall(
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
+        require(address(this).balance >= value, "ERC725X: insufficient balance for CALL");
+        
+        // solhint-disable avoid-low-level-calls
+        (bool success, bytes memory returnData) = to.call{gas: gasleft(), value: value}(data);
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        
+        emit Executed(OPERATION_CALL, to, value, bytes4(data));
+    }
+
+    /**
+     * @dev perform staticcall using operation 3
+     * @param to The address on which staticcall is executed
+     * @param value The value passed to the execute(...) function (MUST be 0)
+     * @param data The data to be sent with the staticcall
+     * @return result The data returned from the staticcall
+     */
+    function _executeStaticCall(
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
+        require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+        
+        // solhint-disable avoid-low-level-calls
+        (bool success, bytes memory returnData) = to.staticcall{gas: gasleft()}(data);
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        
+        emit Executed(OPERATION_STATICCALL, to, value, bytes4(data));
+    }
+
+    /**
+     * @dev perform delegatecall using operation 4
+     * @param to The address on which delegatecall is executed
+     * @param value The value passed to the execute(...) function (MUST be 0)
+     * @param data The data to be sent with the delegatecall
+     * @return result The data returned from the delegatecall
+     */
+    function _executeDelegateCall(
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal virtual returns(bytes memory result) {
+        require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
+        
+        // solhint-disable avoid-low-level-calls
+        (bool success, bytes memory returnData) = to.delegatecall{gas: gasleft()}(data);
+        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        
+        emit Executed(OPERATION_DELEGATECALL, to, value, bytes4(data));
+    }
+
+    /**
+     * @dev perform contract creation using operation 1
+     *
+     * @param value The value to be sent to the contract created
+     * @param data The contract bytecode to deploy
+     * @return newContract The address of the contract created
+     */
+    function _deployCreate(address to, uint256 value, bytes memory data) internal virtual returns (bytes memory newContract) {
+        require(to == address(0),"ERC725X: CREATE operations require the receiver address to be empty");
+        require(address(this).balance >= value, "ERC725X: insufficient balance for CREATE");
+        require(data.length != 0, "ERC725X: No contract bytecode provided");
+
+        address contractAddress;
+        // solhint-disable no-inline-assembly
+        assembly {
+            contractAddress := create(value, add(data, 0x20), mload(data))
+        }
+
+        require(contractAddress != address(0), "ERC725X: Could not deploy contract");
+        
+        newContract = abi.encodePacked(contractAddress);
+        emit ContractCreated(OPERATION_CREATE, contractAddress, value);
+    }
+
+    /**
+     * @dev perform contract creation using operation 2
+     *
+     * @param value The value to be sent to the contract created
+     * @param data The contract bytecode to deploy
+     * @return newContract The address of the contract created
+     */
+    function _deployCreate2(address to, uint256 value, bytes memory data) internal virtual returns (bytes memory newContract) {
+        require(to == address(0),"ERC725X: CREATE operations require the receiver address to be empty");
+        require(address(this).balance >= value, "ERC725X: insufficient balance for CREATE2");
+        require(data.length != 0, "ERC725X: No contract bytecode provided");
+
+        bytes32 salt = BytesLib.toBytes32(data, data.length - 32);
+        bytes memory bytecode = BytesLib.slice(data, 0, data.length - 32);
+        address contractAddress = Create2.deploy(value, salt, bytecode);
+        
+        newContract = abi.encodePacked(contractAddress);
+        emit ContractCreated(OPERATION_CREATE2, contractAddress, value);
+    }
+
+
 }
