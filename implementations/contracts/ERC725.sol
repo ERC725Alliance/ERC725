@@ -20,7 +20,7 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
      */
-    constructor(address newOwner) {
+    constructor(address newOwner) notZeroAddressAsOwner(newOwner) {
         OwnableUnset._setOwner(newOwner);
     }
 

@@ -32,7 +32,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
-    "@openzeppelin/contracts-upgradeable": "^4.7.1",
+    "@openzeppelin/contracts-upgradeable": "^4.7.3",
     "@types/chai": "^4.3.1",
     "solidity-bytes-utils": "0.8.0"
   },
