@@ -55,19 +55,17 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         if (operation == OPERATION_STATICCALL) return _executeStaticCall(to, value, data);
 
         // DELEGATECALL
-        // WARNING!
-        // delegatecall is a dangerous operation type!
+        //
+        // WARNING! delegatecall is a dangerous operation type! use with EXTRA CAUTION
         //
         // delegate allows to call another deployed contract and use its functions
-        // to update the state of the current calling contract
+        // to update the state of the current calling contract.
         //
         // this can lead to unexpected behaviour on the contract storage, such as:
-        //
         // - updating any state variables (even if these are protected)
         // - update the contract owner
         // - run selfdestruct in the context of this contract
         //
-        // use with EXTRA CAUTION
         if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
 
         revert("ERC725X: Unknown operation type");
