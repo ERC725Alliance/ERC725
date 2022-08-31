@@ -124,7 +124,7 @@ export const shouldBehaveLikeERC725Y = (
               ["setData(bytes32,bytes)"](txParams.dataKey, txParams.dataValue)
           )
             .to.emit(context.erc725Y, "DataChanged")
-            .withArgs(txParams.dataKey);
+            .withArgs(txParams.dataKey, txParams.dataValue);
 
           const fetchedData = await context.erc725Y.callStatic[
             "getData(bytes32)"
@@ -189,7 +189,7 @@ export const shouldBehaveLikeERC725Y = (
               )
           )
             .to.emit(context.erc725Y, "DataChanged")
-            .withArgs(txParams.dataKey);
+            .withArgs(txParams.dataKey, txParams.dataValue);
 
           const fetchedData = await context.erc725Y.callStatic[
             "getData(bytes32)"
@@ -216,7 +216,7 @@ export const shouldBehaveLikeERC725Y = (
                 ["setData(bytes32,bytes)"](txParams.dataKey, txParams.dataValue)
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(txParams.dataKey);
+              .withArgs(txParams.dataKey, txParams.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -266,7 +266,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(tx2Params.dataKey);
+              .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -317,7 +317,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(tx2Params.dataKey);
+              .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -343,7 +343,7 @@ export const shouldBehaveLikeERC725Y = (
                 ["setData(bytes32,bytes)"](txParams.dataKey, txParams.dataValue)
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(txParams.dataKey);
+              .withArgs(txParams.dataKey, txParams.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -374,7 +374,7 @@ export const shouldBehaveLikeERC725Y = (
               )
           )
             .to.emit(context.erc725Y, "DataChanged")
-            .withArgs(txParams.dataKey);
+            .withArgs(txParams.dataKey, txParams.dataValue);
 
           const fetchedData = await context.erc725Y.callStatic[
             "getData(bytes32)"
@@ -442,7 +442,7 @@ export const shouldBehaveLikeERC725Y = (
               )
           )
             .to.emit(context.erc725Y, "DataChanged")
-            .withArgs(txParams.dataKey);
+            .withArgs(txParams.dataKey, txParams.dataValue);
 
           const fetchedData = await context.erc725Y.callStatic[
             "getData(bytes32)"
@@ -472,7 +472,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(txParams.dataKey);
+              .withArgs(txParams.dataKey, txParams.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -521,7 +521,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(tx2Params.dataKey);
+              .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -571,7 +571,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(tx2Params.dataKey);
+              .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
@@ -600,7 +600,7 @@ export const shouldBehaveLikeERC725Y = (
                 )
             )
               .to.emit(context.erc725Y, "DataChanged")
-              .withArgs(txParams.dataKey);
+              .withArgs(txParams.dataKey, txParams.dataValue);
 
             const fetchedData = await context.erc725Y.callStatic[
               "getData(bytes32)"
