@@ -38,11 +38,11 @@ jobs:
       - name: Run Tests
         run: npm run test
 
-      # - name: Coverall
-      #   uses: coverallsapp/github-action@master
-      #   with:
-      #     path-to-lcov: ./implementations/coverage/lcov.info
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: ./implementations/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: fix authentication token to enable auto-comment in PRs opened from forks
 
