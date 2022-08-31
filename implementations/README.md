@@ -1,4 +1,4 @@
-# @erc725/smart-contracts &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts)
+# @erc725/smart-contracts &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts) [![Coverage Status](https://coveralls.io/repos/github/ERC725Alliance/ERC725/badge.svg?branch=develop)](https://coveralls.io/github/ERC725Alliance/ERC725?branch=develop)
 
 
 **This package is currently in BETA, use with caution!**
