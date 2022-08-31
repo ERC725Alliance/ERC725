@@ -14,8 +14,9 @@ interface IERC725Y is IERC165 {
     /**
      * @notice Emitted when data at a key is changed
      * @param dataKey The data key which value is set
+     * @param dataValue The data value which is set to the key
      */
-    event DataChanged(bytes32 indexed dataKey);
+    event DataChanged(bytes32 indexed dataKey, bytes indexed dataValue);
 
     /**
      * @notice Gets singular data at a given `dataKey`
