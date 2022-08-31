@@ -13,10 +13,10 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 interface IERC725Y is IERC165 {
     /**
      * @notice Emitted when data at a key is changed
-     * @param dataKey The data key which value is set
-     * @param dataValue The data value which is set to the key
+     * @param dataKey The data key which data value is set
+     * @param dataValue The data value to set
      */
-    event DataChanged(bytes32 indexed dataKey, bytes indexed dataValue);
+    event DataChanged(bytes32 indexed dataKey, bytes dataValue);
 
     /**
      * @notice Gets singular data at a given `dataKey`
