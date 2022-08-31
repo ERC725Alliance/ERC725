@@ -23,6 +23,7 @@
     "build": "hardhat compile",
     "lint": "solhint 'contracts/**/*.sol'",
     "test": "hardhat test",
+    "test:coverage": "hardhat coverage",
     "clean": "hardhat clean",
     "package": "hardhat prepare-package",
     "release": "run-s clean build package && standard-version",
