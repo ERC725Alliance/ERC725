@@ -90,7 +90,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev perform call using operation 0
-     *
      * @param to The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
@@ -154,10 +153,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev perform contract creation using operation 1
-     * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
+     * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE)
      * @param value The value to be sent to the contract created
      * @param data The contract bytecode to deploy
-     * @return newContract The address of the contract created
+     * @return newContract The address of the contract created as bytes
      */
     function _deployCreate(
         address to,
@@ -187,8 +186,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @dev perform contract creation using operation 2
      * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
      * @param value The value to be sent to the contract created
-     * @param data The contract bytecode to deploy
-     * @return newContract The address of the contract created
+     * @param data The contract bytecode to deploy combined with the salt
+     * @return newContract The address of the contract created as bytes
      */
     function _deployCreate2(
         address to,
