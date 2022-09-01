@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.2.0) (2022-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y (#163)
+
+### Features
+
+* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y ([#163](https://github.com/ERC725Alliance/ERC725/issues/163)) ([9f88ee0](https://github.com/ERC725Alliance/ERC725/commit/9f88ee0a40fe9eaa197ac946cf92e43b313e3c5f))
+
+
+### Bug Fixes
+
+* [QSP-4] prevent `address(0)` to be set as contract owner on deployment ([#159](https://github.com/ERC725Alliance/ERC725/issues/159)) ([5c47854](https://github.com/ERC725Alliance/ERC725/commit/5c4785426508b68623c3f217111822f7377076bd))
+* ignores return value by ErrorHandlerLib.revertWithParsedError(result) ([#133](https://github.com/ERC725Alliance/ERC725/issues/133)) ([cc7bff8](https://github.com/ERC725Alliance/ERC725/commit/cc7bff8a44c45b2192ac0834da13fd35115bf221))
+* lock base `ERC725XInit` and `ERC725YInit` contracts on deployment ([#139](https://github.com/ERC725Alliance/ERC725/issues/139)) ([3091406](https://github.com/ERC725Alliance/ERC725/commit/30914063995c5379cb781805012bc97118bf0720))
+
 ## [3.1.2](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.1.2) (2022-07-08)
 
 This patch release introduces the important bug fixes, as well as some minor optimizations.
