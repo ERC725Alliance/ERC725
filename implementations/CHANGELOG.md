@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.2.0) (2022-09-01)
+
+### ⚠ BREAKING CHANGES
+
+- add `bytes dataValue` parameter to `DataChanged` event in ERC725Y (#163)
+- removed custom `Initializable` contract (#150)
+- removed `GasLib` library in favour of `internal uncheckedIncrement(...)` function (#160)
+
+### Features
+
+- add `bytes dataValue` parameter to `DataChanged` event in ERC725Y ([#163](https://github.com/ERC725Alliance/ERC725/issues/163)) ([9f88ee0](https://github.com/ERC725Alliance/ERC725/commit/9f88ee0a40fe9eaa197ac946cf92e43b313e3c5f))
+
+### Bug Fixes
+
+- [QSP-4] prevent `address(0)` to be set as contract owner on deployment ([#159](https://github.com/ERC725Alliance/ERC725/issues/159)) ([5c47854](https://github.com/ERC725Alliance/ERC725/commit/5c4785426508b68623c3f217111822f7377076bd))
+
 ## [3.1.2](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.1.2) (2022-07-08)
 
 This patch release introduces the important bug fixes, as well as some minor optimizations.
