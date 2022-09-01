@@ -42,6 +42,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) public payable virtual override onlyOwner returns (bytes memory) {
+
+        require(address(this).balance >= value, "ERC725X: insufficient balance");
+
         // CALL
         if (operation == OPERATION_CALL) return _executeCall(to, value, data);
 
@@ -100,7 +103,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-        require(address(this).balance >= value, "ERC725X: insufficient balance for CALL");
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.call{value: value}(data);
@@ -167,7 +169,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             to == address(0),
             "ERC725X: CREATE operations require the receiver address to be empty"
         );
-        require(address(this).balance >= value, "ERC725X: insufficient balance for CREATE");
         require(data.length != 0, "ERC725X: No contract bytecode provided");
 
         address contractAddress;
@@ -186,7 +187,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @dev perform contract creation using operation 2
      * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
      * @param value The value to be sent to the contract created
-     * @param data The contract bytecode to deploy combined with the salt
+     * @param data The contract bytecode to deploy appended with a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
     function _deployCreate2(
@@ -198,7 +199,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             to == address(0),
             "ERC725X: CREATE operations require the receiver address to be empty"
         );
-        require(address(this).balance >= value, "ERC725X: insufficient balance for CREATE2");
         require(data.length != 0, "ERC725X: No contract bytecode provided");
 
         bytes32 salt = BytesLib.toBytes32(data, data.length - 32);

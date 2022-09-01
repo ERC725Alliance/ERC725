@@ -510,7 +510,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for CALL");
+            ).to.be.revertedWith("ERC725X: insufficient balance");
           });
         });
       });
@@ -1052,7 +1052,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for CREATE");
+            ).to.be.revertedWith("ERC725X: insufficient balance");
           });
         });
 
@@ -1406,7 +1406,7 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance for CREATE2");
+            ).to.be.revertedWith("ERC725X: insufficient balance");
           });
         });
 
