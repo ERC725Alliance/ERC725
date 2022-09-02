@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {Initializable} from "./custom/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
@@ -14,7 +14,7 @@ import {ERC725YCore} from "./ERC725YCore.sol";
  * from/to the contract storage
  */
 abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
+    function _initialize(address newOwner) internal virtual onlyInitializing notZeroAddressAsOwner(newOwner) {
         OwnableUnset._setOwner(newOwner);
     }
 }

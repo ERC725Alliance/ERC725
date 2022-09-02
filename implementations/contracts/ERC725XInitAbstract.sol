@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {Initializable} from "./custom/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 
@@ -14,7 +14,7 @@ import {ERC725XCore} from "./ERC725XCore.sol";
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 abstract contract ERC725XInitAbstract is Initializable, ERC725XCore {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
+    function _initialize(address newOwner) internal virtual onlyInitializing notZeroAddressAsOwner(newOwner) {
         OwnableUnset._setOwner(newOwner);
     }
 }

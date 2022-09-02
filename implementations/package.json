@@ -1,6 +1,6 @@
 {
   "name": "@erc725/smart-contracts",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "description": "ERC725 contract implementations",
   "homepage": "https://erc725alliance.org",
   "repository": {
@@ -10,11 +10,8 @@
   },
   "files": [
     "contracts/**/*.sol",
+    "artifacts/*.json",
     "!contracts/helpers/*.sol",
-    "artifacts/ILSP*.json",
-    "artifacts/ERC725*.json",
-    "!artifacts/ERC725YReader.json",
-    "!artifacts/ERC725YWriter.json",
     "constants.js",
     "README.md",
     "LICENSE"
@@ -23,25 +20,32 @@
     "test": "test"
   },
   "scripts": {
+    "build": "hardhat compile",
     "lint": "solhint 'contracts/**/*.sol'",
-    "test": "truffle test",
-    "test:coverage": "truffle run coverage",
-    "solc": "sh solc.sh",
-    "release": "truffle compile --all; npm run package && standard-version",
-    "package": "node reduce-artifacts.js"
+    "test": "hardhat test",
+    "test:coverage": "hardhat coverage",
+    "clean": "hardhat clean",
+    "package": "hardhat prepare-package",
+    "release": "run-s clean build package && standard-version",
+    "analyse": "sh solc.sh"
   },
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts-upgradeable": "^4.7.3",
+    "@types/chai": "^4.3.1",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
-    "@truffle/config": "^1.3.12",
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
     "chai": "^4.2.0",
     "coveralls": "^3.1.1",
     "eth-create2-calculator": "^1.1.5",
     "eth-gas-reporter": "^0.2.19",
+    "hardhat": "^2.10.1",
+    "hardhat-packager": "^1.4.2",
+    "npm-run-all": "^4.1.5",
     "openzeppelin-test-helpers": "^0.4.2",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
@@ -49,7 +53,7 @@
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.20",
     "standard-version": "^9.3.1",
-    "truffle": "^5.2.5"
+    "ts-node": "^10.9.1"
   },
   "prettier": {
     "overrides": [
