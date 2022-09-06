@@ -1,8 +1,8 @@
-# ERC 725 &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts) [![Coverage Status](https://coveralls.io/repos/github/ERC725Alliance/ERC725/badge.svg?branch=develop)](https://coveralls.io/github/ERC725Alliance/ERC725?branch=develop)
+# ERC725 &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts) [![Coverage Status](https://coveralls.io/repos/github/ERC725Alliance/ERC725/badge.svg?branch=develop)](https://coveralls.io/github/ERC725Alliance/ERC725?branch=develop)
 
 Repository for the code and standard documents around ERC725 and related standards
 
-## ERC 725 Use Cases
+## ERC725 Use Cases
 
 Projects building on ERC725 are invited to add themselves to the table [here](https://github.com/ERC725Alliance/ERC725/blob/master/docs/use-cases.md).
 
