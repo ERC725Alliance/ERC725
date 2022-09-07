@@ -12,14 +12,13 @@ import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
 contract ERC725XInit is ERC725XInitAbstract {
-
     /**
      * @dev Deploy + lock base contract deployment on deployment
      */
     constructor() {
         _disableInitializers();
     }
-    
+
     /**
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract

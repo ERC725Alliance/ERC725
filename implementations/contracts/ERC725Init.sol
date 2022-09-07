@@ -10,14 +10,13 @@ import {ERC725InitAbstract} from "./ERC725InitAbstract.sol";
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
 contract ERC725Init is ERC725InitAbstract {
-
     /**
      * @dev Deploy + lock base contract deployment on deployment
      */
     constructor() {
         _disableInitializers();
     }
-    
+
     /**
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
