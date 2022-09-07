@@ -54,20 +54,5 @@
     "solidity-coverage": "^0.7.20",
     "standard-version": "^9.3.1",
     "ts-node": "^10.9.1"
-  },
-  "prettier": {
-    "overrides": [
-      {
-        "files": "*.sol",
-        "options": {
-          "printWidth": 99,
-          "tabWidth": 4,
-          "useTabs": false,
-          "singleQuote": false,
-          "bracketSpacing": false,
-          "explicitTypes": "always"
-        }
-      }
-    ]
   }
 }
