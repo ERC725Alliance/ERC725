@@ -1,3 +1,5 @@
+# you need to install the solc compiler to run these commands (not solcjs from the npm package, it does not include these options)
+# See installation instructions: https://docs.soliditylang.org/en/v0.8.16/installing-solidity.html
 solc --storage-layout @openzeppelin/="$(pwd)"/node_modules/@openzeppelin/ solidity-bytes-utils/="$(pwd)"/node_modules/solidity-bytes-utils/ ../Utils="$(pwd)/contracts/Utils" contracts/ERC725.sol -o ./analyse/storage-layout/ --pretty-json --overwrite
 solc --hashes @openzeppelin/="$(pwd)"/node_modules/@openzeppelin/ solidity-bytes-utils/="$(pwd)"/node_modules/solidity-bytes-utils/ ../Utils="$(pwd)/contracts/Utils" contracts/ERC725.sol -o ./analyse/selectors/ --overwrite
 solc --gas @openzeppelin/="$(pwd)"/node_modules/@openzeppelin/ solidity-bytes-utils/="$(pwd)"/node_modules/solidity-bytes-utils/ ../Utils="$(pwd)/contracts/Utils" contracts/ERC725.sol >> ./analyse/gas-costs.md --overwrite
