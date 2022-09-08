@@ -11,10 +11,9 @@ import "../ERC725X.sol";
  *      2. the contract can then transfer the native tokens in its balance via ERC725X.execute(0, recipient, amount, "")
  */
 contract ERC725XPayableTester is ERC725X {
-
     // solhint-disable no-empty-blocks
     constructor(address _newOwner) ERC725X(_newOwner) {}
-    
+
     // solhint-disable no-empty-blocks
     receive() external payable {}
 }

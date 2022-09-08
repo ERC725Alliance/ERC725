@@ -42,7 +42,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) public payable virtual override onlyOwner returns (bytes memory) {
-
         require(address(this).balance >= value, "ERC725X: insufficient balance");
 
         // CALL
@@ -103,7 +102,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");

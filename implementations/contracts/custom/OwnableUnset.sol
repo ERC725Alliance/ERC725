@@ -29,7 +29,7 @@ abstract contract OwnableUnset {
     }
 
     /**
-     * @dev disallow passing address(0) as parameter 
+     * @dev disallow passing address(0) as parameter
      *      intended to be used when setting initial contract owner on deployment
      *
      * @param newOwner the address of the contract owner
