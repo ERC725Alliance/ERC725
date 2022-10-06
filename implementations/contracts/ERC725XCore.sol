@@ -43,7 +43,32 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes memory data
     ) public payable virtual override onlyOwner returns (bytes memory) {
         require(address(this).balance >= value, "ERC725X: insufficient balance");
+        return _execute(operation, to, value, data);
+    }
 
+    /* Overrides functions */
+
+    /**
+     * @inheritdoc ERC165
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(IERC165, ERC165)
+        returns (bool)
+    {
+        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
+    }
+
+    /* Internal functions */
+
+    function _execute(
+        uint256 operation,
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal virtual returns (bytes memory) {
         // CALL
         if (operation == OPERATION_CALL) return _executeCall(to, value, data);
 
@@ -71,24 +96,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
 
         revert("ERC725X: Unknown operation type");
-    }
-
-    /* Overrides functions */
-
-    /**
-     * @inheritdoc ERC165
-     */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(IERC165, ERC165)
-        returns (bool)
-    {
-        return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
-    }
-
-    /* Internal functions */
+    } 
 
     /**
      * @dev perform call using operation 0
