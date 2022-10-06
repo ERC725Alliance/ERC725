@@ -96,7 +96,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
 
         revert("ERC725X: Unknown operation type");
-    } 
+    }
 
     /**
      * @dev perform call using operation 0

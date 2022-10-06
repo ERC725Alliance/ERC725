@@ -29,12 +29,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function getData(bytes32 dataKey)
-        public
-        view
-        virtual
-        returns (bytes memory dataValue)
-    {
+    function getData(bytes32 dataKey) public view virtual returns (bytes memory dataValue) {
         dataValue = _getData(dataKey);
     }
 
