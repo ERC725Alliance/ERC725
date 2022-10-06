@@ -41,7 +41,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address to,
         uint256 value,
         bytes memory data
-    ) public payable virtual override onlyOwner returns (bytes memory) {
+    ) public payable virtual onlyOwner returns (bytes memory) {
         require(address(this).balance >= value, "ERC725X: insufficient balance");
         return _execute(operation, to, value, data);
     }
