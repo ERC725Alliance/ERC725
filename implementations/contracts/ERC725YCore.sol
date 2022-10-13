@@ -29,13 +29,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function getData(bytes32 dataKey)
-        public
-        view
-        virtual
-        override
-        returns (bytes memory dataValue)
-    {
+    function getData(bytes32 dataKey) public view virtual returns (bytes memory dataValue) {
         dataValue = _getData(dataKey);
     }
 
@@ -46,7 +40,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         public
         view
         virtual
-        override
         returns (bytes[] memory dataValues)
     {
         dataValues = new bytes[](dataKeys.length);
@@ -61,7 +54,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32 dataKey, bytes memory dataValue) public virtual override onlyOwner {
+    function setData(bytes32 dataKey, bytes memory dataValue) public virtual onlyOwner {
         _setData(dataKey, dataValue);
     }
 
@@ -71,7 +64,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     function setData(bytes32[] memory dataKeys, bytes[] memory dataValues)
         public
         virtual
-        override
         onlyOwner
     {
         require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
