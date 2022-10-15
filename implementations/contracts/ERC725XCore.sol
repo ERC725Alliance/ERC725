@@ -110,11 +110,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
+        emit Executed(OPERATION_CALL, to, value, bytes4(data));
+
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-
-        emit Executed(OPERATION_CALL, to, value, bytes4(data));
     }
 
     /**
@@ -131,11 +131,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
 
+        emit Executed(OPERATION_STATICCALL, to, value, bytes4(data));
+
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.staticcall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-
-        emit Executed(OPERATION_STATICCALL, to, value, bytes4(data));
     }
 
     /**
@@ -152,11 +152,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
+        emit Executed(OPERATION_DELEGATECALL, to, value, bytes4(data));
+
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
-
-        emit Executed(OPERATION_DELEGATECALL, to, value, bytes4(data));
     }
 
     /**
