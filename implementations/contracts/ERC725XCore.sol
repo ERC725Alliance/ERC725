@@ -15,14 +15,9 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
-// prettier-ignore
 import {
     _INTERFACEID_ERC725X,
-    OPERATION_CALL, 
-    OPERATION_DELEGATECALL, 
-    OPERATION_STATICCALL, 
-    OPERATION_CREATE, 
-    OPERATION_CREATE2
+    OPERATION_TYPE
 } from "./constants.sol";
 
 /**
@@ -66,16 +61,16 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes memory data
     ) internal virtual returns (bytes memory) {
         // CALL
-        if (operation == OPERATION_CALL) return _executeCall(to, value, data);
+        if (operation == uint256(OPERATION_TYPE.CALL)) return _executeCall(to, value, data);
 
         // Deploy with CREATE
-        if (operation == OPERATION_CREATE) return _deployCreate(to, value, data);
+        if (operation == uint256(OPERATION_TYPE.CREATE)) return _deployCreate(to, value, data);
 
         // Deploy with CREATE2
-        if (operation == OPERATION_CREATE2) return _deployCreate2(to, value, data);
+        if (operation == uint256(OPERATION_TYPE.CREATE2)) return _deployCreate2(to, value, data);
 
         // STATICCALL
-        if (operation == OPERATION_STATICCALL) return _executeStaticCall(to, value, data);
+        if (operation == uint256(OPERATION_TYPE.STATICCALL)) return _executeStaticCall(to, value, data);
 
         // DELEGATECALL
         //
@@ -89,7 +84,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         // - update the contract owner
         // - run selfdestruct in the context of this contract
         //
-        if (operation == OPERATION_DELEGATECALL) return _executeDelegateCall(to, value, data);
+        if (operation == uint256(OPERATION_TYPE.DELEGATECALL)) return _executeDelegateCall(to, value, data);
 
         revert("ERC725X: Unknown operation type");
     }
@@ -106,7 +101,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-        emit Executed(OPERATION_CALL, to, value, bytes4(data));
+        emit Executed(uint256(OPERATION_TYPE.CALL), to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.call{value: value}(data);
@@ -127,7 +122,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
 
-        emit Executed(OPERATION_STATICCALL, to, value, bytes4(data));
+        emit Executed(uint256(OPERATION_TYPE.STATICCALL), to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.staticcall(data);
@@ -148,7 +143,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
 
-        emit Executed(OPERATION_DELEGATECALL, to, value, bytes4(data));
+        emit Executed(uint256(OPERATION_TYPE.DELEGATECALL), to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.delegatecall(data);
@@ -182,7 +177,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         require(contractAddress != address(0), "ERC725X: Could not deploy contract");
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_CREATE, contractAddress, value);
+        emit ContractCreated(uint256(OPERATION_TYPE.CREATE), contractAddress, value);
     }
 
     /**
@@ -208,6 +203,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_CREATE2, contractAddress, value);
+        emit ContractCreated(uint256(OPERATION_TYPE.CREATE2), contractAddress, value);
     }
 }
