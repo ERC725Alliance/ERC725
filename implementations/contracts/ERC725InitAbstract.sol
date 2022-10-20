@@ -28,8 +28,6 @@ abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore 
 
     // NOTE this implementation has not by default: receive() external payable {}
 
-    /* Overrides functions */
-
     /**
      * @inheritdoc ERC165
      */

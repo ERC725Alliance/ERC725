@@ -27,7 +27,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
      */
     mapping(bytes32 => bytes) internal _store;
 
-    /* Public functions */
     /**
      * @inheritdoc IERC725Y
      */
@@ -77,8 +76,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         }
     }
 
-    /* Internal functions */
-
     function _getData(bytes32 dataKey) internal view virtual returns (bytes memory dataValue) {
         return _store[dataKey];
     }
@@ -97,8 +94,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
             return i + 1;
         }
     }
-
-    /* Overrides functions */
 
     /**
      * @inheritdoc ERC165

@@ -26,8 +26,6 @@ contract ERC725 is ERC725XCore, ERC725YCore {
 
     // NOTE this implementation has not by default: receive() external payable {}
 
-    /* Overrides functions */
-
     /**
      * @inheritdoc ERC165
      */
