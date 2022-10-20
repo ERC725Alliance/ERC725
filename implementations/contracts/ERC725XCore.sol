@@ -20,6 +20,20 @@ import {
     OPERATION_TYPE
 } from "./constants.sol";
 
+error ERC725X_InsufficientBalance(uint256 balance, uint256 value);
+
+error ERC725X_UnknownOperationType(uint256 operationTypeProvided);
+
+error ERC725X_MsgValueDisallowedInStaticCall();
+
+error ERC725X_MsgValueDisallowedInDelegateCall();
+
+error ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+
+error ERC725X_ContractDeploymentFailed();
+
+error ERC725X_NoContractBytecodeProvided();
+
 /**
  * @title Core implementation of ERC725X executor
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -37,7 +51,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) public payable virtual onlyOwner returns (bytes memory) {
-        require(address(this).balance >= value, "ERC725X: insufficient balance");
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
         return _execute(operationType, to, value, data);
     }
 
@@ -55,22 +71,22 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     function _execute(
-        uint256 operation,
+        uint256 operationType,
         address to,
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory) {
         // CALL
-        if (operation == uint256(OPERATION_TYPE.CALL)) return _executeCall(to, value, data);
+        if (operationType == uint256(OPERATION_TYPE.CALL)) return _executeCall(to, value, data);
 
         // Deploy with CREATE
-        if (operation == uint256(OPERATION_TYPE.CREATE)) return _deployCreate(to, value, data);
+        if (operationType == uint256(OPERATION_TYPE.CREATE)) return _deployCreate(to, value, data);
 
         // Deploy with CREATE2
-        if (operation == uint256(OPERATION_TYPE.CREATE2)) return _deployCreate2(to, value, data);
+        if (operationType == uint256(OPERATION_TYPE.CREATE2)) return _deployCreate2(to, value, data);
 
         // STATICCALL
-        if (operation == uint256(OPERATION_TYPE.STATICCALL)) return _executeStaticCall(to, value, data);
+        if (operationType == uint256(OPERATION_TYPE.STATICCALL)) return _executeStaticCall(to, value, data);
 
         // DELEGATECALL
         //
@@ -84,9 +100,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         // - update the contract owner
         // - run selfdestruct in the context of this contract
         //
-        if (operation == uint256(OPERATION_TYPE.DELEGATECALL)) return _executeDelegateCall(to, value, data);
+        if (operationType == uint256(OPERATION_TYPE.DELEGATECALL)) return _executeDelegateCall(to, value, data);
 
-        revert("ERC725X: Unknown operation type");
+        revert ERC725X_UnknownOperationType(operationType);
     }
 
     /**
@@ -120,9 +136,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-        require(value == 0, "ERC725X: cannot transfer value with operation STATICCALL");
+        if (value != 0) {
+            revert ERC725X_MsgValueDisallowedInStaticCall();
+        }
 
-        emit Executed(uint256(OPERATION_TYPE.STATICCALL), to, value, bytes4(data));
+        emit Executed(3, to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.staticcall(data);
@@ -141,14 +159,18 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-        require(value == 0, "ERC725X: cannot transfer value with operation DELEGATECALL");
+        if (value != 0) {
+            revert ERC725X_MsgValueDisallowedInDelegateCall();
+        }
 
-        emit Executed(uint256(OPERATION_TYPE.DELEGATECALL), to, value, bytes4(data));
+        emit Executed(4, to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
+
+   
 
     /**
      * @dev deploy a contract using the CREATE opcode (operation type = 1)
@@ -162,11 +184,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory newContract) {
-        require(
-            to == address(0),
-            "ERC725X: CREATE operations require the receiver address to be empty"
-        );
-        require(data.length != 0, "ERC725X: No contract bytecode provided");
+        if (to != address(0)) {
+            revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+        }
+
+        if (data.length == 0) {
+            revert ERC725X_NoContractBytecodeProvided();
+        }
 
         address contractAddress;
         // solhint-disable no-inline-assembly
@@ -174,10 +198,12 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             contractAddress := create(value, add(data, 0x20), mload(data))
         }
 
-        require(contractAddress != address(0), "ERC725X: Could not deploy contract");
+        if (contractAddress == address(0)) {
+            revert ERC725X_ContractDeploymentFailed();
+        }
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(uint256(OPERATION_TYPE.CREATE), contractAddress, value);
+        emit ContractCreated(1, contractAddress, value);
     }
 
     /**
@@ -192,17 +218,19 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory newContract) {
-        require(
-            to == address(0),
-            "ERC725X: CREATE operations require the receiver address to be empty"
-        );
-        require(data.length != 0, "ERC725X: No contract bytecode provided");
+        if (to != address(0)) {
+            revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+        }
+
+        if (data.length == 0) {
+            revert ERC725X_NoContractBytecodeProvided();
+        }
 
         bytes32 salt = BytesLib.toBytes32(data, data.length - 32);
         bytes memory bytecode = BytesLib.slice(data, 0, data.length - 32);
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(uint256(OPERATION_TYPE.CREATE2), contractAddress, value);
+        emit ContractCreated(2, contractAddress, value);
     }
 }
