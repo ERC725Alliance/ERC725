@@ -39,13 +39,23 @@ interface IERC725X is IERC165 {
 
     /**
      * @param operationType The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4
-     * @param to The smart contract or address to interact with, `to` will be unused if a contract is created (operation 1 and 2)
+     * @param to The smart contract or address to interact with (unused if a contract is created via operation 1 or 2)
      * @param value The amount of native tokens to transfer (in Wei).
      * @param data The call data, or the bytecode of the contract to deploy
-     * @dev Executes any other smart contract.
-     * SHOULD only be callable by the owner of the contract set via ERC173
+     * 
+     * @dev Generic executor function to:
+     * 
+     * - send native tokens to any address.
+     * - interact with any contract by passing an abi-encoded function call in the `data` parameter.
+     * - deploy a contract by providing its bytecode via the `data` parameter
+     * 
+     * Requirements:
+     * 
+     * - SHOULD only be callable by the owner of the contract set via ERC173.
+     * - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully.
+     *  `to` SHOULD be address(0) when deploying a contract.
      *
-     * Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4
+     * Emits an {Executed} event, when a call is executed under `operationType` 0, 3 and 4
      * Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2
      */
     function execute(

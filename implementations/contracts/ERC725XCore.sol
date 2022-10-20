@@ -26,7 +26,7 @@ import {
 } from "./constants.sol";
 
 /**
- * @title Core implementation of ERC725 X executor
+ * @title Core implementation of ERC725X executor
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
@@ -37,16 +37,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @inheritdoc IERC725X
      */
     function execute(
-        uint256 operation,
+        uint256 operationType,
         address to,
         uint256 value,
         bytes memory data
     ) public payable virtual onlyOwner returns (bytes memory) {
         require(address(this).balance >= value, "ERC725X: insufficient balance");
-        return _execute(operation, to, value, data);
+        return _execute(operationType, to, value, data);
     }
-
-    /* Overrides functions */
 
     /**
      * @inheritdoc ERC165
@@ -60,8 +58,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
-
-    /* Internal functions */
 
     function _execute(
         uint256 operation,
@@ -99,7 +95,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform call using operation 0
+     * @dev perform low-level call (operation type = 0)
      * @param to The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
@@ -118,7 +114,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform staticcall using operation 3
+     * @dev perform low-level staticcall (operation type = 3)
      * @param to The address on which staticcall is executed
      * @param value The value passed to the execute(...) function (MUST be 0)
      * @param data The data to be sent with the staticcall
@@ -139,7 +135,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform delegatecall using operation 4
+     * @dev perform low-level delegatecall (operation type = 4)
      * @param to The address on which delegatecall is executed
      * @param value The value passed to the execute(...) function (MUST be 0)
      * @param data The data to be sent with the delegatecall
@@ -160,7 +156,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform contract creation using operation 1
+     * @dev deploy a contract using the CREATE opcode (operation type = 1)
      * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE)
      * @param value The value to be sent to the contract created
      * @param data The contract bytecode to deploy
@@ -190,7 +186,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform contract creation using operation 2
+     * @dev deploy a contract using the CREATE2 opcode (operation type = 2)
      * @param to The recipient address passed to execute(...) (MUST be address(0) for CREATE2)
      * @param value The value to be sent to the contract created
      * @param data The contract bytecode to deploy appended with a bytes32 salt
