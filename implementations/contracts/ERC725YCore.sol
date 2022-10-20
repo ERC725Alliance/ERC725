@@ -12,6 +12,8 @@ import {OwnableUnset} from "./custom/OwnableUnset.sol";
 // constants
 import {_INTERFACEID_ERC725Y} from "./constants.sol";
 
+import "./errors.sol";
+
 /**
  * @title Core implementation of ERC725Y General data key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -66,7 +68,10 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         virtual
         onlyOwner
     {
-        require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
+        if (dataKeys.length != dataValues.length) {
+            revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
+        }
+        
         for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             _setData(dataKeys[i], dataValues[i]);
         }

@@ -20,19 +20,7 @@ import {
     OPERATION_TYPE
 } from "./constants.sol";
 
-error ERC725X_InsufficientBalance(uint256 balance, uint256 value);
-
-error ERC725X_UnknownOperationType(uint256 operationTypeProvided);
-
-error ERC725X_MsgValueDisallowedInStaticCall();
-
-error ERC725X_MsgValueDisallowedInDelegateCall();
-
-error ERC725X_CreateOperationsRequireEmptyRecipientAddress();
-
-error ERC725X_ContractDeploymentFailed();
-
-error ERC725X_NoContractBytecodeProvided();
+import "./errors.sol";
 
 /**
  * @title Core implementation of ERC725X executor
@@ -70,6 +58,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @dev check the `operationType` provided and perform the associated low-level opcode.
+     * see `IERC725X.execute(...)`.
+     */
     function _execute(
         uint256 operationType,
         address to,
