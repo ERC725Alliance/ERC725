@@ -15,10 +15,7 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
-import {
-    _INTERFACEID_ERC725X,
-    OPERATION_TYPE
-} from "./constants.sol";
+import {_INTERFACEID_ERC725X, OPERATION_TYPE} from "./constants.sol";
 
 import "./errors.sol";
 
@@ -132,7 +129,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             revert ERC725X_MsgValueDisallowedInStaticCall();
         }
 
-        emit Executed(3, to, value, bytes4(data));
+        emit Executed(uint256(OPERATION_TYPE.STATICCALL), to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.staticcall(data);
@@ -155,14 +152,12 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             revert ERC725X_MsgValueDisallowedInDelegateCall();
         }
 
-        emit Executed(4, to, value, bytes4(data));
+        emit Executed(uint256(OPERATION_TYPE.DELEGATECALL), to, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
         (bool success, bytes memory returnData) = to.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
-
-   
 
     /**
      * @dev deploy a contract using the CREATE opcode (operation type = 1)
@@ -195,7 +190,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(1, contractAddress, value);
+        emit ContractCreated(uint256(OPERATION_TYPE.CREATE), contractAddress, value);
     }
 
     /**
@@ -223,6 +218,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(2, contractAddress, value);
+        emit ContractCreated(uint256(OPERATION_TYPE.CREATE2), contractAddress, value);
     }
 }
