@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 bytes4 constant _INTERFACEID_ERC725X = 0x44c028fe;
 bytes4 constant _INTERFACEID_ERC725Y = 0x714df77c;
 
-// ERC725X OPERATIONS TYPES
+// ERC725X OPERATION TYPES
 enum OPERATION_TYPE {
     CALL,
     CREATE,
