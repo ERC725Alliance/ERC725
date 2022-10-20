@@ -39,7 +39,7 @@ error ERC725X_CreateOperationsRequireEmptyRecipientAddress();
 error ERC725X_ContractDeploymentFailed();
 
 /**
- * @dev reverts when no contract bytecode was provided as parameter when trying to deploy a contract 
+ * @dev reverts when no contract bytecode was provided as parameter when trying to deploy a contract
  * via `ERC725X.execute(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error ERC725X_NoContractBytecodeProvided();

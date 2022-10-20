@@ -42,15 +42,15 @@ interface IERC725X is IERC165 {
      * @param to The smart contract or address to interact with (unused if a contract is created via operation 1 or 2)
      * @param value The amount of native tokens to transfer (in Wei).
      * @param data The call data, or the bytecode of the contract to deploy
-     * 
+     *
      * @dev Generic executor function to:
-     * 
+     *
      * - send native tokens to any address.
      * - interact with any contract by passing an abi-encoded function call in the `data` parameter.
      * - deploy a contract by providing its bytecode via the `data` parameter
-     * 
+     *
      * Requirements:
-     * 
+     *
      * - SHOULD only be callable by the owner of the contract set via ERC173.
      * - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully.
      * - `to` SHOULD be address(0) when deploying a contract.

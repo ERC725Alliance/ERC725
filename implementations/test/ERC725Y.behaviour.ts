@@ -627,7 +627,11 @@ export const shouldBehaveLikeERC725Y = (
                   [txParams.dataKey, txParams.dataKey],
                   [txParams.dataValue]
                 )
-            ).to.be.revertedWithCustomError(context.erc725Y, "ERC725Y_DataKeysValuesLengthMismatch")
+            )
+              .to.be.revertedWithCustomError(
+                context.erc725Y,
+                "ERC725Y_DataKeysValuesLengthMismatch"
+              )
               .withArgs(2, 1);
           });
         });

@@ -501,7 +501,9 @@ export const shouldBehaveLikeERC725X = (
               data: "0x",
             };
 
-            const contractBalance = await provider.getBalance(context.erc725X.address)
+            const contractBalance = await provider.getBalance(
+              context.erc725X.address
+            );
 
             await expect(
               context.erc725X
@@ -512,10 +514,12 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_InsufficientBalance").withArgs(
-              contractBalance,
-              ethers.utils.parseEther("75")
-            );
+            )
+              .to.be.revertedWithCustomError(
+                context.erc725X,
+                "ERC725X_InsufficientBalance"
+              )
+              .withArgs(contractBalance, ethers.utils.parseEther("75"));
           });
         });
       });
@@ -958,7 +962,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_ContractDeploymentFailed");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_ContractDeploymentFailed"
+            );
           });
         });
 
@@ -1049,7 +1056,9 @@ export const shouldBehaveLikeERC725X = (
               data: WithConstructorPayableContractBytecode,
             };
 
-            const contractBalance = await provider.getBalance(context.erc725X.address)
+            const contractBalance = await provider.getBalance(
+              context.erc725X.address
+            );
 
             await expect(
               context.erc725X
@@ -1060,13 +1069,12 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(
-              context.erc725X,
-              "ERC725X_InsufficientBalance"
-            ).withArgs(
-              contractBalance,
-              ethers.utils.parseEther("90")
-            );
+            )
+              .to.be.revertedWithCustomError(
+                context.erc725X,
+                "ERC725X_InsufficientBalance"
+              )
+              .withArgs(contractBalance, ethers.utils.parseEther("90"));
           });
         });
 
@@ -1088,7 +1096,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_ContractDeploymentFailed");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_ContractDeploymentFailed"
+            );
           });
         });
       });
@@ -1340,7 +1351,8 @@ export const shouldBehaveLikeERC725X = (
                   txParams.data
                 )
             ).to.be.revertedWithCustomError(
-              context.erc725X, "ERC725X_CreateOperationsRequireEmptyRecipientAddress"
+              context.erc725X,
+              "ERC725X_CreateOperationsRequireEmptyRecipientAddress"
             );
           });
         });
@@ -1420,7 +1432,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_InsufficientBalance");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_InsufficientBalance"
+            );
           });
         });
 
@@ -1934,7 +1949,10 @@ export const shouldBehaveLikeERC725X = (
               txParams.value,
               txParams.data
             )
-        ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_UnknownOperationType");
+        ).to.be.revertedWithCustomError(
+          context.erc725X,
+          "ERC725X_UnknownOperationType"
+        );
       });
     });
   });

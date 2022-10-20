@@ -71,7 +71,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         if (dataKeys.length != dataValues.length) {
             revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
         }
-        
+
         for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrement(i)) {
             _setData(dataKeys[i], dataValues[i]);
         }
