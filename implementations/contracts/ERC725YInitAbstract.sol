@@ -18,8 +18,8 @@ abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
         internal
         virtual
         onlyInitializing
-        notZeroAddressAsOwner(newOwner)
     {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
         OwnableUnset._setOwner(newOwner);
     }
 }

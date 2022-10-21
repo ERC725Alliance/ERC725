@@ -20,7 +20,8 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
      */
-    constructor(address newOwner) notZeroAddressAsOwner(newOwner) {
+    constructor(address newOwner) {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
         OwnableUnset._setOwner(newOwner);
     }
 
