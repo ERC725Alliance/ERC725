@@ -785,6 +785,28 @@ export const shouldBehaveLikeERC725X = (
 
     describe("When testing Operation CREATE", () => {
       describe("When creating a contract", () => {
+        describe("without passing the contract deployment code", () => {
+          it("should revert", async () => {
+            const txParams = {
+              Operation: OPERATION_TYPE.CREATE,
+              to: AddressZero,
+              value: 0,
+              data: "0x",
+            };
+
+            await expect(
+              context.erc725X
+                .connect(context.accounts.owner)
+                .execute(
+                  txParams.Operation,
+                  txParams.to,
+                  txParams.value,
+                  txParams.data
+                )
+            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_NoContractBytecodeProvided");
+          })
+        })
+
         describe("without constructor", () => {
           it("should create the contract and emit ContractCreated event", async () => {
             const txParams = {

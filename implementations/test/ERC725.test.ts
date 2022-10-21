@@ -18,7 +18,7 @@ type ERC725TestContext = {
   deployParams: ERC725DeployParams;
 };
 
-describe("ERC725", () => {
+describe.only("ERC725", () => {
   describe("when using ERC725 with constructor", () => {
     describe("when deploying the contract", () => {
       it("should revert when giving address(0) as owner", async () => {
@@ -27,6 +27,8 @@ describe("ERC725", () => {
         const deployParams = {
           newOwner: ethers.constants.AddressZero,
         };
+
+        const contract = await new ERC725__factory(accounts[0]).deploy(accounts[0].address)
 
         await expect(
           new ERC725__factory(accounts[0]).deploy(deployParams.newOwner)
