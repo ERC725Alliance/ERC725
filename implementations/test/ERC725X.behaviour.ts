@@ -501,6 +501,10 @@ export const shouldBehaveLikeERC725X = (
               data: "0x",
             };
 
+            const contractBalance = await provider.getBalance(
+              context.erc725X.address
+            );
+
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
@@ -510,7 +514,12 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance");
+            )
+              .to.be.revertedWithCustomError(
+                context.erc725X,
+                "ERC725X_InsufficientBalance"
+              )
+              .withArgs(contractBalance, ethers.utils.parseEther("75"));
           });
         });
       });
@@ -776,6 +785,28 @@ export const shouldBehaveLikeERC725X = (
 
     describe("When testing Operation CREATE", () => {
       describe("When creating a contract", () => {
+        describe("without passing the contract deployment code", () => {
+          it("should revert", async () => {
+            const txParams = {
+              Operation: OPERATION_TYPE.CREATE,
+              to: AddressZero,
+              value: 0,
+              data: "0x",
+            };
+
+            await expect(
+              context.erc725X
+                .connect(context.accounts.owner)
+                .execute(
+                  txParams.Operation,
+                  txParams.to,
+                  txParams.value,
+                  txParams.data
+                )
+            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_NoContractBytecodeProvided");
+          })
+        })
+
         describe("without constructor", () => {
           it("should create the contract and emit ContractCreated event", async () => {
             const txParams = {
@@ -953,7 +984,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: Could not deploy contract");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_ContractDeploymentFailed"
+            );
           });
         });
 
@@ -975,8 +1009,9 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith(
-              "ERC725X: CREATE operations require the receiver address to be empty"
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_CreateOperationsRequireEmptyRecipientAddress"
             );
           });
         });
@@ -1043,6 +1078,10 @@ export const shouldBehaveLikeERC725X = (
               data: WithConstructorPayableContractBytecode,
             };
 
+            const contractBalance = await provider.getBalance(
+              context.erc725X.address
+            );
+
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
@@ -1052,7 +1091,12 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance");
+            )
+              .to.be.revertedWithCustomError(
+                context.erc725X,
+                "ERC725X_InsufficientBalance"
+              )
+              .withArgs(contractBalance, ethers.utils.parseEther("90"));
           });
         });
 
@@ -1074,7 +1118,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: Could not deploy contract");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_ContractDeploymentFailed"
+            );
           });
         });
       });
@@ -1325,8 +1372,9 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith(
-              "ERC725X: CREATE operations require the receiver address to be empty"
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_CreateOperationsRequireEmptyRecipientAddress"
             );
           });
         });
@@ -1406,7 +1454,10 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith("ERC725X: insufficient balance");
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_InsufficientBalance"
+            );
           });
         });
 
@@ -1612,8 +1663,9 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith(
-              "ERC725X: cannot transfer value with operation STATICCALL"
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_MsgValueDisallowedInStaticCall"
             );
           });
         });
@@ -1783,8 +1835,9 @@ export const shouldBehaveLikeERC725X = (
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWith(
-              "ERC725X: cannot transfer value with operation DELEGATECALL"
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_MsgValueDisallowedInDelegateCall"
             );
           });
         });
@@ -1918,7 +1971,10 @@ export const shouldBehaveLikeERC725X = (
               txParams.value,
               txParams.data
             )
-        ).to.be.revertedWith("ERC725X: Unknown operation type");
+        ).to.be.revertedWithCustomError(
+          context.erc725X,
+          "ERC725X_UnknownOperationType"
+        );
       });
     });
   });

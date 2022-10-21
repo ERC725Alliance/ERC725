@@ -14,7 +14,7 @@ contract Reader {
      * @dev do not put the `view` modifier, so to display the gas usage of `getData(...)`
      *  in the gas reporter of the test suite
      */
-    function read(bytes32 _key) public returns (bytes memory) {
+    function read(bytes32 _key) public view returns (bytes memory) {
         bytes32[] memory keys = new bytes32[](1);
         keys[0] = _key;
 

@@ -21,14 +21,12 @@ abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore 
         internal
         virtual
         onlyInitializing
-        notZeroAddressAsOwner(newOwner)
     {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
         OwnableUnset._setOwner(newOwner);
     }
 
     // NOTE this implementation has not by default: receive() external payable {}
-
-    /* Overrides functions */
 
     /**
      * @inheritdoc ERC165

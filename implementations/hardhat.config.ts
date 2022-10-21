@@ -33,6 +33,14 @@ const config: HardhatUserConfig = {
     outDir: "types",
     target: "ethers-v5",
   },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    gasPrice: 21,
+    excludeContracts: ["helpers/"],
+    src: "./contracts",
+    showMethodSig: true,
+  }
 };
 
 export default config;
