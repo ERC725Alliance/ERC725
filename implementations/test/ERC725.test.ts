@@ -18,7 +18,7 @@ type ERC725TestContext = {
   deployParams: ERC725DeployParams;
 };
 
-describe.only("ERC725", () => {
+describe("ERC725", () => {
   describe("when using ERC725 with constructor", () => {
     describe("when deploying the contract", () => {
       it("should revert when giving address(0) as owner", async () => {

@@ -164,21 +164,21 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
      * @dev deploy a contract using the CREATE opcode (operation type = 1)
      * @param value The value to be sent to the contract created
-     * @param data The contract bytecode to deploy
+     * @param creationCode The contract creation bytecode to deploy (runtime + constructor code)
      * @return newContract The address of the contract created as bytes
      */
     function _deployCreate(
         uint256 value,
-        bytes memory data
+        bytes memory creationCode
     ) internal virtual returns (bytes memory newContract) {
-        if (data.length == 0) {
+        if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
 
         address contractAddress;
         // solhint-disable no-inline-assembly
         assembly {
-            contractAddress := create(value, add(data, 0x20), mload(data))
+            contractAddress := create(value, add(creationCode, 0x20), mload(creationCode))
         }
 
         if (contractAddress == address(0)) {
@@ -192,19 +192,19 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
      * @dev deploy a contract using the CREATE2 opcode (operation type = 2)
      * @param value The value to be sent to the contract created
-     * @param data The contract bytecode to deploy appended with a bytes32 salt
+     * @param creationCode The contract creation bytecode to deploy (runtime + constructor code) appended with a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
     function _deployCreate2(
         uint256 value,
-        bytes memory data
+        bytes memory creationCode
     ) internal virtual returns (bytes memory newContract) {
-        if (data.length == 0) {
+        if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
 
-        bytes32 salt = BytesLib.toBytes32(data, data.length - 32);
-        bytes memory bytecode = BytesLib.slice(data, 0, data.length - 32);
+        bytes32 salt = BytesLib.toBytes32(creationCode, creationCode.length - 32);
+        bytes memory bytecode = BytesLib.slice(creationCode, 0, creationCode.length - 32);
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
