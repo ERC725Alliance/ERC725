@@ -41,7 +41,7 @@ interface IERC725X is IERC165 {
      * @param operationType The operation type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4
      * @param to The address of the EOA or smart contract to (unused if a contract is created via operation type 1 or 2)
      * @param value The amount of native tokens to transfer (in Wei)
-     * @param data The call data, or the creation bytecode of the contract to deploy (constructor + runtime code)
+     * @param data The call data, or the creation bytecode of the contract to deploy
      *
      * @dev Generic executor function to:
      *
