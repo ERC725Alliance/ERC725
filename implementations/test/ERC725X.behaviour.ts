@@ -95,9 +95,15 @@ export const shouldBehaveLikeERC725X = (
     valueToSend = ethers.utils.parseEther("50");
     await context.erc725X
       .connect(context.accounts.owner)
-      .execute(OPERATION_TYPE.CALL, AddressZero, 0, "0x", {
-        value: valueToSend,
-      });
+      ["execute(uint256,address,uint256,bytes)"](
+        OPERATION_TYPE.CALL,
+        AddressZero,
+        0,
+        "0x",
+        {
+          value: valueToSend,
+        }
+      );
   });
 
   describe("When testing ownership", () => {
@@ -169,7 +175,7 @@ export const shouldBehaveLikeERC725X = (
           await expect(
             context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -201,7 +207,7 @@ export const shouldBehaveLikeERC725X = (
           await expect(
             context.erc725X
               .connect(context.accounts.anyone)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -237,7 +243,7 @@ export const shouldBehaveLikeERC725X = (
 
             await context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -276,7 +282,7 @@ export const shouldBehaveLikeERC725X = (
 
             await context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -312,7 +318,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -342,7 +348,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -373,7 +379,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -402,7 +408,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -437,7 +443,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -472,7 +478,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -508,7 +514,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -551,7 +557,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -602,7 +608,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -648,12 +654,9 @@ export const shouldBehaveLikeERC725X = (
               data: countCounterABI,
             };
 
-            const returnValue = await context.erc725X.callStatic.execute(
-              txParams.Operation,
-              txParams.to,
-              txParams.value,
-              txParams.data
-            );
+            const returnValue = await context.erc725X.callStatic[
+              "execute(uint256,address,uint256,bytes)"
+            ](txParams.Operation, txParams.to, txParams.value, txParams.data);
 
             const [countDecoded] = abiCoder.decode(["uint256"], returnValue);
 
@@ -686,7 +689,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -724,7 +727,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -761,12 +764,9 @@ export const shouldBehaveLikeERC725X = (
                 data: returnSomeStringsABI,
               };
 
-              const returnValue = await context.erc725X.callStatic.execute(
-                txParams.Operation,
-                txParams.to,
-                txParams.value,
-                txParams.data
-              );
+              const returnValue = await context.erc725X.callStatic[
+                "execute(uint256,address,uint256,bytes)"
+              ](txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const arrays = abiCoder.decode(
                 ["string[]", "string[]"],
@@ -797,15 +797,18 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
                   txParams.data
                 )
-            ).to.be.revertedWithCustomError(context.erc725X, "ERC725X_NoContractBytecodeProvided");
-          })
-        })
+            ).to.be.revertedWithCustomError(
+              context.erc725X,
+              "ERC725X_NoContractBytecodeProvided"
+            );
+          });
+        });
 
         describe("without constructor", () => {
           it("should create the contract and emit ContractCreated event", async () => {
@@ -818,7 +821,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -832,7 +835,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -876,7 +879,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -890,7 +893,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -925,7 +928,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -939,7 +942,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -978,7 +981,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1003,7 +1006,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1027,7 +1030,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1041,7 +1044,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1085,7 +1088,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1112,7 +1115,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1142,7 +1145,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1156,7 +1159,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1204,7 +1207,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1218,7 +1221,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1256,7 +1259,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1270,7 +1273,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1311,7 +1314,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1342,7 +1345,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1366,7 +1369,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1392,7 +1395,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1406,7 +1409,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1448,7 +1451,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1476,7 +1479,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1500,7 +1503,7 @@ export const shouldBehaveLikeERC725X = (
 
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1514,7 +1517,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1540,7 +1543,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1561,7 +1564,7 @@ export const shouldBehaveLikeERC725X = (
             };
             const addressContractCreated = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1569,7 +1572,7 @@ export const shouldBehaveLikeERC725X = (
               );
             await context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1595,7 +1598,7 @@ export const shouldBehaveLikeERC725X = (
             // re-creating
             await context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1629,7 +1632,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1657,7 +1660,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1694,7 +1697,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1729,7 +1732,7 @@ export const shouldBehaveLikeERC725X = (
 
             const result = await context.erc725X
               .connect(context.accounts.owner)
-              .callStatic.execute(
+              .callStatic["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1764,7 +1767,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1803,7 +1806,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1829,7 +1832,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1867,7 +1870,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1906,7 +1909,7 @@ export const shouldBehaveLikeERC725X = (
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
+                ["execute(uint256,address,uint256,bytes)"](
                   txParams.Operation,
                   txParams.to,
                   txParams.value,
@@ -1936,7 +1939,7 @@ export const shouldBehaveLikeERC725X = (
 
             await context.erc725X
               .connect(context.accounts.owner)
-              .execute(
+              ["execute(uint256,address,uint256,bytes)"](
                 txParams.Operation,
                 txParams.to,
                 txParams.value,
@@ -1965,7 +1968,7 @@ export const shouldBehaveLikeERC725X = (
         await expect(
           context.erc725X
             .connect(context.accounts.owner)
-            .execute(
+            ["execute(uint256,address,uint256,bytes)"](
               txParams.Operation,
               txParams.to,
               txParams.value,
