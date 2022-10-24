@@ -17,7 +17,7 @@ contract ERC165InterfaceIDs {
             _INTERFACEID_ERC725X == type(IERC725X).interfaceId,
             "hardcoded _INTERFACEID_ERC725X in `constants.sol` does not match `type(IERC725X).interfaceId`"
         );
-        return _INTERFACEID_ERC725X;
+        return type(IERC725X).interfaceId;
     }
 
     function getERC725YInterfaceID() public pure returns (bytes4) {
@@ -25,6 +25,6 @@ contract ERC165InterfaceIDs {
             _INTERFACEID_ERC725Y == type(IERC725Y).interfaceId,
             "hardcoded _INTERFACEID_ERC725Y in `constants.sol` does not match `type(IERC725Y).interfaceId`"
         );
-        return _INTERFACEID_ERC725Y;
+        return type(IERC725Y).interfaceId;
     }
 }
