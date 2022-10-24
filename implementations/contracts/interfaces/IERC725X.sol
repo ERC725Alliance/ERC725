@@ -62,6 +62,35 @@ interface IERC725X is IERC165 {
         uint256 operationType,
         address to,
         uint256 value,
-        bytes calldata data
+        bytes memory data
     ) external payable returns (bytes memory);
+
+    /**
+     * @param operationType The list of operation type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4
+     * @param to The list of {to} addresses to interact with
+     * @param value The list of amount of native tokens to transfer (in Wei)
+     * @param data The list of call data, or the creation bytecode of the contract to deploy
+     *
+     * @dev Generic executor function to:
+     *
+     * - send native tokens to any address.
+     * - interact with any contract by passing an abi-encoded function call in the `data` parameter.
+     * - deploy a contract by providing its creation bytecode in the `data` parameter.
+     *
+     * Requirements:
+     *
+     * - The length of the parameters provided MUST be equal
+     * - SHOULD only be callable by the owner of the contract set via ERC173.
+     * - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully.
+     * - `to` SHOULD be address(0) when deploying a contract.
+     *
+     * Emits an {Executed} event, when a call is made with `operationType` 0 (CALL), 3 (STATICCALL) or 4 (DELEGATECALL)
+     * Emits a {ContractCreated} event, when deploying a contract with `operationType` 1 (CREATE) or 2 (CREATE2)
+     */
+    function execute(
+        uint256[] memory operationType,
+        address[] memory to,
+        uint256[] memory value,
+        bytes[] memory data
+    ) external payable returns (bytes[] memory);
 }

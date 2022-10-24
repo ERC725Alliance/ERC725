@@ -16,7 +16,7 @@ import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
 import {
-    _INTERFACEID_ERC725X, 
+    _INTERFACEID_ERC725X,
     OPERATION_0_CALL,
     OPERATION_1_CREATE,
     OPERATION_2_CREATE2,
@@ -47,6 +47,29 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             revert ERC725X_InsufficientBalance(address(this).balance, value);
         }
         return _execute(operationType, to, value, data);
+    }
+
+    /**
+     * @inheritdoc IERC725X
+     */
+    function execute(
+        uint256[] memory operationType,
+        address[] memory to,
+        uint256[] memory value,
+        bytes[] memory data
+    ) public payable virtual onlyOwner returns (bytes[] memory result) {
+        if (
+            operationType.length == to.length &&
+            to.length == value.length &&
+            value.length == data.length
+        ) revert ERC725X_ExecuteParametersLengthMismatch();
+
+        for (uint256 i = 0; i < operationType.length; i++) {
+            if (address(this).balance < value[i])
+                revert ERC725X_InsufficientBalance(address(this).balance, value[i]);
+
+            result[i] = _execute(operationType[i], to[i], value[i], data[i]);
+        }
     }
 
     /**
@@ -140,10 +163,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the staticcall
      * @return result The data returned from the staticcall
      */
-    function _executeStaticCall(
-        address to,
-        bytes memory data
-    ) internal virtual returns (bytes memory result) {
+    function _executeStaticCall(address to, bytes memory data)
+        internal
+        virtual
+        returns (bytes memory result)
+    {
         emit Executed(OPERATION_3_STATICCALL, to, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
@@ -157,10 +181,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
      */
-    function _executeDelegateCall(
-        address to,
-        bytes memory data
-    ) internal virtual returns (bytes memory result) {
+    function _executeDelegateCall(address to, bytes memory data)
+        internal
+        virtual
+        returns (bytes memory result)
+    {
         emit Executed(OPERATION_4_DELEGATECALL, to, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
@@ -174,10 +199,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s)
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate(
-        uint256 value,
-        bytes memory creationCode
-    ) internal virtual returns (bytes memory newContract) {
+    function _deployCreate(uint256 value, bytes memory creationCode)
+        internal
+        virtual
+        returns (bytes memory newContract)
+    {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
@@ -202,10 +228,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s) and a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate2(
-        uint256 value,
-        bytes memory creationCode
-    ) internal virtual returns (bytes memory newContract) {
+    function _deployCreate2(uint256 value, bytes memory creationCode)
+        internal
+        virtual
+        returns (bytes memory newContract)
+    {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
