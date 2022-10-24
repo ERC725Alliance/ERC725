@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // ERC165 INTERFACE IDs
-bytes4 constant _INTERFACEID_ERC725X = 0x44c028fe;
+bytes4 constant _INTERFACEID_ERC725X = 0x570ef073;
 bytes4 constant _INTERFACEID_ERC725Y = 0x714df77c;
 
 // ERC725X OPERATION TYPES

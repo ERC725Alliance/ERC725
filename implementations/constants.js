@@ -1,6 +1,6 @@
 const INTERFACE_ID = {
     ERC165: '0x01ffc9a7',
-    ERC725X: '0x44c028fe',
+    ERC725X: '0x570ef073',
     ERC725Y: '0x714df77c',
 };
 
