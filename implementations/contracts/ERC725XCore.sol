@@ -59,14 +59,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes[] memory data
     ) public payable virtual onlyOwner returns (bytes[] memory result) {
         if (
-            operationsType.length == to.length &&
-            to.length == values.length &&
-            values.length == data.length
+            operationsType.length != to.length ||
+            (to.length != values.length || values.length != data.length)
         ) revert ERC725X_ExecuteParametersLengthMismatch();
 
+        result = new bytes[](operationsType.length);
         for (uint256 i = 0; i < operationsType.length; i++) {
             if (address(this).balance < values[i])
-                revert ERC725X_InsufficientBalance(address(this).balance, value[i]);
+                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
 
             result[i] = _execute(operationsType[i], to[i], values[i], data[i]);
         }
