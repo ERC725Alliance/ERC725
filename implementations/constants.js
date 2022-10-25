@@ -12,7 +12,15 @@ const OPERATION_TYPE = {
     DELEGATECALL: 4,
 };
 
+const FUNCTIONS_SELECTOR = {
+    EXECUTE: '0x44c028fe',
+    EXECUTE_ARRAY: '0x13ced88d',
+    SETDATA: '0x7f23690c',
+    SETDATA_ARRAY: '0x14a6e293',
+};
+
 module.exports = {
     INTERFACE_ID,
     OPERATION_TYPE,
+    FUNCTIONS_SELECTOR,
 };
