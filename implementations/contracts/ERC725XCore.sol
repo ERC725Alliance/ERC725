@@ -64,7 +64,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         ) revert ERC725X_ExecuteParametersLengthMismatch();
 
         result = new bytes[](operationsType.length);
-        for (uint256 i = 0; i < operationsType.length; i++) {
+        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
             if (address(this).balance < values[i])
                 revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
 
@@ -243,5 +243,15 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value);
+    }
+
+    /**
+     * @dev Will return unchecked incremented uint256
+     *      can be used to save gas when iterating over loops
+     */
+    function _uncheckedIncrementERC725X(uint256 i) internal pure returns (uint256) {
+        unchecked {
+            return i + 1;
+        }
     }
 }
