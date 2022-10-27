@@ -9,7 +9,7 @@ import {IERC725Y} from "../interfaces/IERC725Y.sol";
 import "../constants.sol";
 
 /**
- * @dev Contract used to calculate interfacesId
+ * @dev Contract used to calculate constants
  */
 contract ConstantsChecker {
     function getERC725XInterfaceID() public pure returns (bytes4) {
