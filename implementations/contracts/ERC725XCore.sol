@@ -16,7 +16,7 @@ import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
 import {
-    _INTERFACEID_ERC725X, 
+    _INTERFACEID_ERC725X,
     OPERATION_0_CALL,
     OPERATION_1_CREATE,
     OPERATION_2_CREATE2,
@@ -39,14 +39,37 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      */
     function execute(
         uint256 operationType,
-        address to,
+        address target,
         uint256 value,
         bytes memory data
     ) public payable virtual onlyOwner returns (bytes memory) {
         if (address(this).balance < value) {
             revert ERC725X_InsufficientBalance(address(this).balance, value);
         }
-        return _execute(operationType, to, value, data);
+        return _execute(operationType, target, value, data);
+    }
+
+    /**
+     * @inheritdoc IERC725X
+     */
+    function execute(
+        uint256[] memory operationsType,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory datas
+    ) public payable virtual onlyOwner returns (bytes[] memory result) {
+        if (
+            operationsType.length != targets.length ||
+            (targets.length != values.length || values.length != datas.length)
+        ) revert ERC725X_ExecuteParametersLengthMismatch();
+
+        result = new bytes[](operationsType.length);
+        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
+            if (address(this).balance < values[i])
+                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
+
+            result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
+        }
     }
 
     /**
@@ -68,31 +91,31 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      */
     function _execute(
         uint256 operationType,
-        address to,
+        address target,
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory) {
         // CALL
         if (operationType == OPERATION_0_CALL) {
-            return _executeCall(to, value, data);
+            return _executeCall(target, value, data);
         }
 
         // Deploy with CREATE
         if (operationType == uint256(OPERATION_1_CREATE)) {
-            if (to != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+            if (target != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
             return _deployCreate(value, data);
         }
 
         // Deploy with CREATE2
         if (operationType == uint256(OPERATION_2_CREATE2)) {
-            if (to != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+            if (target != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
             return _deployCreate2(value, data);
         }
 
         // STATICCALL
         if (operationType == uint256(OPERATION_3_STATICCALL)) {
             if (value != 0) revert ERC725X_MsgValueDisallowedInStaticCall();
-            return _executeStaticCall(to, data);
+            return _executeStaticCall(target, data);
         }
 
         // DELEGATECALL
@@ -109,7 +132,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         //
         if (operationType == uint256(OPERATION_4_DELEGATECALL)) {
             if (value != 0) revert ERC725X_MsgValueDisallowedInDelegateCall();
-            return _executeDelegateCall(to, data);
+            return _executeDelegateCall(target, data);
         }
 
         revert ERC725X_UnknownOperationType(operationType);
@@ -117,54 +140,56 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev perform low-level call (operation type = 0)
-     * @param to The address on which call is executed
+     * @param target The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
      * @return result The data from the call
      */
     function _executeCall(
-        address to,
+        address target,
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
-        emit Executed(OPERATION_0_CALL, to, value, bytes4(data));
+        emit Executed(OPERATION_0_CALL, target, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.call{value: value}(data);
+        (bool success, bytes memory returnData) = target.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
      * @dev perform low-level staticcall (operation type = 3)
-     * @param to The address on which staticcall is executed
+     * @param target The address on which staticcall is executed
      * @param data The data to be sent with the staticcall
      * @return result The data returned from the staticcall
      */
-    function _executeStaticCall(
-        address to,
-        bytes memory data
-    ) internal virtual returns (bytes memory result) {
-        emit Executed(OPERATION_3_STATICCALL, to, 0, bytes4(data));
+    function _executeStaticCall(address target, bytes memory data)
+        internal
+        virtual
+        returns (bytes memory result)
+    {
+        emit Executed(OPERATION_3_STATICCALL, target, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.staticcall(data);
+        (bool success, bytes memory returnData) = target.staticcall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
      * @dev perform low-level delegatecall (operation type = 4)
-     * @param to The address on which delegatecall is executed
+     * @param target The address on which delegatecall is executed
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
      */
-    function _executeDelegateCall(
-        address to,
-        bytes memory data
-    ) internal virtual returns (bytes memory result) {
-        emit Executed(OPERATION_4_DELEGATECALL, to, 0, bytes4(data));
+    function _executeDelegateCall(address target, bytes memory data)
+        internal
+        virtual
+        returns (bytes memory result)
+    {
+        emit Executed(OPERATION_4_DELEGATECALL, target, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
-        (bool success, bytes memory returnData) = to.delegatecall(data);
+        (bool success, bytes memory returnData) = target.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
@@ -174,10 +199,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s)
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate(
-        uint256 value,
-        bytes memory creationCode
-    ) internal virtual returns (bytes memory newContract) {
+    function _deployCreate(uint256 value, bytes memory creationCode)
+        internal
+        virtual
+        returns (bytes memory newContract)
+    {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
@@ -202,10 +228,11 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s) and a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate2(
-        uint256 value,
-        bytes memory creationCode
-    ) internal virtual returns (bytes memory newContract) {
+    function _deployCreate2(uint256 value, bytes memory creationCode)
+        internal
+        virtual
+        returns (bytes memory newContract)
+    {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
@@ -216,5 +243,15 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value);
+    }
+
+    /**
+     * @dev Will return unchecked incremented uint256
+     *      can be used to save gas when iterating over loops
+     */
+    function _uncheckedIncrementERC725X(uint256 i) internal pure returns (uint256) {
+        unchecked {
+            return i + 1;
+        }
     }
 }

@@ -45,6 +45,11 @@ error ERC725X_ContractDeploymentFailed();
 error ERC725X_NoContractBytecodeProvided();
 
 /**
+ * @dev reverts when there is not the same number of operation, to addresses, value, and data.
+ */
+error ERC725X_ExecuteParametersLengthMismatch();
+
+/**
  * @dev reverts when there is not the same number of elements in the lists of data keys and data values
  * when calling setData(bytes32[],bytes[]).
  * @param dataKeysLength the number of data keys in the bytes32[] dataKeys
