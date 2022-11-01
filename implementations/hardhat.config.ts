@@ -1,7 +1,17 @@
 import { HardhatUserConfig } from "hardhat/config";
+
+/**
+ * this package includes:
+ *  - @nomiclabs/hardhat-ethers
+ *  - @nomicfoundation/hardhat-chai-matchers
+ *  - @nomicfoundation/hardhat-network-helpers
+ *  - @nomiclabs/hardhat-etherscan
+ *  - @typechain/hardhat
+ *  - hardhat-gas-reporter
+ *  - solidity-coverage
+ */
 import "@nomicfoundation/hardhat-toolbox";
 
-import "@typechain/hardhat";
 import "hardhat-packager";
 
 const config: HardhatUserConfig = {
@@ -23,6 +33,14 @@ const config: HardhatUserConfig = {
     outDir: "types",
     target: "ethers-v5",
   },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    gasPrice: 21,
+    excludeContracts: ["helpers/"],
+    src: "./contracts",
+    showMethodSig: true,
+  }
 };
 
 export default config;

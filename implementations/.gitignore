@@ -10,11 +10,16 @@ types
 cache
 artifacts
 
+# Hardhat holders
 build
-solc
+cache
+types
 coverage
 
 .openzeppelin/.session
+
+# Solidity generated files/folders
+solc
 
 # Mac
 .DS_Store

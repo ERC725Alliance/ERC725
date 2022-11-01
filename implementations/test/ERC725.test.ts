@@ -28,10 +28,12 @@ describe("ERC725", () => {
           newOwner: ethers.constants.AddressZero,
         };
 
+        const contract = await new ERC725__factory(accounts[0]).deploy(accounts[0].address)
+
         await expect(
           new ERC725__factory(accounts[0]).deploy(deployParams.newOwner)
         ).to.be.revertedWith(
-          "Ownable: contract owner cannot be the zero address"
+          "Ownable: new owner is the zero address"
         );
       });
     });
@@ -78,7 +80,7 @@ describe("ERC725", () => {
         await expect(
           context.erc725["initialize(address)"](ethers.constants.AddressZero)
         ).to.be.revertedWith(
-          "Ownable: contract owner cannot be the zero address"
+          "Ownable: new owner is the zero address"
         );
       });
     });
