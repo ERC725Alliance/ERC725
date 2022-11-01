@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 4.0.0 (2022-10-31)
+
+### ⚠ BREAKING CHANGES
+
+- add underscore to variable name `store` -> `_store` (#174)
+- replace error strings by custom errors (#175)
+- add execute batch function to ERC725X (#177)
+
+### Features
+
+- add execute batch function to ERC725X ([a0b08fa](https://github.com/ERC725Alliance/ERC725/commit/a0b08fafccd1f009a497ca400efd50933a478457))
+
+### Bug Fixes
+
+- emit `Executed` event before the external call ([#173](https://github.com/ERC725Alliance/ERC725/issues/173)) ([13743ae](https://github.com/ERC725Alliance/ERC725/commit/13743aedc1d6dce3e50cd8dd3b82b0e51fbd6827))
+
 ## [3.2.0](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v3.2.0) (2022-09-01)
 
 ### ⚠ BREAKING CHANGES
