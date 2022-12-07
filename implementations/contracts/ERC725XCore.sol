@@ -219,7 +219,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_1_CREATE, contractAddress, value);
+        emit ContractCreated(OPERATION_1_CREATE, contractAddress, value, bytes32(0));
     }
 
     /**
@@ -242,7 +242,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value);
+        emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);
     }
 
     /**
