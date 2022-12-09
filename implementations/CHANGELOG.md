@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/ERC725Alliance/ERC725/compare/v4.0.0...v4.1.0) (2022-12-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* add `salt` parameter to the `ContractCreated` event in ERC725X (#183)
+
+
+* create internal virtual `_execute` function with core ERC725X logic to improve overriding core behaviour ([#184](https://github.com/ERC725Alliance/ERC725/pull/184))
+* add `salt` parameter to the `ContractCreated` event in ERC725X ([#183](https://github.com/ERC725Alliance/ERC725/issues/183)) ([4a6ca14](https://github.com/ERC725Alliance/ERC725/commit/4a6ca140b35f1d78f6fefedb11ddc3981f71acb6))
+
 ## 4.0.0 (2022-10-31)
 
 ### ⚠ BREAKING CHANGES
