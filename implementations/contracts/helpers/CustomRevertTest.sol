@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 /**
  * @dev Contract used for testing implementing a receive function that reverts;
  */
-contract revertTester {
+contract RevertTester {
     error MyCustomError(address sender, address initiater);
 
     receive() external payable {
+        // solhint-disable-next-line avoid-tx-origin
         revert MyCustomError(msg.sender, tx.origin);
     }
 
@@ -20,10 +21,12 @@ contract revertTester {
     }
 
     function revertMeWithCustomErrorView() public {
+        // solhint-disable-next-line avoid-tx-origin
         revert MyCustomError(msg.sender, tx.origin);
     }
 
     function revertMeWithCustomErrorNotView() public {
+        // solhint-disable-next-line avoid-tx-origin
         revert MyCustomError(msg.sender, tx.origin);
     }
 }

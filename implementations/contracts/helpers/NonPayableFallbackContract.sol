@@ -5,5 +5,6 @@ pragma solidity ^0.8.0;
  * @dev Contract used for testing implementing receive();
  */
 contract NonPayableFallbackContract {
+    // solhint-disable-next-line payable-fallback
     fallback() external {}
 }

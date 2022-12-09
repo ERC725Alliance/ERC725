@@ -855,7 +855,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeRetreived = await provider.getCode(
@@ -913,7 +914,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeRetreived = await provider.getCode(
@@ -962,7 +964,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1064,7 +1067,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1179,7 +1183,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  salt
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1241,7 +1246,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  salt
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1294,7 +1300,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  salt
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1431,7 +1438,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  salt
                 );
 
               const codeRetreived = await provider.getCode(
@@ -1469,9 +1477,8 @@ export const shouldBehaveLikeERC725X = (
                     txParams.value,
                     txParams.data
                   )
-              ).to.be.revertedWithCustomError(
-                context.erc725X,
-                "ERC725X_InsufficientBalance"
+              ).to.be.revertedWith(
+                "Create2: insufficient balance"
               );
             });
           });
@@ -1542,7 +1549,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operation,
                   addressContractCreatedChecksumed,
-                  txParams.value
+                  txParams.value,
+                  salt
                 );
 
               const codeRetreived = await provider.getCode(
@@ -2275,7 +2283,8 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operations[1],
                   contractAddress,
-                  txParams.values[1]
+                  txParams.values[1],
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeOfContractCreated = await provider.getCode(
@@ -2400,13 +2409,15 @@ export const shouldBehaveLikeERC725X = (
                 .withArgs(
                   txParams.Operations[0],
                   ethers.utils.getAddress(contractsAddresses[0]),
-                  txParams.values[0]
+                  txParams.values[0],
+                  ethers.utils.hexZeroPad("0x00", 32)
                 )
                 .to.emit(context.erc725X, "ContractCreated")
                 .withArgs(
                   txParams.Operations[1],
                   ethers.utils.getAddress(contractsAddresses[1]),
-                  txParams.values[1]
+                  txParams.values[1],
+                  ethers.utils.hexZeroPad("0x00", 32)
                 );
 
               const codeOfContractCreated1 = await provider.getCode(

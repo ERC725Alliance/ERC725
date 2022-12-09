@@ -43,9 +43,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) public payable virtual onlyOwner returns (bytes memory) {
-        if (address(this).balance < value) {
-            revert ERC725X_InsufficientBalance(address(this).balance, value);
-        }
         return _execute(operationType, target, value, data);
     }
 
@@ -57,37 +54,22 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address[] memory targets,
         uint256[] memory values,
         bytes[] memory datas
-    ) public payable virtual onlyOwner returns (bytes[] memory result) {
-        if (
-            operationsType.length != targets.length ||
-            (targets.length != values.length || values.length != datas.length)
-        ) revert ERC725X_ExecuteParametersLengthMismatch();
-
-        result = new bytes[](operationsType.length);
-        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
-            if (address(this).balance < values[i])
-                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
-
-            result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
-        }
+    ) public payable virtual onlyOwner returns (bytes[] memory) {
+        return _execute(operationsType, targets, values, datas);
     }
 
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(IERC165, ERC165)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(IERC165, ERC165) returns (bool) {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 
     /**
      * @dev check the `operationType` provided and perform the associated low-level opcode.
-     * see `IERC725X.execute(...)`.
+     * see `IERC725X.execute(uint256,address,uint256,bytes)`.
      */
     function _execute(
         uint256 operationType,
@@ -139,6 +121,30 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
+     * @dev same as `_execute` but for batch execution
+     * see `IERC725X,execute(uint256[],address[],uint256[],bytes[])`
+     */
+    function _execute(
+        uint256[] memory operationsType,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory datas
+    ) internal virtual returns (bytes[] memory) {
+        if (
+            operationsType.length != targets.length ||
+            (targets.length != values.length || values.length != datas.length)
+        ) revert ERC725X_ExecuteParametersLengthMismatch();
+
+        bytes[] memory result = new bytes[](operationsType.length);
+
+        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
+            result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
+        }
+
+        return result;
+    }
+
+    /**
      * @dev perform low-level call (operation type = 0)
      * @param target The address on which call is executed
      * @param value The value to be sent with the call
@@ -150,9 +156,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
+
         emit Executed(OPERATION_0_CALL, target, value, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -163,14 +173,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the staticcall
      * @return result The data returned from the staticcall
      */
-    function _executeStaticCall(address target, bytes memory data)
-        internal
-        virtual
-        returns (bytes memory result)
-    {
+    function _executeStaticCall(
+        address target,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_3_STATICCALL, target, 0, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.staticcall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -181,14 +190,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
      */
-    function _executeDelegateCall(address target, bytes memory data)
-        internal
-        virtual
-        returns (bytes memory result)
-    {
+    function _executeDelegateCall(
+        address target,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_4_DELEGATECALL, target, 0, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -199,17 +207,20 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s)
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate(uint256 value, bytes memory creationCode)
-        internal
-        virtual
-        returns (bytes memory newContract)
-    {
+    function _deployCreate(
+        uint256 value,
+        bytes memory creationCode
+    ) internal virtual returns (bytes memory newContract) {
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
+
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
 
         address contractAddress;
-        // solhint-disable no-inline-assembly
+        // solhint-disable-next-line no-inline-assembly
         assembly {
             contractAddress := create(value, add(creationCode, 0x20), mload(creationCode))
         }
@@ -219,7 +230,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_1_CREATE, contractAddress, value);
+        emit ContractCreated(OPERATION_1_CREATE, contractAddress, value, bytes32(0));
     }
 
     /**
@@ -228,11 +239,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s) and a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate2(uint256 value, bytes memory creationCode)
-        internal
-        virtual
-        returns (bytes memory newContract)
-    {
+    function _deployCreate2(
+        uint256 value,
+        bytes memory creationCode
+    ) internal virtual returns (bytes memory newContract) {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
@@ -242,7 +252,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
-        emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value);
+        emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);
     }
 
     /**
