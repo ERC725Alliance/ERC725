@@ -43,9 +43,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) public payable virtual onlyOwner returns (bytes memory) {
-        if (address(this).balance < value) {
-            revert ERC725X_InsufficientBalance(address(this).balance, value);
-        }
         return _execute(operationType, target, value, data);
     }
 
@@ -57,19 +54,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address[] memory targets,
         uint256[] memory values,
         bytes[] memory datas
-    ) public payable virtual onlyOwner returns (bytes[] memory result) {
-        if (
-            operationsType.length != targets.length ||
-            (targets.length != values.length || values.length != datas.length)
-        ) revert ERC725X_ExecuteParametersLengthMismatch();
-
-        result = new bytes[](operationsType.length);
-        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
-            if (address(this).balance < values[i])
-                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
-
-            result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
-        }
+    ) public payable virtual onlyOwner returns (bytes[] memory) {
+        return _execute(operationsType, targets, values, datas);
     }
 
     /**
@@ -87,7 +73,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @dev check the `operationType` provided and perform the associated low-level opcode.
-     * see `IERC725X.execute(...)`.
+     * see `IERC725X.execute(uint256,address,uint256,bytes)`.
      */
     function _execute(
         uint256 operationType,
@@ -95,6 +81,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory) {
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
+
         // CALL
         if (operationType == OPERATION_0_CALL) {
             return _executeCall(target, value, data);
@@ -136,6 +126,33 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         revert ERC725X_UnknownOperationType(operationType);
+    }
+
+    /**
+     * @dev same as `_execute` but for batch execution
+     * see `IERC725X,execute(uint256[],address[],uint256[],bytes[])`
+     */
+    function _execute(
+        uint256[] memory operationsType,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory datas
+    ) internal virtual returns (bytes[] memory) {
+        if (
+            operationsType.length != targets.length ||
+            (targets.length != values.length || values.length != datas.length)
+        ) revert ERC725X_ExecuteParametersLengthMismatch();
+
+        bytes[] memory result = new bytes[](operationsType.length);
+        
+        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
+            if (address(this).balance < values[i])
+                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
+
+            result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
+        }
+
+        return result;
     }
 
     /**
