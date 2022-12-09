@@ -1477,9 +1477,8 @@ export const shouldBehaveLikeERC725X = (
                     txParams.value,
                     txParams.data
                   )
-              ).to.be.revertedWithCustomError(
-                context.erc725X,
-                "ERC725X_InsufficientBalance"
+              ).to.be.revertedWith(
+                "Create2: insufficient balance"
               );
             });
           });
