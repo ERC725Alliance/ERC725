@@ -23,6 +23,6 @@ contract Counter {
         return count;
     }
 
-    // solhint-disable no-empty-blocks
+    // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
 }

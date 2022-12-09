@@ -162,7 +162,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         emit Executed(OPERATION_0_CALL, target, value, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.call{value: value}(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -179,7 +179,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_3_STATICCALL, target, 0, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.staticcall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -196,7 +196,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_4_DELEGATECALL, target, 0, bytes4(data));
 
-        // solhint-disable avoid-low-level-calls
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.delegatecall(data);
         result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
@@ -220,7 +220,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         address contractAddress;
-        // solhint-disable no-inline-assembly
+        // solhint-disable-next-line no-inline-assembly
         assembly {
             contractAddress := create(value, add(creationCode, 0x20), mload(creationCode))
         }
