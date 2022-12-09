@@ -61,13 +61,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(IERC165, ERC165)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(IERC165, ERC165) returns (bool) {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
     }
 
@@ -81,10 +77,6 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory) {
-        if (address(this).balance < value) {
-            revert ERC725X_InsufficientBalance(address(this).balance, value);
-        }
-
         // CALL
         if (operationType == OPERATION_0_CALL) {
             return _executeCall(target, value, data);
@@ -144,11 +136,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         ) revert ERC725X_ExecuteParametersLengthMismatch();
 
         bytes[] memory result = new bytes[](operationsType.length);
-        
-        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
-            if (address(this).balance < values[i])
-                revert ERC725X_InsufficientBalance(address(this).balance, values[i]);
 
+        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
             result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
         }
 
@@ -167,6 +156,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         uint256 value,
         bytes memory data
     ) internal virtual returns (bytes memory result) {
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
+
         emit Executed(OPERATION_0_CALL, target, value, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
@@ -180,11 +173,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the staticcall
      * @return result The data returned from the staticcall
      */
-    function _executeStaticCall(address target, bytes memory data)
-        internal
-        virtual
-        returns (bytes memory result)
-    {
+    function _executeStaticCall(
+        address target,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_3_STATICCALL, target, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
@@ -198,11 +190,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
      */
-    function _executeDelegateCall(address target, bytes memory data)
-        internal
-        virtual
-        returns (bytes memory result)
-    {
+    function _executeDelegateCall(
+        address target,
+        bytes memory data
+    ) internal virtual returns (bytes memory result) {
         emit Executed(OPERATION_4_DELEGATECALL, target, 0, bytes4(data));
 
         // solhint-disable avoid-low-level-calls
@@ -216,11 +207,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s)
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate(uint256 value, bytes memory creationCode)
-        internal
-        virtual
-        returns (bytes memory newContract)
-    {
+    function _deployCreate(
+        uint256 value,
+        bytes memory creationCode
+    ) internal virtual returns (bytes memory newContract) {
+        if (address(this).balance < value) {
+            revert ERC725X_InsufficientBalance(address(this).balance, value);
+        }
+
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
@@ -245,11 +239,10 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s) and a bytes32 salt
      * @return newContract The address of the contract created as bytes
      */
-    function _deployCreate2(uint256 value, bytes memory creationCode)
-        internal
-        virtual
-        returns (bytes memory newContract)
-    {
+    function _deployCreate2(
+        uint256 value,
+        bytes memory creationCode
+    ) internal virtual returns (bytes memory newContract) {
         if (creationCode.length == 0) {
             revert ERC725X_NoContractBytecodeProvided();
         }
