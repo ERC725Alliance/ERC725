@@ -42,7 +42,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address target,
         uint256 value,
         bytes memory data
-    ) public payable virtual onlyOwner returns (bytes memory) {
+    ) public payable virtual override onlyOwner returns (bytes memory) {
         return _execute(operationType, target, value, data);
     }
 
@@ -54,7 +54,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         address[] memory targets,
         uint256[] memory values,
         bytes[] memory datas
-    ) public payable virtual onlyOwner returns (bytes[] memory) {
+    ) public payable virtual override onlyOwner returns (bytes[] memory) {
         return _execute(operationsType, targets, values, datas);
     }
 
