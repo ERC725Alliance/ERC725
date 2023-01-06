@@ -17,9 +17,6 @@ jobs:
     strategy:
       matrix:
         solc: [
-            "0.8.5",
-            "0.8.6",
-            "0.8.7",
             "0.8.8",
             "0.8.9",
             # "0.8.10" skipped as default in hardhat.config.ts
@@ -51,8 +48,9 @@ jobs:
         run: |
           solc-select install ${{ matrix.solc }}
           solc-select use ${{ matrix.solc }}
+
       - name: Compile Smart Contracts
         run: |
-          solc contracts/**/*.sol --allow-paths $(pwd)/node_modules/ \
+          solc contracts/**/*.sol \
               @openzeppelin/=node_modules/@openzeppelin/ \
               solidity-bytes-utils/=node_modules/solidity-bytes-utils/
