@@ -12,20 +12,20 @@ contract RevertTester {
         revert MyCustomError(msg.sender, tx.origin);
     }
 
-    function revertMeWithStringView() public view {
+    function revertMeWithStringView() public pure {
         revert("I reverted");
     }
 
-    function revertMeWithStringErrorNotView() public {
+    function revertMeWithStringErrorNotView() public pure {
         revert("I reverted");
     }
 
-    function revertMeWithCustomErrorView() public {
+    function revertMeWithCustomErrorView() public view {
         // solhint-disable-next-line avoid-tx-origin
         revert MyCustomError(msg.sender, tx.origin);
     }
 
-    function revertMeWithCustomErrorNotView() public {
+    function revertMeWithCustomErrorNotView() public view {
         // solhint-disable-next-line avoid-tx-origin
         revert MyCustomError(msg.sender, tx.origin);
     }

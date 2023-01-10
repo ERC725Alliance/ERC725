@@ -1,0 +1,56 @@
+# This workflow ensure that the smart contracts can be compiled
+# with different Solidity 0.8.x versions
+name: Solidity Compiler Versions
+
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "develop"
+
+jobs:
+  solc_version:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: implementations
+    strategy:
+      matrix:
+        solc: [
+            "0.8.8",
+            "0.8.9",
+            # "0.8.10" skipped as default in hardhat.config.ts
+            "0.8.11",
+            "0.8.12",
+            "0.8.13",
+            "0.8.14",
+            "0.8.15",
+            "0.8.16",
+            "0.8.17",
+          ]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: Install solc-select
+        run: pip3 install solc-select
+
+      - name: Use Solc v${{ matrix.solc }}
+        run: |
+          solc-select install ${{ matrix.solc }}
+          solc-select use ${{ matrix.solc }}
+
+      - name: Compile Smart Contracts
+        run: |
+          solc contracts/**/*.sol \
+              @openzeppelin/=node_modules/@openzeppelin/ \
+              solidity-bytes-utils/=node_modules/solidity-bytes-utils/
