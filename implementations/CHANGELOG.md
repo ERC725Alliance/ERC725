@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/ERC725Alliance/ERC725/compare/v3.1.0...v4.1.1) (2023-01-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* add `salt` parameter to the `ContractCreated` event in ERC725X (#183)
+* replace error strings by custom errors + use `enum` for `OPERATION_TYPE` (#175)
+* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y (#163)
+
+### Features
+
+* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y ([#163](https://github.com/ERC725Alliance/ERC725/issues/163)) ([93447de](https://github.com/ERC725Alliance/ERC725/commit/93447def047abab2ad81b365b9e8c1441507f9ae))
+* add execute batch function to ERC725X ([a0b08fa](https://github.com/ERC725Alliance/ERC725/commit/a0b08fafccd1f009a497ca400efd50933a478457))
+
+
+### Bug Fixes
+
+* [QSP-4] prevent `address(0)` to be set as contract owner on deployment ([#159](https://github.com/ERC725Alliance/ERC725/issues/159)) ([29123ea](https://github.com/ERC725Alliance/ERC725/commit/29123ea3ad1bc0e173f608b42737af18a0694a89))
+* emit `Executed` event before the external call ([#173](https://github.com/ERC725Alliance/ERC725/issues/173)) ([13743ae](https://github.com/ERC725Alliance/ERC725/commit/13743aedc1d6dce3e50cd8dd3b82b0e51fbd6827))
+* ignores return value by ErrorHandlerLib.revertWithParsedError(result) ([#133](https://github.com/ERC725Alliance/ERC725/issues/133)) ([6ef9cdc](https://github.com/ERC725Alliance/ERC725/commit/6ef9cdc4739c43c550defa62b025767911998733))
+
+
+* add `salt` parameter to the `ContractCreated` event in ERC725X ([#183](https://github.com/ERC725Alliance/ERC725/issues/183)) ([4a6ca14](https://github.com/ERC725Alliance/ERC725/commit/4a6ca140b35f1d78f6fefedb11ddc3981f71acb6))
+* replace error strings by custom errors + use `enum` for `OPERATION_TYPE` ([#175](https://github.com/ERC725Alliance/ERC725/issues/175)) ([9d5008b](https://github.com/ERC725Alliance/ERC725/commit/9d5008bd4e91f6a8c09a22f0b491fe6db3249cf7))
+
 ## [4.1.0](https://github.com/ERC725Alliance/ERC725/compare/v4.0.0...v4.1.0) (2022-12-09)
 
 
