@@ -34,11 +34,11 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/contracts-upgradeable": "^4.7.3",
-    "@types/chai": "^4.3.1",
     "solidity-bytes-utils": "0.8.0"
-  },
-  "devDependencies": {
+},
+"devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@types/chai": "^4.3.1",
     "chai": "^4.2.0",
     "coveralls": "^3.1.1",
     "eth-create2-calculator": "^1.1.5",
