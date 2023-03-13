@@ -53,7 +53,7 @@ interface IERC725Y is IERC165 {
      * @dev Sets array of data for multiple given `dataKeys`
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
-     * The function was marked as payable to enable flexibility on child contracts
+     * The function is marked as payable to enable flexibility on child contracts
      *
      * If the function is not intended to receive value, an additional check
      * should be implemented to check that value equal 0.
