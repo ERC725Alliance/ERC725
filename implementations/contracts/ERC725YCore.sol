@@ -69,6 +69,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         bytes32[] memory dataKeys,
         bytes[] memory dataValues
     ) public payable virtual override onlyOwner {
+        /// @dev do not allow to send value by default when setting data in ERC725Y
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
 
         if (dataKeys.length != dataValues.length) {
