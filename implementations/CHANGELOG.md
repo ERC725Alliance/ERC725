@@ -2,28 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [4.1.1](https://github.com/ERC725Alliance/ERC725/compare/v4.1.0...v4.1.1) (2023-01-17)
-
-
-### Bug Fixes
-
-* re-add `override` keyword for functions inherited from interface to compiling with solc compiler 0.8.7 or 0.8.6 ([#188](https://github.com/ERC725Alliance/ERC725/pull/188))
-
-### Build
-
-* add Errors & Events definitions to `constants.js` ([#192](https://github.com/ERC725Alliance/ERC725/pull/192))
-
-## [4.1.0](https://github.com/ERC725Alliance/ERC725/compare/v4.0.0...v4.1.0) (2022-12-09)
-
+## [4.2.0](https://github.com/ERC725Alliance/ERC725/compare/v4.1.1...v4.2.0) (2023-03-13)
 
 ### ⚠ BREAKING CHANGES
 
-* add `salt` parameter to the `ContractCreated` event in ERC725X (#183)
+- mark setData(..) as payable (#197)
+
+### [4.1.1](https://github.com/ERC725Alliance/ERC725/compare/v4.1.0...v4.1.1) (2023-01-17)
+
+### Bug Fixes
+
+- re-add `override` keyword for functions inherited from interface to compiling with solc compiler 0.8.7 or 0.8.6 ([#188](https://github.com/ERC725Alliance/ERC725/pull/188))
+
+### Build
+
+- add Errors & Events definitions to `constants.js` ([#192](https://github.com/ERC725Alliance/ERC725/pull/192))
+
+## [4.1.0](https://github.com/ERC725Alliance/ERC725/compare/v4.0.0...v4.1.0) (2022-12-09)
+
+### ⚠ BREAKING CHANGES
+
+- add `salt` parameter to the `ContractCreated` event in ERC725X (#183)
 
 ### Features
 
-* create internal virtual `_execute` function with core ERC725X logic to improve overriding core behaviour ([#184](https://github.com/ERC725Alliance/ERC725/pull/184))
-* add `salt` parameter to the `ContractCreated` event in ERC725X ([#183](https://github.com/ERC725Alliance/ERC725/issues/183)) ([4a6ca14](https://github.com/ERC725Alliance/ERC725/commit/4a6ca140b35f1d78f6fefedb11ddc3981f71acb6))
+- create internal virtual `_execute` function with core ERC725X logic to improve overriding core behaviour ([#184](https://github.com/ERC725Alliance/ERC725/pull/184))
+- add `salt` parameter to the `ContractCreated` event in ERC725X ([#183](https://github.com/ERC725Alliance/ERC725/issues/183)) ([4a6ca14](https://github.com/ERC725Alliance/ERC725/commit/4a6ca140b35f1d78f6fefedb11ddc3981f71acb6))
 
 ## 4.0.0 (2022-10-31)
 
