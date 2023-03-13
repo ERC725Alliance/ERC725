@@ -107,6 +107,27 @@ export const shouldBehaveLikeERC725Y = (
   });
 
   describe("When testing setting data", () => {
+    describe("When sending value to setData", () => {
+      it("should revert when sending value", async () => {
+        let value = 100;
+        const txParams = {
+          dataKey: ethers.utils.solidityKeccak256(["string"], ["FirstDataKey"]),
+          dataValue: "0xaabbccdd",
+        };
+
+        await expect(
+          context.erc725Y
+            .connect(context.accounts.owner)
+            ["setData(bytes32,bytes)"](txParams.dataKey, txParams.dataValue, {
+              value: value,
+            })
+        ).to.be.revertedWithCustomError(
+          context.erc725Y,
+          "ERC725Y_MsgValueDisallowed"
+        );
+      });
+    });
+
     describe("When using setData(bytes32,bytes)", () => {
       describe("When owner is setting data", () => {
         it("should pass and emit DataChanged event", async () => {
