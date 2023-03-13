@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-- mark setData(..) as payable (#197)
+- mark `setData(..)` functions as payable ([#197](https://github.com/ERC725Alliance/ERC725/pull/197))
 
 ### [4.1.1](https://github.com/ERC725Alliance/ERC725/compare/v4.1.0...v4.1.1) (2023-01-17)
 
