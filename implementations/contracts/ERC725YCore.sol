@@ -30,20 +30,18 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function getData(bytes32 dataKey) public view virtual override returns (bytes memory dataValue) {
+    function getData(
+        bytes32 dataKey
+    ) public view virtual override returns (bytes memory dataValue) {
         dataValue = _getData(dataKey);
     }
 
     /**
      * @inheritdoc IERC725Y
      */
-    function getData(bytes32[] memory dataKeys)
-        public
-        view
-        virtual
-        override
-        returns (bytes[] memory dataValues)
-    {
+    function getData(
+        bytes32[] memory dataKeys
+    ) public view virtual override returns (bytes[] memory dataValues) {
         dataValues = new bytes[](dataKeys.length);
 
         for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrementERC725Y(i)) {
@@ -56,19 +54,23 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32 dataKey, bytes memory dataValue) public virtual override onlyOwner {
+    function setData(
+        bytes32 dataKey,
+        bytes memory dataValue
+    ) public payable virtual override onlyOwner {
+        if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
         _setData(dataKey, dataValue);
     }
 
     /**
      * @inheritdoc IERC725Y
      */
-    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues)
-        public
-        virtual
-        override
-        onlyOwner
-    {
+    function setData(
+        bytes32[] memory dataKeys,
+        bytes[] memory dataValues
+    ) public payable virtual override onlyOwner {
+        if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
+
         if (dataKeys.length != dataValues.length) {
             revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
         }
@@ -100,13 +102,9 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(IERC165, ERC165)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(IERC165, ERC165) returns (bool) {
         return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
     }
 }

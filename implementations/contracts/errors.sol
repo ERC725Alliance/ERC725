@@ -56,3 +56,8 @@ error ERC725X_ExecuteParametersLengthMismatch();
  * @param dataValuesLength the number of data value in the bytes[] dataValue
  */
 error ERC725Y_DataKeysValuesLengthMismatch(uint256 dataKeysLength, uint256 dataValuesLength);
+
+/**
+ * @dev reverts when sending value to the `setData(..)` functions
+ */
+error ERC725Y_MsgValueDisallowed();
