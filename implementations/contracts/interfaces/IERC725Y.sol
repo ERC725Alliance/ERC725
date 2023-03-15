@@ -38,9 +38,14 @@ interface IERC725Y is IERC165 {
      * @param dataValue The value to set
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
+     * The function is marked as payable to enable flexibility on child contracts
+     *
+     * If the function is not intended to receive value, an additional check
+     * should be implemented to check that value equal 0.
+     *
      * Emits a {DataChanged} event.
      */
-    function setData(bytes32 dataKey, bytes memory dataValue) external;
+    function setData(bytes32 dataKey, bytes memory dataValue) external payable;
 
     /**
      * @param dataKeys The array of data keys for values to set
@@ -48,7 +53,12 @@ interface IERC725Y is IERC165 {
      * @dev Sets array of data for multiple given `dataKeys`
      * SHOULD only be callable by the owner of the contract set via ERC173
      *
+     * The function is marked as payable to enable flexibility on child contracts
+     *
+     * If the function is not intended to receive value, an additional check
+     * should be implemented to check that value equal 0.
+     *
      * Emits a {DataChanged} event.
      */
-    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) external;
+    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) external payable;
 }
