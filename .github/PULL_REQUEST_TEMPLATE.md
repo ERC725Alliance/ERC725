@@ -8,9 +8,9 @@
 
 <!-- Keep the sub-header that suits the PR and remove the rest -->
 
-<!-- Changes that potentially causes other components to fail (changes in interfaceIds, function signatures, behavior, etc ..) ---> 
+<!-- Changes that potentially causes other components to fail (changes in interfaceIds, function signatures, behavior, etc ..) --->
 <!---
-## ⚠️ BREAKING CHANGES 
+## ⚠️ BREAKING CHANGES
 ---->
 
 <!---
@@ -57,11 +57,12 @@ Fixes #???? <!-- Fill in with issue number -->
 
 ### PR Checklist
 
-<!-- Before merging the pull request all of the following must be complete. -->
+<!-- Before merging the pull request, making sure you have run locally the following. -->
 <!-- Feel free to submit a PR or Draft PR even if some items are pending. -->
-<!-- Some of the items may not apply. -->
+<!-- (Some of the items may not apply.) -->
 
-- [ ] Tests
-- [ ] Documentation
-- [ ] Ran `npm run test`
+- [ ] Wrote Tests
+- [ ] Wrote Documentation
 - [ ] Ran `npm run lint`
+- [ ] Ran `npm run build`
+- [ ] Ran `npm run test`
