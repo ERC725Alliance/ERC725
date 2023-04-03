@@ -1,4 +1,4 @@
-name: Feature|Refactor Request
+name: Feature | Changes Request
 description: Suggest an idea to improve the repository.
 title: "[Feature-Request]: "
 labels:
@@ -10,14 +10,21 @@ body:
         Thanks for taking the time to provide feedback!
     type: markdown
   - attributes:
+      label: "Rationale/Motivation:"
+      description: "Explain why the feature is important and how it benefits the project."
+    id: rationale
+    type: textarea
+    validations:
+      required: true
+  - attributes:
       label: "Describe the desired feature:"
-      description: Explain what the feature solves/improves.
+      description: Explain what the feature enables/improves.
     id: feature-request
     type: textarea
     validations:
       required: true
   - attributes:
-      label: "Code example that solves the feature:"
-      description: "It can be a GitHub repository/gist or a simple code snippet."
+      label: "Code example that enables the feature:"
+      description: "Can be a link to a GitHub repository, gist or a simple code snippet."
     id: reproduce
     type: textarea

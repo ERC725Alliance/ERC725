@@ -12,13 +12,19 @@ body:
     type: markdown
   - attributes:
       label: "Describe the issue:"
-    id: what-happened
+    id: what-happen
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Expected behavior:"
+    id: expected-behavior
     type: textarea
     validations:
       required: true
   - attributes:
       label: "Environment"
-      description: "Compiler version, Compiler options, Framework/IDE (e.g. Truffle/Hardhat/Remix), Operating System"
+      description: "Compiler version, Compiler options, Node/NPM version, Framework/IDE (e.g. Truffle/Hardhat/Remix), Operating System"
     id: environment
     type: textarea
     validations:
