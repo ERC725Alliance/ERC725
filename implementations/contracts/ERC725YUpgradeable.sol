@@ -2,20 +2,24 @@
 pragma solidity ^0.8.0;
 
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import {IERC725Y} from "./interfaces/IERC725Y.sol";
+import {
+    IERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+import {IERC725YUpgradeable} from "./interfaces/IERC725YUpgradeable.sol";
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {
+    ERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {
     OwnableUpgradeable
 } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 // constants
-import {_INTERFACEID_ERC725Y} from "./constants.sol";
+import {_INTERFACEID_ERC725Y} from "./constantsUpgradeable.sol";
 
-import "./errors.sol";
+import "./errorsUpgradeable.sol";
 
 /**
  * @title Core implementation of ERC725Y General data key/value store
@@ -24,7 +28,12 @@ import "./errors.sol";
  * It is intended to standardise certain data key/value pairs to allow automated read and writes
  * from/to the contract storage
  */
-contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC725Y {
+contract ERC725YUpgradeable is
+    Initializable,
+    ERC165Upgradeable,
+    OwnableUpgradeable,
+    IERC725YUpgradeable
+{
     function __ERC725Y_init(address newOwner) internal onlyInitializing {
         OwnableUpgradeable.__Ownable_init();
         __ERC725Y_init_unchained(newOwner);
@@ -41,7 +50,7 @@ contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC72
     mapping(bytes32 => bytes) internal _store;
 
     /**
-     * @inheritdoc IERC725Y
+     * @inheritdoc IERC725YUpgradeable
      */
     function getData(
         bytes32 dataKey
@@ -50,7 +59,7 @@ contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC72
     }
 
     /**
-     * @inheritdoc IERC725Y
+     * @inheritdoc IERC725YUpgradeable
      */
     function getData(
         bytes32[] memory dataKeys
@@ -65,7 +74,7 @@ contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC72
     }
 
     /**
-     * @inheritdoc IERC725Y
+     * @inheritdoc IERC725YUpgradeable
      */
     function setData(
         bytes32 dataKey,
@@ -76,7 +85,7 @@ contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC72
     }
 
     /**
-     * @inheritdoc IERC725Y
+     * @inheritdoc IERC725YUpgradeable
      */
     function setData(
         bytes32[] memory dataKeys,
@@ -95,7 +104,7 @@ contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC72
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC165Upgradeable
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);

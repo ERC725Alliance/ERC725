@@ -4,16 +4,20 @@ pragma solidity ^0.8.0;
 // modules
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import {IERC725X} from "./interfaces/IERC725X.sol";
+import {
+    IERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+import {IERC725XUpgradeable} from "./interfaces/IERC725XUpgradeable.sol";
 
 // libraries
-import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Create2Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
+import {AddressUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {
+    ERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {
     OwnableUpgradeable
 } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -26,9 +30,9 @@ import {
     OPERATION_2_CREATE2,
     OPERATION_3_STATICCALL,
     OPERATION_4_DELEGATECALL
-} from "./constants.sol";
+} from "./constantsUpgradeable.sol";
 
-import "./errors.sol";
+import "./errorsUpgradeable.sol";
 
 /**
  * @title Inheritable Proxy Implementation of ERC725 X Executor
@@ -37,7 +41,12 @@ import "./errors.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC725X {
+abstract contract ERC725XUpgradeable is
+    Initializable,
+    ERC165Upgradeable,
+    OwnableUpgradeable,
+    IERC725XUpgradeable
+{
     function __ERC725X_init(address newOwner) internal onlyInitializing {
         OwnableUpgradeable.__Ownable_init();
         __ERC725X_init_unchained(newOwner);
@@ -49,7 +58,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
     }
 
     /**
-     * @inheritdoc IERC725X
+     * @inheritdoc IERC725XUpgradeable
      */
     function execute(
         uint256 operationType,
@@ -61,7 +70,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
     }
 
     /**
-     * @inheritdoc IERC725X
+     * @inheritdoc IERC725XUpgradeable
      */
     function execute(
         uint256[] memory operationsType,
@@ -73,7 +82,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC165Upgradeable
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == _INTERFACEID_ERC725X || super.supportsInterface(interfaceId);
@@ -176,7 +185,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.call{value: value}(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        result = AddressUpgradeable.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -193,7 +202,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.staticcall(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        result = AddressUpgradeable.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -210,7 +219,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.delegatecall(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        result = AddressUpgradeable.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -261,7 +270,7 @@ abstract contract ERC725XUpgradeable is Initializable, ERC165, OwnableUpgradeabl
 
         bytes32 salt = BytesLib.toBytes32(creationCode, creationCode.length - 32);
         bytes memory bytecode = BytesLib.slice(creationCode, 0, creationCode.length - 32);
-        address contractAddress = Create2.deploy(value, salt, bytecode);
+        address contractAddress = Create2Upgradeable.deploy(value, salt, bytecode);
 
         newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);

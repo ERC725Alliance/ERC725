@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {
+    ERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {
     OwnableUpgradeable
@@ -11,7 +13,7 @@ import {ERC725XUpgradeable} from "./ERC725XUpgradeable.sol";
 import {ERC725YUpgradeable} from "./ERC725YUpgradeable.sol";
 
 // constants
-import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
+import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constantsUpgradeable.sol";
 
 /**
  * @title Inheritable Proxy Implementation of ERC725 bundle
@@ -20,7 +22,7 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  */
 abstract contract ERC725Upgradeable is
     Initializable,
-    ERC165,
+    ERC165Upgradeable,
     ERC725YUpgradeable,
     ERC725XUpgradeable
 {
@@ -34,11 +36,17 @@ abstract contract ERC725Upgradeable is
     // NOTE this implementation has not by default: receive() external payable {}
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC165Upgradeable
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(ERC165, ERC725XUpgradeable, ERC725YUpgradeable) returns (bool) {
+    )
+        public
+        view
+        virtual
+        override(ERC165Upgradeable, ERC725XUpgradeable, ERC725YUpgradeable)
+        returns (bool)
+    {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||
