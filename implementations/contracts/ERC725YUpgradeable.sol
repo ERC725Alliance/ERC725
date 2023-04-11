@@ -7,7 +7,10 @@ import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 // constants
 import {_INTERFACEID_ERC725Y} from "./constants.sol";
@@ -21,7 +24,17 @@ import "./errors.sol";
  * It is intended to standardise certain data key/value pairs to allow automated read and writes
  * from/to the contract storage
  */
-abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
+contract ERC725YUpgradeable is Initializable, ERC165, OwnableUpgradeable, IERC725Y {
+    function __ERC725Y_init(address newOwner) internal onlyInitializing {
+        OwnableUpgradeable.__Ownable_init();
+        __ERC725Y_init_unchained(newOwner);
+    }
+
+    function __ERC725Y_init_unchained(address newOwner) internal onlyInitializing {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        OwnableUpgradeable._transferOwnership(newOwner);
+    }
+
     /**
      * @dev Map the dataKeys to their dataValues
      */
@@ -81,6 +94,13 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         }
     }
 
+    /**
+     * @inheritdoc ERC165
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
+    }
+
     function _getData(bytes32 dataKey) internal view virtual returns (bytes memory dataValue) {
         return _store[dataKey];
     }
@@ -98,14 +118,5 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         unchecked {
             return i + 1;
         }
-    }
-
-    /**
-     * @inheritdoc ERC165
-     */
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
-        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
     }
 }

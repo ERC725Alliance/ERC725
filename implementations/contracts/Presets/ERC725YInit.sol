@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
+import {ERC725YUpgradeable} from "../ERC725YUpgradeable.sol";
 
 /**
  * @title Deployable Proxy Implementation of ERC725Y General data key/value store
@@ -11,7 +11,7 @@ import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
  * It is intended to standardise certain data key/value pairs to allow automated read and writes
  * from/to the contract storage
  */
-contract ERC725YInit is ERC725YInitAbstract {
+contract ERC725YInit is ERC725YUpgradeable {
     /**
      * @dev Deploy + lock base contract deployment on deployment
      */
@@ -24,6 +24,6 @@ contract ERC725YInit is ERC725YInitAbstract {
      * @param newOwner the owner of the contract
      */
     function initialize(address newOwner) public virtual initializer {
-        ERC725YInitAbstract._initialize(newOwner);
+        ERC725YUpgradeable.__ERC725Y_init(newOwner);
     }
 }

@@ -4,9 +4,11 @@ pragma solidity ^0.8.0;
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
-import {ERC725XCore} from "./ERC725XCore.sol";
-import {ERC725YCore} from "./ERC725YCore.sol";
+import {
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {ERC725XUpgradeable} from "./ERC725XUpgradeable.sol";
+import {ERC725YUpgradeable} from "./ERC725YUpgradeable.sol";
 
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
@@ -16,28 +18,27 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
-abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
-    function _initialize(address newOwner)
-        internal
-        virtual
-        onlyInitializing
-    {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        OwnableUnset._setOwner(newOwner);
+abstract contract ERC725Upgradeable is
+    Initializable,
+    ERC165,
+    ERC725YUpgradeable,
+    ERC725XUpgradeable
+{
+    function __ERC725_init(address newOwner) internal onlyInitializing {
+        __ERC725X_init_unchained(newOwner);
+        __ERC725Y_init_unchained(newOwner);
     }
+
+    function __ERC725_init_unchained(address newOwner) internal onlyInitializing {}
 
     // NOTE this implementation has not by default: receive() external payable {}
 
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(ERC725XCore, ERC725YCore)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC165, ERC725XUpgradeable, ERC725YUpgradeable) returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||

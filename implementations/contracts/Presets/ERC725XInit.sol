@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // modules
-import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
+import {ERC725XUpgradeable} from "../ERC725XUpgradeable.sol";
 
 /**
  * @title Deployable Proxy Implementation of ERC725 X Executor
@@ -11,7 +11,7 @@ import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
  * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-contract ERC725XInit is ERC725XInitAbstract {
+contract ERC725XInit is ERC725XUpgradeable {
     /**
      * @dev Deploy + lock base contract deployment on deployment
      */
@@ -24,6 +24,6 @@ contract ERC725XInit is ERC725XInitAbstract {
      * @param newOwner the owner of the contract
      */
     function initialize(address newOwner) public virtual initializer {
-        ERC725XInitAbstract._initialize(newOwner);
+        ERC725XUpgradeable.__ERC725X_init(newOwner);
     }
 }

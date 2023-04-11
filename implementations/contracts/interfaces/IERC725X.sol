@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.0;
 
-// interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-
 /**
  * @title The interface for ERC725X General executor
  * @dev ERC725X provides the ability to call arbitrary functions at any other smart contract and itself,
  * including using `delegatecall`, `staticcall`, as well as creating contracts using `create` and `create2`
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system
  */
-interface IERC725X is IERC165 {
+interface IERC725X {
     /**
      * @notice Emitted when deploying a contract
      * @param operationType The opcode used to deploy the contract (CREATE or CREATE2)
