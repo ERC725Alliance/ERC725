@@ -50,6 +50,12 @@ error ERC725X_NoContractBytecodeProvided();
 error ERC725X_ExecuteParametersLengthMismatch();
 
 /**
+ * @dev reverts when one of the array parameter provided to
+ * `execute(uint256[],address[],uint256[],bytes[]) is an empty array
+ */
+error ERC725X_ExecuteParametersEmptyArray();
+
+/**
  * @dev reverts when there is not the same number of elements in the lists of data keys and data values
  * when calling setData(bytes32[],bytes[]).
  * @param dataKeysLength the number of data keys in the bytes32[] dataKeys

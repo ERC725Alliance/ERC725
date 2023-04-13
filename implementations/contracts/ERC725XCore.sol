@@ -131,6 +131,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes[] memory datas
     ) internal virtual returns (bytes[] memory) {
         if (
+            operationsType.length == 0 ||
+            targets.length == 0 ||
+            values.length == 0 ||
+            datas.length == 0
+        ) revert ERC725X_ExecuteParametersEmptyArray();
+
+        if (
             operationsType.length != targets.length ||
             (targets.length != values.length || values.length != datas.length)
         ) revert ERC725X_ExecuteParametersLengthMismatch();
