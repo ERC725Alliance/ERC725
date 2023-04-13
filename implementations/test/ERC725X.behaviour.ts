@@ -1797,7 +1797,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
     describe('When testing the execute array function', () => {
       describe('When testing execution ownership', () => {
-        it('should revert if all the array parameters are empty arrays []', async () => {
+        it('should revert if all the array parameters are empty arrays [] [] [] []', async () => {
           const txParams = {
             operations: [],
             targets: [],

@@ -64,6 +64,12 @@ error ERC725X_ExecuteParametersEmptyArray();
 error ERC725Y_DataKeysValuesLengthMismatch(uint256 dataKeysLength, uint256 dataValuesLength);
 
 /**
+ * @dev reverts when one of the array parameter provided to
+ * `setData(bytes32[],bytes[])` is an empty array
+ */
+error ERC725Y_DataKeysValuesEmptyArray();
+
+/**
  * @dev reverts when sending value to the `setData(..)` functions
  */
 error ERC725Y_MsgValueDisallowed();
