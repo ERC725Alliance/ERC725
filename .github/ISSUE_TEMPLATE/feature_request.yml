@@ -1,0 +1,30 @@
+name: Feature | Changes Request
+description: Suggest an idea to improve the repository.
+title: "[Feature-Request]: "
+labels:
+  - feature
+body:
+  - attributes:
+      value: |
+        Please check the [issues tab](https://github.com/ERC725Alliance/ERC725/issues) to avoid duplicates.
+        Thanks for taking the time to provide feedback!
+    type: markdown
+  - attributes:
+      label: "Rationale/Motivation:"
+      description: "Explain why the feature is important and how it benefits the project."
+    id: rationale
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Describe the desired feature:"
+      description: Explain what the feature enables/improves.
+    id: feature-request
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Code example that enables the feature:"
+      description: "Can be a link to a GitHub repository, gist or a simple code snippet."
+    id: reproduce
+    type: textarea

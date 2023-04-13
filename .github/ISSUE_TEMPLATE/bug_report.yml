@@ -1,0 +1,38 @@
+name: "Bug Report"
+description: File a bug report
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - attributes:
+      value: |
+        Please check the [issues tab](https://github.com/ERC725Alliance/ERC725/issues) to avoid duplicates.
+        Remember, this is not a place to ask for help debugging code. For that, we welcome you in the [LUKSO's discord server](https://discord.com/channels/359064931246538762/585786253992132609)!
+        Thanks for taking the time to fill out this bug report!
+    type: markdown
+  - attributes:
+      label: "Describe the issue:"
+    id: what-happen
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Expected behavior:"
+    id: expected-behavior
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Environment"
+      description: "Compiler version, Compiler options, Node/NPM version, Framework/IDE (e.g. Truffle/Hardhat/Remix), Operating System"
+    id: environment
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      label: "Code example to reproduce the issue:"
+      description: "It can be a GitHub repository/gist or a simple code snippet."
+    id: reproduce
+    type: textarea
+    validations:
+      required: true
