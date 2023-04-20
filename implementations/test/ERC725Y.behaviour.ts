@@ -338,7 +338,35 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         });
       });
     });
+
     describe('When using setData(bytes32[],bytes[])', () => {
+      it('should revert if all parameters are empty arrays [] []', async () => {
+        const dataKeys = [];
+        const dataValues = [];
+
+        await expect(
+          context.erc725Y
+            .connect(context.accounts.owner)
+            ['setData(bytes32[],bytes[])'](dataKeys, dataValues),
+        ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesEmptyArray');
+      });
+
+      it('should revert if at least one of the parameters is an empty array []', async () => {
+        const dataKeys = [
+          ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
+          ethers.utils.solidityKeccak256(['string'], ['SecondDataKey']),
+        ];
+        const dataValues = [];
+
+        await expect(
+          context.erc725Y
+            .connect(context.accounts.owner)
+            ['setData(bytes32[],bytes[])'](dataKeys, dataValues),
+        )
+          .to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch')
+          .withArgs(dataKeys.length, dataValues.length);
+      });
+
       describe('When owner is setting data', () => {
         it('should pass and emit DataChanged event', async () => {
           const txParams = {
