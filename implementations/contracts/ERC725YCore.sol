@@ -72,12 +72,12 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         /// @dev do not allow to send value by default when setting data in ERC725Y
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
 
-        if (dataKeys.length == 0 || dataValues.length == 0) {
-            revert ERC725Y_DataKeysValuesEmptyArray();
-        }
-
         if (dataKeys.length != dataValues.length) {
             revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
+        }
+
+        if (dataKeys.length == 0) {
+            revert ERC725Y_DataKeysValuesEmptyArray();
         }
 
         for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrementERC725Y(i)) {
