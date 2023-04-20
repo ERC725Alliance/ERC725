@@ -362,7 +362,9 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           context.erc725Y
             .connect(context.accounts.owner)
             ['setData(bytes32[],bytes[])'](dataKeys, dataValues),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesEmptyArray');
+        )
+          .to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch')
+          .withArgs(dataKeys.length, dataValues.length);
       });
 
       describe('When owner is setting data', () => {

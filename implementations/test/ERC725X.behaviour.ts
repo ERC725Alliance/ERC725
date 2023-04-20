@@ -1796,7 +1796,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
     });
 
     describe('When testing the execute array function', () => {
-      it('should revert if all the array parameters are empty arrays [] [] [] []', async () => {
+      it('should revert with error `ERC725X_ExecuteParametersEmptyArray` if all the array parameters are empty arrays [] [] [] []', async () => {
         const txParams = {
           operations: [],
           targets: [],
@@ -1816,7 +1816,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
         ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
       });
 
-      it('should revert if at least one of the array parameter is an empty array []', async () => {
+      it('should revert with error `ERC725X_ExecuteParametersLengthMismatch` if at least one of the array parameter is an empty array []', async () => {
         const txParams = {
           operations: [OPERATION_TYPE.CALL, OPERATION_TYPE.CALL],
           targets: [context.accounts.anyone.address, context.accounts.anyone.address],
@@ -1833,7 +1833,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               txParams.values,
               txParams.datas,
             ),
-        ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
+        ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersLengthMismatch');
       });
 
       describe('When testing execution ownership', () => {
@@ -1857,7 +1857,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
         });
 
-        it('should revert if at least one of the array parameter is an empty array []', async () => {
+        it('should revert with error `ERC725X_ExecuteParametersLengthMismatch` if at least one of the array parameter is an empty array []', async () => {
           const txParams = {
             operations: [OPERATION_TYPE.CALL, OPERATION_TYPE.CALL],
             targets: [context.accounts.anyone.address, context.accounts.anyone.address],
@@ -1874,7 +1874,10 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
                 txParams.values,
                 txParams.datas,
               ),
-          ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
+          ).to.be.revertedWithCustomError(
+            context.erc725X,
+            'ERC725X_ExecuteParametersLengthMismatch',
+          );
         });
 
         describe('When owner is executing', () => {
