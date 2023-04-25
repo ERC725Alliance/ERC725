@@ -30,7 +30,9 @@ interface IERC725Y is IERC165 {
      * @param dataKeys The array of keys which values to retrieve
      * @return dataValues The array of data stored at multiple keys
      */
-    function getData(bytes32[] memory dataKeys) external view returns (bytes[] memory dataValues);
+    function getDataBatch(
+        bytes32[] memory dataKeys
+    ) external view returns (bytes[] memory dataValues);
 
     /**
      * @notice Sets singular data for a given `dataKey`
@@ -60,5 +62,5 @@ interface IERC725Y is IERC165 {
      *
      * Emits a {DataChanged} event.
      */
-    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) external payable;
+    function setDataBatch(bytes32[] memory dataKeys, bytes[] memory dataValues) external payable;
 }

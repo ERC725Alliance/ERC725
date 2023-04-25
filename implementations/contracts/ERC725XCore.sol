@@ -49,13 +49,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
      * @inheritdoc IERC725X
      */
-    function execute(
+    function executeBatch(
         uint256[] memory operationsType,
         address[] memory targets,
         uint256[] memory values,
         bytes[] memory datas
     ) public payable virtual override onlyOwner returns (bytes[] memory) {
-        return _execute(operationsType, targets, values, datas);
+        return _executeBatch(operationsType, targets, values, datas);
     }
 
     /**
@@ -124,7 +124,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @dev same as `_execute` but for batch execution
      * see `IERC725X,execute(uint256[],address[],uint256[],bytes[])`
      */
-    function _execute(
+    function _executeBatch(
         uint256[] memory operationsType,
         address[] memory targets,
         uint256[] memory values,
