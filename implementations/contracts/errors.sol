@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 /**
  * @dev reverts when trying to send more native tokens `value` than available in current `balance`.
  * @param balance the balance of the ERC725X contract.
- * @param value the amount of native tokens sent via `ERC725X.execute(...)`.
+ * @param value the amount of native tokens sent via `ERC725X.execute/Batch(...)`.
  */
 error ERC725X_InsufficientBalance(uint256 balance, uint256 value);
 
@@ -16,31 +16,31 @@ error ERC725X_UnknownOperationType(uint256 operationTypeProvided);
 
 /**
  * @dev the `value` parameter (= sending native tokens) is not allowed when making a staticcall
- * via `ERC725X.execute(...)` because sending native tokens is a state changing operation.
+ * via `ERC725X.execute/Batch(...)` because sending native tokens is a state changing operation.
  */
 error ERC725X_MsgValueDisallowedInStaticCall();
 
 /**
  * @dev the `value` parameter (= sending native tokens) is not allowed when making a delegatecall
- * via `ERC725X.execute(...)` because msg.value is persisting.
+ * via `ERC725X.execute/Batch(...)` because msg.value is persisting.
  */
 error ERC725X_MsgValueDisallowedInDelegateCall();
 
 /**
- * @dev reverts when passing a `to` address while deploying a contract va `ERC725X.execute(...)`
+ * @dev reverts when passing a `to` address while deploying a contract va `ERC725X.execute/Batch(...)`
  * whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error ERC725X_CreateOperationsRequireEmptyRecipientAddress();
 
 /**
- * @dev reverts when contract deployment via `ERC725X.execute(...)` failed.
+ * @dev reverts when contract deployment via `ERC725X.execute/Batch(...)` failed.
  * whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error ERC725X_ContractDeploymentFailed();
 
 /**
  * @dev reverts when no contract bytecode was provided as parameter when trying to deploy a contract
- * via `ERC725X.execute(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2).
+ * via `ERC725X.execute/Batch(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error ERC725X_NoContractBytecodeProvided();
 
@@ -51,13 +51,13 @@ error ERC725X_ExecuteParametersLengthMismatch();
 
 /**
  * @dev reverts when one of the array parameter provided to
- * `execute(uint256[],address[],uint256[],bytes[]) is an empty array
+ * `executeBatch(uint256[],address[],uint256[],bytes[]) is an empty array
  */
 error ERC725X_ExecuteParametersEmptyArray();
 
 /**
  * @dev reverts when there is not the same number of elements in the lists of data keys and data values
- * when calling setData(bytes32[],bytes[]).
+ * when calling setDataBatch.
  * @param dataKeysLength the number of data keys in the bytes32[] dataKeys
  * @param dataValuesLength the number of data value in the bytes[] dataValue
  */
@@ -65,7 +65,7 @@ error ERC725Y_DataKeysValuesLengthMismatch(uint256 dataKeysLength, uint256 dataV
 
 /**
  * @dev reverts when one of the array parameter provided to
- * `setData(bytes32[],bytes[])` is an empty array
+ * `setDataBatch` is an empty array
  */
 error ERC725Y_DataKeysValuesEmptyArray();
 

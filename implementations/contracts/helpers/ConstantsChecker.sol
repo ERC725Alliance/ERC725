@@ -38,11 +38,11 @@ contract ConstantsChecker {
 
     function getExecuteArraySelector() public pure returns (bytes4) {
         require(
-            EXECUTE_ARRAY_SELECTOR ==
-                bytes4(keccak256("execute(uint256[],address[],uint256[],bytes[])")),
-            "hardcoded EXECUTE_ARRAY_SELECTOR in `constants.sol` does not match `IERC725X.execute.selector`"
+            EXECUTE_BATCH_SELECTOR ==
+                bytes4(keccak256("executeBatch(uint256[],address[],uint256[],bytes[])")),
+            "hardcoded EXECUTE_BATCH_SELECTOR in `constants.sol` does not match `IERC725X.execute.selector`"
         );
-        return bytes4(keccak256("execute(uint256[],address[],uint256[],bytes[])"));
+        return bytes4(keccak256("executeBatch(uint256[],address[],uint256[],bytes[])"));
     }
 
     function getSetDataSelector() public pure returns (bytes4) {
@@ -55,9 +55,9 @@ contract ConstantsChecker {
 
     function getSetDataArraySelector() public pure returns (bytes4) {
         require(
-            SETDATA_ARRAY_SELECTOR == bytes4(keccak256("setData(bytes32[],bytes[])")),
-            "hardcoded SETDATA_ARRAY_SELECTOR in `constants.sol` does not match `IERC725Y.setData.selector`"
+            SETDATA_BATCH_SELECTOR == bytes4(keccak256("setDataBatch(bytes32[],bytes[])")),
+            "hardcoded SETDATA_BATCH_SELECTOR in `constants.sol` does not match `IERC725Y.setData.selector`"
         );
-        return bytes4(keccak256("setData(bytes32[],bytes[])"));
+        return bytes4(keccak256("setDataBatch(bytes32[],bytes[])"));
     }
 }

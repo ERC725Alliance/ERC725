@@ -19,11 +19,15 @@ describe('Constants Checker', () => {
   describe('Calculating ERC165InterfaceIds', () => {
     it('ERC725X', async () => {
       const result = await contract.getERC725XInterfaceID();
+      console.log(result);
+      
       expect(result).to.equal(INTERFACE_ID.ERC725X);
     });
 
     it('ERC725Y', async () => {
       const result = await contract.getERC725YInterfaceID();
+      console.log(result);
+      
       expect(result).to.equal(INTERFACE_ID.ERC725Y);
     });
   });
@@ -37,7 +41,7 @@ describe('Constants Checker', () => {
 
       it('execute array selector', async () => {
         const result = await contract.getExecuteArraySelector();
-        expect(result).to.equal(FUNCTIONS_SELECTOR.EXECUTE_ARRAY);
+        expect(result).to.equal(FUNCTIONS_SELECTOR.EXECUTE_BATCH);
       });
     });
 
@@ -49,7 +53,7 @@ describe('Constants Checker', () => {
 
       it('setData array selector', async () => {
         const result = await contract.getSetDataArraySelector();
-        expect(result).to.equal(FUNCTIONS_SELECTOR.SETDATA_ARRAY);
+        expect(result).to.equal(FUNCTIONS_SELECTOR.SETDATA_BATCH);
       });
     });
   });
