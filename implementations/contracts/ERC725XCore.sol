@@ -143,8 +143,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         bytes[] memory result = new bytes[](operationsType.length);
 
-        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
+        for (uint256 i = 0; i < operationsType.length; ) {
             result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
+
+            // Increment the iterator in unchecked block to save gas
+            unchecked {
+                i++;
+            }
         }
 
         return result;
@@ -259,15 +264,5 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);
-    }
-
-    /**
-     * @dev Will return unchecked incremented uint256
-     *      can be used to save gas when iterating over loops
-     */
-    function _uncheckedIncrementERC725X(uint256 i) internal pure returns (uint256) {
-        unchecked {
-            return i + 1;
-        }
     }
 }
