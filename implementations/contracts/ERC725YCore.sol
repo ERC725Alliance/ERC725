@@ -44,7 +44,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     ) public view virtual override returns (bytes[] memory dataValues) {
         dataValues = new bytes[](dataKeys.length);
 
-        for (uint256 i = 0; i < dataKeys.length;) {
+        for (uint256 i = 0; i < dataKeys.length; ) {
             dataValues[i] = _getData(dataKeys[i]);
 
             // Increment the iterator in unchecked block to save gas
@@ -78,14 +78,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
 
         if (dataKeys.length != dataValues.length) {
-            revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
+            revert ERC725Y_DataKeysValuesLengthMismatch();
         }
 
         if (dataKeys.length == 0) {
             revert ERC725Y_DataKeysValuesEmptyArray();
         }
 
-        for (uint256 i = 0; i < dataKeys.length;) {
+        for (uint256 i = 0; i < dataKeys.length; ) {
             _setData(dataKeys[i], dataValues[i]);
 
             // Increment the iterator in unchecked block to save gas
