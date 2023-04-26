@@ -364,7 +364,6 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             .setDataBatch(dataKeys, dataValues),
         )
           .to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch')
-          .withArgs(dataKeys.length, dataValues.length);
       });
 
       describe('When owner is setting data', () => {
@@ -590,7 +589,6 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
                 context.erc725Y,
                 'ERC725Y_DataKeysValuesLengthMismatch',
               )
-              .withArgs(2, 1);
           });
         });
       });

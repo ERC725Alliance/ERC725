@@ -44,8 +44,13 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     ) public view virtual override returns (bytes[] memory dataValues) {
         dataValues = new bytes[](dataKeys.length);
 
-        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrementERC725Y(i)) {
+        for (uint256 i = 0; i < dataKeys.length; ) {
             dataValues[i] = _getData(dataKeys[i]);
+
+            // Increment the iterator in unchecked block to save gas
+            unchecked {
+                ++i;
+            }
         }
 
         return dataValues;
@@ -73,15 +78,20 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
 
         if (dataKeys.length != dataValues.length) {
-            revert ERC725Y_DataKeysValuesLengthMismatch(dataKeys.length, dataValues.length);
+            revert ERC725Y_DataKeysValuesLengthMismatch();
         }
 
         if (dataKeys.length == 0) {
             revert ERC725Y_DataKeysValuesEmptyArray();
         }
 
-        for (uint256 i = 0; i < dataKeys.length; i = _uncheckedIncrementERC725Y(i)) {
+        for (uint256 i = 0; i < dataKeys.length; ) {
             _setData(dataKeys[i], dataValues[i]);
+
+            // Increment the iterator in unchecked block to save gas
+            unchecked {
+                ++i;
+            }
         }
     }
 
@@ -92,16 +102,6 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     function _setData(bytes32 dataKey, bytes memory dataValue) internal virtual {
         _store[dataKey] = dataValue;
         emit DataChanged(dataKey, dataValue);
-    }
-
-    /**
-     * @dev Will return unchecked incremented uint256
-     *      can be used to save gas when iterating over loops
-     */
-    function _uncheckedIncrementERC725Y(uint256 i) internal pure returns (uint256) {
-        unchecked {
-            return i + 1;
-        }
     }
 
     /**

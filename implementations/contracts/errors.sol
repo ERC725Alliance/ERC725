@@ -58,10 +58,8 @@ error ERC725X_ExecuteParametersEmptyArray();
 /**
  * @dev reverts when there is not the same number of elements in the lists of data keys and data values
  * when calling setDataBatch.
- * @param dataKeysLength the number of data keys in the bytes32[] dataKeys
- * @param dataValuesLength the number of data value in the bytes[] dataValue
  */
-error ERC725Y_DataKeysValuesLengthMismatch(uint256 dataKeysLength, uint256 dataValuesLength);
+error ERC725Y_DataKeysValuesLengthMismatch();
 
 /**
  * @dev reverts when one of the array parameter provided to
