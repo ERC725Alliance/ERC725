@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/ERC725Alliance/ERC725/compare/v4.2.0...v5.0.0) (2023-04-26)
+
+### ⚠ BREAKING CHANGES
+
+- Remove function overloading and rename overloaded functions to add "Batch" keyword: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
+    - `setData(bytes32[],bytes[])` --> `setDataBatch(bytes32[],bytes[])`
+    - `getData(bytes32[])` --> `getDataBatch(bytes32[])`
+    - `execute(uint256[],address[],uint256[],bytes[])` --> `executeBatch(uint256[],address[],uint256[],bytes[])`
+
+- Change interfaceId of ERC725X and ERC725Y: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
+    - ERC725X from `0x570ef073` to `0x7545acac`
+    - ERC725Y from `0x714df77c` to `0x629aa694`
+
+### Refactor
+
+- Remove parameters from error in ERC725Y (`ERC725Y_DataKeysValuesLengthMismatch`) ([#208](https://github.com/ERC725Alliance/ERC725/pull/208))
+
 ## [4.2.0](https://github.com/ERC725Alliance/ERC725/compare/v4.1.1...v4.2.0) (2023-03-13)
 
 ### ⚠ BREAKING CHANGES
