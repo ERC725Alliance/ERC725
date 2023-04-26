@@ -83,19 +83,19 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         }
 
         // Deploy with CREATE
-        if (operationType == uint256(OPERATION_1_CREATE)) {
+        if (operationType == OPERATION_1_CREATE) {
             if (target != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
             return _deployCreate(value, data);
         }
 
         // Deploy with CREATE2
-        if (operationType == uint256(OPERATION_2_CREATE2)) {
+        if (operationType == OPERATION_2_CREATE2) {
             if (target != address(0)) revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
             return _deployCreate2(value, data);
         }
 
         // STATICCALL
-        if (operationType == uint256(OPERATION_3_STATICCALL)) {
+        if (operationType == OPERATION_3_STATICCALL) {
             if (value != 0) revert ERC725X_MsgValueDisallowedInStaticCall();
             return _executeStaticCall(target, data);
         }
@@ -112,7 +112,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         // - update the contract owner
         // - run selfdestruct in the context of this contract
         //
-        if (operationType == uint256(OPERATION_4_DELEGATECALL)) {
+        if (operationType == OPERATION_4_DELEGATECALL) {
             if (value != 0) revert ERC725X_MsgValueDisallowedInDelegateCall();
             return _executeDelegateCall(target, data);
         }
@@ -143,8 +143,13 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         bytes[] memory result = new bytes[](operationsType.length);
 
-        for (uint256 i = 0; i < operationsType.length; i = _uncheckedIncrementERC725X(i)) {
+        for (uint256 i = 0; i < operationsType.length; ) {
             result[i] = _execute(operationsType[i], targets[i], values[i], datas[i]);
+
+            // Increment the iterator in unchecked block to save gas
+            unchecked {
+                ++i;
+            }
         }
 
         return result;
@@ -259,15 +264,5 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);
-    }
-
-    /**
-     * @dev Will return unchecked incremented uint256
-     *      can be used to save gas when iterating over loops
-     */
-    function _uncheckedIncrementERC725X(uint256 i) internal pure returns (uint256) {
-        unchecked {
-            return i + 1;
-        }
     }
 }
