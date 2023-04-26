@@ -11,14 +11,14 @@ contract Reader {
     }
 
     /**
-     * @dev do not put the `view` modifier, so to display the gas usage of `getData(...)`
+     * @dev do not put the `view` modifier, so to display the gas usage of `getDataBatch(...)`
      *  in the gas reporter of the test suite
      */
     function read(bytes32 _key) public view returns (bytes memory) {
         bytes32[] memory keys = new bytes32[](1);
         keys[0] = _key;
 
-        bytes[] memory result = erc725y.getData(keys);
+        bytes[] memory result = erc725y.getDataBatch(keys);
         return result[0];
     }
 }

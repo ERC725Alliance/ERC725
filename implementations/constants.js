@@ -1,7 +1,7 @@
 const INTERFACE_ID = {
   ERC165: '0x01ffc9a7',
-  ERC725X: '0x570ef073',
-  ERC725Y: '0x714df77c',
+  ERC725X: '0x7545acac',
+  ERC725Y: '0x629aa694',
 };
 
 const OPERATION_TYPE = {
@@ -14,9 +14,9 @@ const OPERATION_TYPE = {
 
 const FUNCTIONS_SELECTOR = {
   EXECUTE: '0x44c028fe',
-  EXECUTE_ARRAY: '0x13ced88d',
+  EXECUTE_BATCH: '0x31858452',
   SETDATA: '0x7f23690c',
-  SETDATA_ARRAY: '0x14a6e293',
+  SETDATA_BATCH: '0x97902421',
 };
 
 const Errors = {

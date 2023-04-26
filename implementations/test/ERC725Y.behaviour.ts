@@ -107,13 +107,13 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         await expect(
           context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue, {
+            .setData(txParams.dataKey, txParams.dataValue, {
               value: value,
             }),
         ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_MsgValueDisallowed');
       });
 
-      it('should revert when sending value to setData(..) Array', async () => {
+      it('should revert when sending value to setDataBatch(..)', async () => {
         let value = 100;
         const txParams = {
           dataKey: [ethers.utils.solidityKeccak256(['string'], ['FirstDataKey'])],
@@ -123,14 +123,14 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         await expect(
           context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])'](txParams.dataKey, txParams.dataValue, {
+            .setDataBatch(txParams.dataKey, txParams.dataValue, {
               value: value,
             }),
         ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_MsgValueDisallowed');
       });
     });
 
-    describe('When using setData(bytes32,bytes)', () => {
+    describe('When using setData', () => {
       describe('When owner is setting data', () => {
         it('should pass and emit DataChanged event', async () => {
           const txParams = {
@@ -141,12 +141,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue),
+              .setData(txParams.dataKey, txParams.dataValue),
           )
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -164,10 +164,10 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             context.erc725Y
               .connect(context.accounts.anyone)
-              ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue),
+              .setData(txParams.dataKey, txParams.dataValue),
           ).to.be.revertedWith('Ownable: caller is not the owner');
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -194,12 +194,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             erc725YWriter
               .connect(context.accounts.owner)
-              .callSetDataSingle(context.erc725Y.address, txParams.dataKey, txParams.dataValue),
+              .callSetData(context.erc725Y.address, txParams.dataKey, txParams.dataValue),
           )
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -218,12 +218,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue),
+                .setData(txParams.dataKey, txParams.dataValue),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               txParams.dataKey,
             );
 
@@ -242,9 +242,9 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             // Setting for first time
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32,bytes)'](tx1Params.dataKey, tx1Params.dataValue);
+              .setData(tx1Params.dataKey, tx1Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx1Params.dataKey,
             );
 
@@ -259,12 +259,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32,bytes)'](tx2Params.dataKey, tx2Params.dataValue),
+                .setData(tx2Params.dataKey, tx2Params.dataValue),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx2Params.dataKey,
             );
 
@@ -283,9 +283,9 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             // Setting for first time
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32,bytes)'](tx1Params.dataKey, tx1Params.dataValue);
+              .setData(tx1Params.dataKey, tx1Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx1Params.dataKey,
             );
 
@@ -301,12 +301,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32,bytes)'](tx2Params.dataKey, tx2Params.dataValue),
+                .setData(tx2Params.dataKey, tx2Params.dataValue),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx2Params.dataKey,
             );
 
@@ -324,12 +324,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue),
+                .setData(txParams.dataKey, txParams.dataValue),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               txParams.dataKey,
             );
 
@@ -339,7 +339,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
       });
     });
 
-    describe('When using setData(bytes32[],bytes[])', () => {
+    describe('When using setDataBatch', () => {
       it('should revert if all parameters are empty arrays [] []', async () => {
         const dataKeys = [];
         const dataValues = [];
@@ -347,7 +347,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         await expect(
           context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])'](dataKeys, dataValues),
+            .setDataBatch(dataKeys, dataValues),
         ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesEmptyArray');
       });
 
@@ -361,7 +361,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         await expect(
           context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])'](dataKeys, dataValues),
+            .setDataBatch(dataKeys, dataValues),
         )
           .to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch')
       });
@@ -376,12 +376,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]),
+              .setDataBatch([txParams.dataKey], [txParams.dataValue]),
           )
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -399,10 +399,10 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             context.erc725Y
               .connect(context.accounts.anyone)
-              ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]),
+              .setDataBatch([txParams.dataKey], [txParams.dataValue]),
           ).to.be.revertedWith('Ownable: caller is not the owner');
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -429,12 +429,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           await expect(
             erc725YWriter
               .connect(context.accounts.owner)
-              .callSetDataArray(context.erc725Y.address, [txParams.dataKey], [txParams.dataValue]),
+              .callSetDataBatch(context.erc725Y.address, [txParams.dataKey], [txParams.dataValue]),
           )
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+          const fetchedData = await context.erc725Y.getData(
             txParams.dataKey,
           );
 
@@ -453,12 +453,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]),
+                .setDataBatch([txParams.dataKey], [txParams.dataValue]),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               txParams.dataKey,
             );
 
@@ -476,9 +476,9 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             // Setting for first time
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])']([tx1Params.dataKey], [tx1Params.dataValue]);
+              .setDataBatch([tx1Params.dataKey], [tx1Params.dataValue]);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx1Params.dataKey,
             );
 
@@ -493,12 +493,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32[],bytes[])']([tx2Params.dataKey], [tx2Params.dataValue]),
+                .setDataBatch([tx2Params.dataKey], [tx2Params.dataValue]),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx2Params.dataKey,
             );
 
@@ -516,9 +516,9 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             // Setting for first time
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])']([tx1Params.dataKey], [tx1Params.dataValue]);
+              .setDataBatch([tx1Params.dataKey], [tx1Params.dataValue]);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx1Params.dataKey,
             );
 
@@ -534,12 +534,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32[],bytes[])']([tx2Params.dataKey], [tx2Params.dataValue]),
+                .setDataBatch([tx2Params.dataKey], [tx2Params.dataValue]),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               tx2Params.dataKey,
             );
 
@@ -557,12 +557,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]),
+                .setDataBatch([txParams.dataKey], [txParams.dataValue]),
             )
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.callStatic['getData(bytes32)'](
+            const fetchedData = await context.erc725Y.getData(
               txParams.dataKey,
             );
 
@@ -580,7 +580,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                ['setData(bytes32[],bytes[])'](
+                .setDataBatch(
                   [txParams.dataKey, txParams.dataKey],
                   [txParams.dataValue],
                 ),
@@ -607,12 +607,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue);
+            .setData(txParams.dataKey, txParams.dataValue);
         });
         it('should pass', async () => {
           const result = await context.erc725Y
             .connect(context.accounts.owner)
-            .callStatic['getData(bytes32)'](txParams.dataKey);
+            .getData(txParams.dataKey);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -627,12 +627,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue);
+            .setData(txParams.dataKey, txParams.dataValue);
         });
         it('should pass', async () => {
           const result = await context.erc725Y
             .connect(context.accounts.anyone)
-            .callStatic['getData(bytes32)'](txParams.dataKey);
+            .getData(txParams.dataKey);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -650,12 +650,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue);
+            .setData(txParams.dataKey, txParams.dataValue);
         });
         it('should pass', async () => {
           const result = await erc725YReader
             .connect(context.accounts.anyone)
-            .callStatic.callGetDataSingle(context.erc725Y.address, txParams.dataKey);
+            .callStatic.callGetData(context.erc725Y.address, txParams.dataKey);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -671,12 +671,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue);
+              .setData(txParams.dataKey, txParams.dataValue);
           });
           it('should pass', async () => {
             const result = await context.erc725Y
               .connect(context.accounts.owner)
-              .callStatic['getData(bytes32)'](txParams.dataKey);
+              .getData(txParams.dataKey);
 
             expect(result).to.equal(txParams.dataValue);
           });
@@ -691,19 +691,19 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32,bytes)'](txParams.dataKey, txParams.dataValue);
+              .setData(txParams.dataKey, txParams.dataValue);
           });
           it('should pass', async () => {
             const result = await context.erc725Y
               .connect(context.accounts.owner)
-              .callStatic['getData(bytes32)'](txParams.dataKey);
+              .getData(txParams.dataKey);
 
             expect(result).to.equal(txParams.dataValue);
           });
         });
       });
     });
-    describe('When using getData(bytes32[])', () => {
+    describe('When using getDataBatch(bytes32[])', () => {
       describe('When owner is setting data', () => {
         let txParams;
         beforeEach(async () => {
@@ -714,12 +714,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]);
+            .setDataBatch([txParams.dataKey], [txParams.dataValue]);
         });
         it('should pass', async () => {
           const [result] = await context.erc725Y
             .connect(context.accounts.owner)
-            .callStatic['getData(bytes32[])']([txParams.dataKey]);
+            .getDataBatch([txParams.dataKey]);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -734,12 +734,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]);
+            .setDataBatch([txParams.dataKey], [txParams.dataValue]);
         });
         it('should pass', async () => {
           const [result] = await context.erc725Y
             .connect(context.accounts.anyone)
-            .callStatic['getData(bytes32[])']([txParams.dataKey]);
+            .getDataBatch([txParams.dataKey]);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -757,12 +757,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
           await context.erc725Y
             .connect(context.accounts.owner)
-            ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]);
+            .setDataBatch([txParams.dataKey], [txParams.dataValue]);
         });
         it('should pass', async () => {
           const [result] = await erc725YReader
             .connect(context.accounts.anyone)
-            .callStatic.callGetDataArray(context.erc725Y.address, [txParams.dataKey]);
+            .callStatic.callGetDataBatch(context.erc725Y.address, [txParams.dataKey]);
 
           expect(result).to.equal(txParams.dataValue);
         });
@@ -778,12 +778,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]);
+              .setDataBatch([txParams.dataKey], [txParams.dataValue]);
           });
           it('should pass', async () => {
             const [result] = await context.erc725Y
               .connect(context.accounts.owner)
-              .callStatic['getData(bytes32[])']([txParams.dataKey]);
+              .getDataBatch([txParams.dataKey]);
 
             expect(result).to.equal(txParams.dataValue);
           });
@@ -799,12 +799,12 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])']([txParams.dataKey], [txParams.dataValue]);
+              .setDataBatch([txParams.dataKey], [txParams.dataValue]);
           });
           it('should pass', async () => {
             const [result] = await context.erc725Y
               .connect(context.accounts.owner)
-              .callStatic['getData(bytes32[])']([txParams.dataKey]);
+              .getDataBatch([txParams.dataKey]);
 
             expect(result).to.equal(txParams.dataValue);
           });
@@ -822,7 +822,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
 
             await context.erc725Y
               .connect(context.accounts.owner)
-              ['setData(bytes32[],bytes[])'](
+              .setDataBatch(
                 [txParams.dataKey1, txParams.dataKey2],
                 [txParams.dataValue1, txParams.dataValue2],
               );
@@ -830,7 +830,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           it('should pass', async () => {
             const [result1, result2] = await context.erc725Y
               .connect(context.accounts.owner)
-              .callStatic['getData(bytes32[])']([txParams.dataKey1, txParams.dataKey2]);
+              .getDataBatch([txParams.dataKey1, txParams.dataKey2]);
 
             expect(result1).to.equal(txParams.dataValue1);
             expect(result2).to.equal(txParams.dataValue2);

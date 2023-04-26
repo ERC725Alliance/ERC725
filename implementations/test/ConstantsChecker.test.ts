@@ -37,7 +37,7 @@ describe('Constants Checker', () => {
 
       it('execute array selector', async () => {
         const result = await contract.getExecuteArraySelector();
-        expect(result).to.equal(FUNCTIONS_SELECTOR.EXECUTE_ARRAY);
+        expect(result).to.equal(FUNCTIONS_SELECTOR.EXECUTE_BATCH);
       });
     });
 
@@ -49,7 +49,7 @@ describe('Constants Checker', () => {
 
       it('setData array selector', async () => {
         const result = await contract.getSetDataArraySelector();
-        expect(result).to.equal(FUNCTIONS_SELECTOR.SETDATA_ARRAY);
+        expect(result).to.equal(FUNCTIONS_SELECTOR.SETDATA_BATCH);
       });
     });
   });

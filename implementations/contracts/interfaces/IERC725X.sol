@@ -90,7 +90,7 @@ interface IERC725X is IERC165 {
      * Emits an {Executed} event, when a call is made with `operationType` 0 (CALL), 3 (STATICCALL) or 4 (DELEGATECALL)
      * Emits a {ContractCreated} event, when deploying a contract with `operationType` 1 (CREATE) or 2 (CREATE2)
      */
-    function execute(
+    function executeBatch(
         uint256[] memory operationsType,
         address[] memory targets,
         uint256[] memory values,
