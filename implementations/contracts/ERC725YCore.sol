@@ -49,7 +49,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
             // Increment the iterator in unchecked block to save gas
             unchecked {
-                i++;
+                ++i;
             }
         }
 
@@ -90,7 +90,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
             // Increment the iterator in unchecked block to save gas
             unchecked {
-                i++;
+                ++i;
             }
         }
     }

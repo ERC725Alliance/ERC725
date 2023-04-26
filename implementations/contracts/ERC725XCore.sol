@@ -148,7 +148,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
             // Increment the iterator in unchecked block to save gas
             unchecked {
-                i++;
+                ++i;
             }
         }
 
