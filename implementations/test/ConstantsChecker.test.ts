@@ -19,15 +19,11 @@ describe('Constants Checker', () => {
   describe('Calculating ERC165InterfaceIds', () => {
     it('ERC725X', async () => {
       const result = await contract.getERC725XInterfaceID();
-      console.log(result);
-      
       expect(result).to.equal(INTERFACE_ID.ERC725X);
     });
 
     it('ERC725Y', async () => {
       const result = await contract.getERC725YInterfaceID();
-      console.log(result);
-      
       expect(result).to.equal(INTERFACE_ID.ERC725Y);
     });
   });

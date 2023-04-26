@@ -113,7 +113,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_MsgValueDisallowed');
       });
 
-      it('should revert when sending value to setData(..) Array', async () => {
+      it('should revert when sending value to setDataBatch(..)', async () => {
         let value = 100;
         const txParams = {
           dataKey: [ethers.utils.solidityKeccak256(['string'], ['FirstDataKey'])],
