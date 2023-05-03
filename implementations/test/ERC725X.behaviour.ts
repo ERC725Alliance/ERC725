@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
+import { BigNumber } from "ethers"
 
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { AddressZero } from '@ethersproject/constants';
@@ -73,6 +74,7 @@ export const getNamedAccounts = async (): Promise<ERC725XTestAccounts> => {
 
 export type ERC725XDeployParams = {
   newOwner: string;
+  funding?: BigNumber;
 };
 
 export type ERC725XTestContext = {
@@ -2586,5 +2588,9 @@ export const shouldInitializeLikeERC725X = (
     it('should have set the correct owner', async () => {
       expect(await context.erc725X.callStatic.owner()).to.equal(context.deployParams.newOwner);
     });
+
+    it("should have funded the contract with `msg.value` when `initialize(...)` was called", async () => {
+      expect()
+    })
   });
 };

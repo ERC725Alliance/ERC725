@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
+import { BigNumber } from 'ethers';
 
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { AddressZero } from '@ethersproject/constants';
@@ -32,6 +33,7 @@ export const getNamedAccounts = async (): Promise<ERC725YTestAccounts> => {
 
 export type ERC725YDeployParams = {
   newOwner: string;
+  funding?: BigNumber;
 };
 
 export type ERC725YTestContext = {
@@ -146,9 +148,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal(txParams.dataValue);
         });
@@ -167,9 +167,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .setData(txParams.dataKey, txParams.dataValue),
           ).to.be.revertedWith('Ownable: caller is not the owner');
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal('0x');
         });
@@ -199,9 +197,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal(txParams.dataValue);
         });
@@ -223,9 +219,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              txParams.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
             expect(fetchedData).to.equal(txParams.dataValue);
           });
@@ -244,9 +238,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .connect(context.accounts.owner)
               .setData(tx1Params.dataKey, tx1Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx1Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx1Params.dataKey);
 
             expect(fetchedData).to.equal(tx1Params.dataValue);
           });
@@ -264,9 +256,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx2Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx2Params.dataKey);
 
             expect(fetchedData).to.equal(tx2Params.dataValue);
           });
@@ -285,9 +275,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .connect(context.accounts.owner)
               .setData(tx1Params.dataKey, tx1Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx1Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx1Params.dataKey);
 
             expect(fetchedData).to.equal(tx1Params.dataValue);
           });
@@ -306,9 +294,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx2Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx2Params.dataKey);
 
             expect(fetchedData).to.equal(tx2Params.dataValue);
           });
@@ -329,9 +315,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              txParams.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
             expect(fetchedData).to.equal(txParams.dataValue);
           });
@@ -345,9 +329,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         const dataValues = [];
 
         await expect(
-          context.erc725Y
-            .connect(context.accounts.owner)
-            .setDataBatch(dataKeys, dataValues),
+          context.erc725Y.connect(context.accounts.owner).setDataBatch(dataKeys, dataValues),
         ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesEmptyArray');
       });
 
@@ -359,11 +341,8 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
         const dataValues = [];
 
         await expect(
-          context.erc725Y
-            .connect(context.accounts.owner)
-            .setDataBatch(dataKeys, dataValues),
-        )
-          .to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch')
+          context.erc725Y.connect(context.accounts.owner).setDataBatch(dataKeys, dataValues),
+        ).to.be.revertedWithCustomError(context.erc725Y, 'ERC725Y_DataKeysValuesLengthMismatch');
       });
 
       describe('When owner is setting data', () => {
@@ -381,9 +360,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal(txParams.dataValue);
         });
@@ -402,9 +379,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .setDataBatch([txParams.dataKey], [txParams.dataValue]),
           ).to.be.revertedWith('Ownable: caller is not the owner');
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal('0x');
         });
@@ -434,9 +409,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             .to.emit(context.erc725Y, 'DataChanged')
             .withArgs(txParams.dataKey, txParams.dataValue);
 
-          const fetchedData = await context.erc725Y.getData(
-            txParams.dataKey,
-          );
+          const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
           expect(fetchedData).to.equal(txParams.dataValue);
         });
@@ -458,9 +431,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              txParams.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
             expect(fetchedData).to.equal(txParams.dataValue);
           });
@@ -478,9 +449,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .connect(context.accounts.owner)
               .setDataBatch([tx1Params.dataKey], [tx1Params.dataValue]);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx1Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx1Params.dataKey);
 
             expect(fetchedData).to.equal(tx1Params.dataValue);
           });
@@ -498,9 +467,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx2Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx2Params.dataKey);
 
             expect(fetchedData).to.equal(tx2Params.dataValue);
           });
@@ -518,9 +485,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .connect(context.accounts.owner)
               .setDataBatch([tx1Params.dataKey], [tx1Params.dataValue]);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx1Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx1Params.dataKey);
 
             expect(fetchedData).to.equal(tx1Params.dataValue);
           });
@@ -539,9 +504,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(tx2Params.dataKey, tx2Params.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              tx2Params.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(tx2Params.dataKey);
 
             expect(fetchedData).to.equal(tx2Params.dataValue);
           });
@@ -562,9 +525,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
               .to.emit(context.erc725Y, 'DataChanged')
               .withArgs(txParams.dataKey, txParams.dataValue);
 
-            const fetchedData = await context.erc725Y.getData(
-              txParams.dataKey,
-            );
+            const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
             expect(fetchedData).to.equal(txParams.dataValue);
           });
@@ -580,15 +541,11 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             await expect(
               context.erc725Y
                 .connect(context.accounts.owner)
-                .setDataBatch(
-                  [txParams.dataKey, txParams.dataKey],
-                  [txParams.dataValue],
-                ),
-            )
-              .to.be.revertedWithCustomError(
-                context.erc725Y,
-                'ERC725Y_DataKeysValuesLengthMismatch',
-              )
+                .setDataBatch([txParams.dataKey, txParams.dataKey], [txParams.dataValue]),
+            ).to.be.revertedWithCustomError(
+              context.erc725Y,
+              'ERC725Y_DataKeysValuesLengthMismatch',
+            );
           });
         });
       });
@@ -857,16 +814,22 @@ export const shouldInitializeLikeERC725Y = (
   });
 
   describe('when the contract was initialized', () => {
+    it('should have set the correct owner', async () => {
+      expect(await context.erc725Y.callStatic.owner()).to.be.equal(context.deployParams.newOwner);
+    });
+
+    it('should have deployed and funded the contract with `msg.value`', async () => {
+      expect(await ethers.provider.getBalance(context.erc725Y.address)).to.equal(
+        context.deployParams.funding,
+      );
+    });
+
     it('should have registered the ERC165 interface', async () => {
       expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC165)).to.be.true;
     });
 
     it('should have registered the ERC725Y interface', async () => {
       expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC725Y));
-    });
-
-    it('should have set the correct owner', async () => {
-      expect(await context.erc725Y.callStatic.owner()).to.be.equal(context.deployParams.newOwner);
     });
   });
 };
