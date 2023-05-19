@@ -13,19 +13,20 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 /**
  * @title ERC725 bundle
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Bundles ERC725X and ERC725Y together into one smart contract
+ * @dev Bundles ERC725X and ERC725Y together into one smart contract.
+ * This implementation does not have by default a:
+ *  - `receive() external payable {}`
+ *  - or `fallback() external payable {}`
  */
 contract ERC725 is ERC725XCore, ERC725YCore {
     /**
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
      */
-    constructor(address newOwner) {
+    constructor(address newOwner) payable {
         require(newOwner != address(0), "Ownable: new owner is the zero address");
         OwnableUnset._setOwner(newOwner);
     }
-
-    // NOTE this implementation has not by default: receive() external payable {}
 
     /**
      * @inheritdoc ERC165

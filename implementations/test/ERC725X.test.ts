@@ -38,6 +38,21 @@ describe('ERC725X', () => {
         ).to.be.revertedWith('Ownable: new owner is the zero address');
       });
 
+      it("should deploy and fund the contract with `msg.value`", async () => {
+        const accounts = await getNamedAccounts();
+
+        const deployParams = {
+          newOwner: accounts.owner.address,
+          funding: ethers.utils.parseEther('10'),
+        };
+
+        const contract = await new ERC725X__factory(accounts.owner).deploy(deployParams.newOwner, {
+          value: deployParams.funding,
+        });
+
+        expect(await ethers.provider.getBalance(contract.address)).to.equal(deployParams.funding);
+      })
+
       describe('once the contract was deployed', () => {
         let context: ERC725XTestContext;
 
@@ -67,6 +82,7 @@ describe('ERC725X', () => {
 
       const deployParams = {
         newOwner: accounts.owner.address,
+        funding: ethers.utils.parseEther('10'),
       };
 
       const erc725XBase = await new ERC725XInit__factory(accounts.owner).deploy();
@@ -78,7 +94,9 @@ describe('ERC725X', () => {
     };
 
     const initializeProxy = async (context: ERC725XTestContext) => {
-      return context.erc725X['initialize(address)'](context.deployParams.newOwner);
+      return context.erc725X['initialize(address)'](context.deployParams.newOwner, {
+        value: context.deployParams.funding,
+      });
     };
 
     describe('when deploying the base implementation contract', () => {

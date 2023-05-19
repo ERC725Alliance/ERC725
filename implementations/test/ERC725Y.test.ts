@@ -18,9 +18,12 @@ describe('ERC725Y', () => {
 
       const deployParams = {
         newOwner: accounts.owner.address,
+        funding: ethers.utils.parseEther('10'),
       };
 
-      const erc725Y = await new ERC725Y__factory(accounts.owner).deploy(deployParams.newOwner);
+      const erc725Y = await new ERC725Y__factory(accounts.owner).deploy(deployParams.newOwner, {
+        value: deployParams.funding,
+      });
 
       return { accounts, erc725Y, deployParams };
     };
@@ -67,6 +70,7 @@ describe('ERC725Y', () => {
 
       const deployParams = {
         newOwner: accounts.owner.address,
+        funding: ethers.utils.parseEther('10'),
       };
 
       const erc725YBase = await new ERC725YInit__factory(accounts.owner).deploy();
@@ -78,7 +82,9 @@ describe('ERC725Y', () => {
     };
 
     const initializeProxy = async (context: ERC725YTestContext) => {
-      return context.erc725Y['initialize(address)'](context.deployParams.newOwner);
+      return context.erc725Y['initialize(address)'](context.deployParams.newOwner, {
+        value: context.deployParams.funding,
+      });
     };
 
     describe('when deploying the base implementation contract', () => {
