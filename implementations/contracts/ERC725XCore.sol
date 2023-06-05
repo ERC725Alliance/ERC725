@@ -175,7 +175,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.call{value: value}(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        return Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -192,7 +192,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.staticcall(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        return Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -209,7 +209,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.delegatecall(data);
-        result = Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
+        return Address.verifyCallResult(success, returnData, "ERC725X: Unknown Error");
     }
 
     /**
@@ -240,8 +240,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
             revert ERC725X_ContractDeploymentFailed();
         }
 
-        newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_1_CREATE, contractAddress, value, bytes32(0));
+        return abi.encodePacked(contractAddress);
     }
 
     /**
@@ -262,7 +262,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         bytes memory bytecode = BytesLib.slice(creationCode, 0, creationCode.length - 32);
         address contractAddress = Create2.deploy(value, salt, bytecode);
 
-        newContract = abi.encodePacked(contractAddress);
         emit ContractCreated(OPERATION_2_CREATE2, contractAddress, value, salt);
+        return abi.encodePacked(contractAddress);
     }
 }
