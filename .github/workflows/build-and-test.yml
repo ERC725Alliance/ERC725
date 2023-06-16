@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Solhint Linter
+      - name: Run Solidity Linter
         run: npm run lint
+
+      - name: Check Prettier Style
+        run: npm run format:check
 
       - name: Compile contracts
         run: npm run build --if-present
