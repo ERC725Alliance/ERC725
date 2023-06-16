@@ -55,8 +55,8 @@ const Errors = {
     },
     '0xe9ad2b5f': {
       error: 'ERC725X_ExecuteParametersEmptyArray()',
-      message: 'ERC725X: Parameters cannot be an empty array'
-    }
+      message: 'ERC725X: Parameters cannot be an empty array',
+    },
   },
   ERC725Y: {
     '0x3bcc8979': {
@@ -65,12 +65,12 @@ const Errors = {
     },
     '0x97da5f95': {
       error: 'ERC725Y_DataKeysValuesEmptyArray()',
-      message: 'ERC725Y: Parameters cannot be an empty array'
+      message: 'ERC725Y: Parameters cannot be an empty array',
     },
     '0xf36ba737': {
       error: 'ERC725Y_MsgValueDisallowed()',
-      message: 'ERC725Y: Sending value to setData functions is not allowed'
-    }
+      message: 'ERC725Y: Sending value to setData functions is not allowed',
+    },
   },
 };
 
