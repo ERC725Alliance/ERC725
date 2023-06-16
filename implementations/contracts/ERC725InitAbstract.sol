@@ -17,11 +17,7 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
 abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
-    function _initialize(address newOwner)
-        internal
-        virtual
-        onlyInitializing
-    {
+    function _initialize(address newOwner) internal virtual onlyInitializing {
         require(newOwner != address(0), "Ownable: new owner is the zero address");
         OwnableUnset._setOwner(newOwner);
     }
@@ -31,13 +27,9 @@ abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore 
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(ERC725XCore, ERC725YCore)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC725XCore, ERC725YCore) returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||
