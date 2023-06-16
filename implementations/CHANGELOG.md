@@ -7,13 +7,14 @@ All notable changes to this project will be documented in this file. See [standa
 ### ⚠ BREAKING CHANGES
 
 - Remove function overloading and rename overloaded functions to add "Batch" keyword: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
-    - `setData(bytes32[],bytes[])` --> `setDataBatch(bytes32[],bytes[])`
-    - `getData(bytes32[])` --> `getDataBatch(bytes32[])`
-    - `execute(uint256[],address[],uint256[],bytes[])` --> `executeBatch(uint256[],address[],uint256[],bytes[])`
+
+  - `setData(bytes32[],bytes[])` --> `setDataBatch(bytes32[],bytes[])`
+  - `getData(bytes32[])` --> `getDataBatch(bytes32[])`
+  - `execute(uint256[],address[],uint256[],bytes[])` --> `executeBatch(uint256[],address[],uint256[],bytes[])`
 
 - Change interfaceId of ERC725X and ERC725Y: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
-    - ERC725X from `0x570ef073` to `0x7545acac`
-    - ERC725Y from `0x714df77c` to `0x629aa694`
+  - ERC725X from `0x570ef073` to `0x7545acac`
+  - ERC725Y from `0x714df77c` to `0x629aa694`
 
 ### Refactor
 
