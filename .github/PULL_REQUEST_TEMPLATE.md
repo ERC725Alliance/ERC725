@@ -11,41 +11,14 @@
 <!-- Changes that potentially causes other components to fail (changes in interfaceIds, function signatures, behavior, etc ..) --->
 <!---
 ## ⚠️ BREAKING CHANGES
----->
-
-<!---
 ## 🚀 Feature
----->
-
-<!---
 ## 🐛 Bug
----->
-
-<!---
 ## ♻️ Refactor
----->
-
-<!---
 ## 🧪 Tests
----->
-
-<!---
 ## ⚡️ Performance
----->
-
-<!---
 ## 🎨 Style
----->
-
-<!---
 ## 📄 Documentation
----->
-
-<!---
 ## 📦 Build
----->
-
-<!---
 ## 🤖 CI
 ---->
 
@@ -64,5 +37,6 @@ Fixes #???? <!-- Fill in with issue number -->
 - [ ] Wrote Tests
 - [ ] Wrote Documentation
 - [ ] Ran `npm run lint`
+- [ ] Ran `npm run format`
 - [ ] Ran `npm run build`
 - [ ] Ran `npm run test`
