@@ -15,7 +15,7 @@
       "options": {
         "tabWidth": 4,
         "printWidth": 100,
-        "compiler": "0.8.10"
+        "compiler": "0.8.17"
       }
     }
   ]
