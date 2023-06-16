@@ -38,7 +38,7 @@ describe('ERC725X', () => {
         ).to.be.revertedWith('Ownable: new owner is the zero address');
       });
 
-      it("should deploy and fund the contract with `msg.value`", async () => {
+      it('should deploy and fund the contract with `msg.value`', async () => {
         const accounts = await getNamedAccounts();
 
         const deployParams = {
@@ -51,7 +51,7 @@ describe('ERC725X', () => {
         });
 
         expect(await ethers.provider.getBalance(contract.address)).to.equal(deployParams.funding);
-      })
+      });
 
       describe('once the contract was deployed', () => {
         let context: ERC725XTestContext;
