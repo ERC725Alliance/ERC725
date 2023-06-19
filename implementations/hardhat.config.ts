@@ -15,7 +15,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-packager";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.10",
+  solidity: "0.8.17",
   packager: {
     contracts: [
       "ERC725X",
