@@ -17,7 +17,9 @@ contract ReturnTest {
 
     error Bang();
 
-    function functionThatRevertsWithErrorString(string memory error) external pure {
+    function functionThatRevertsWithErrorString(
+        string memory error
+    ) external pure {
         revert(error);
     }
 

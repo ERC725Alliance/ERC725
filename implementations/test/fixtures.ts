@@ -12,14 +12,14 @@ export async function deployProxy(
     '0x3d602d80600a3d3981f3363d3d373d3d3d363d73bebebebebebebebebebebebebebebebebebebebe5af43d82803e903d91602b57fd5bf3';
 
   // deploy proxy contract
-  let proxyBytecode = eip1167RuntimeCodeTemplate.replace(
+  const proxyBytecode = eip1167RuntimeCodeTemplate.replace(
     'bebebebebebebebebebebebebebebebebebebebe',
     baseContractAddress.substr(2),
   );
-  let tx = await deployer.sendTransaction({
+  const tx = await deployer.sendTransaction({
     data: proxyBytecode,
   });
-  let receipt = await tx.wait();
+  const receipt = await tx.wait();
 
   return receipt.contractAddress;
 }

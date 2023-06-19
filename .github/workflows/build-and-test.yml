@@ -30,10 +30,10 @@ jobs:
         run: npm ci
 
       - name: Run Solidity Linter
-        run: npm run lint
+        run: npm run lint:solidity
 
-      - name: Check Prettier Style
-        run: npm run format:check
+      - name: Run ESLint on JS/TS files
+        run: npm run lint
 
       - name: Compile contracts
         run: npm run build --if-present

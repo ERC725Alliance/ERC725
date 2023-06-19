@@ -575,7 +575,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             });
 
             it('should revert with string and bubble the error', async () => {
-              let errorString = 'Oh! I revert';
+              const errorString = 'Oh! I revert';
 
               const stringErrorFunctionABI = returnTest.interface.encodeFunctionData(
                 'functionThatRevertsWithErrorString',

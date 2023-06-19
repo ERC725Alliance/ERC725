@@ -36,7 +36,7 @@ Fixes #???? <!-- Fill in with issue number -->
 
 - [ ] Wrote Tests
 - [ ] Wrote Documentation
-- [ ] Ran `npm run lint`
-- [ ] Ran `npm run format`
+- [ ] Ran `npm run lint` && `npm run lint:solidity`
+- [ ] Ran `npm run format` (prettier)
 - [ ] Ran `npm run build`
 - [ ] Ran `npm run test`

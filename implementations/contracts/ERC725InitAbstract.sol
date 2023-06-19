@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {
+    Initializable
+} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
@@ -16,9 +18,16 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
  */
-abstract contract ERC725InitAbstract is Initializable, ERC725XCore, ERC725YCore {
+abstract contract ERC725InitAbstract is
+    Initializable,
+    ERC725XCore,
+    ERC725YCore
+{
     function _initialize(address newOwner) internal virtual onlyInitializing {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        require(
+            newOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
         OwnableUnset._setOwner(newOwner);
     }
 
