@@ -109,5 +109,5 @@ module.exports = {
   INTERFACE_ID,
   OPERATION_TYPE,
   Errors,
-  EventSignatures
+  EventSignatures,
 };
