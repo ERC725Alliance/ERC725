@@ -12,13 +12,6 @@ const OPERATION_TYPE = {
   DELEGATECALL: 4,
 };
 
-const FUNCTIONS_SELECTOR = {
-  EXECUTE: '0x44c028fe',
-  EXECUTE_BATCH: '0x31858452',
-  SETDATA: '0x7f23690c',
-  SETDATA_BATCH: '0x97902421',
-};
-
 const Errors = {
   ERC725X: {
     '0x0df9a8f8': {
@@ -116,6 +109,5 @@ module.exports = {
   INTERFACE_ID,
   OPERATION_TYPE,
   Errors,
-  EventSignatures,
-  FUNCTIONS_SELECTOR,
+  EventSignatures
 };

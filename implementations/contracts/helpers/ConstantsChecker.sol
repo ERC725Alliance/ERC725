@@ -27,36 +27,4 @@ contract ConstantsChecker {
         );
         return type(IERC725Y).interfaceId;
     }
-
-    function getExecuteSelector() public pure returns (bytes4) {
-        require(
-            EXECUTE_SELECTOR == IERC725X.execute.selector,
-            "hardcoded EXECUTE_SELECTOR in `constants.sol` does not match `IERC725X.execute.selector`"
-        );
-        return IERC725X.execute.selector;
-    }
-
-    function getExecuteArraySelector() public pure returns (bytes4) {
-        require(
-            EXECUTE_BATCH_SELECTOR == IERC725X.executeBatch.selector,
-            "hardcoded EXECUTE_BATCH_SELECTOR in `constants.sol` does not match `IERC725X.execute.selector`"
-        );
-        return IERC725X.executeBatch.selector;
-    }
-
-    function getSetDataSelector() public pure returns (bytes4) {
-        require(
-            SETDATA_SELECTOR == IERC725Y.setData.selector,
-            "hardcoded SETDATA_SELECTOR in `constants.sol` does not match `IERC725Y.setData.selector`"
-        );
-        return IERC725Y.setData.selector;
-    }
-
-    function getSetDataArraySelector() public pure returns (bytes4) {
-        require(
-            SETDATA_BATCH_SELECTOR == IERC725Y.setDataBatch.selector,
-            "hardcoded SETDATA_BATCH_SELECTOR in `constants.sol` does not match `IERC725Y.setData.selector`"
-        );
-        return IERC725Y.setDataBatch.selector;
-    }
 }
