@@ -100,7 +100,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
   describe('When testing setting data', () => {
     describe('When sending value to setData', () => {
       it('should revert when sending value to setData(..)', async () => {
-        let value = 100;
+        const value = 100;
         const txParams = {
           dataKey: ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
           dataValue: '0xaabbccdd',
@@ -116,7 +116,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
       });
 
       it('should revert when sending value to setDataBatch(..)', async () => {
-        let value = 100;
+        const value = 100;
         const txParams = {
           dataKey: [ethers.utils.solidityKeccak256(['string'], ['FirstDataKey'])],
           dataValue: ['0xaabbccdd'],

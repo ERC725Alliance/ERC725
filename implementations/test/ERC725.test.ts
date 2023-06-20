@@ -43,9 +43,9 @@ describe('ERC725', () => {
         const contract = await new ERC725__factory(accounts[0]).deploy(deployParams.newOwner);
 
         expect(await contract.owner()).to.equal(deployParams.newOwner);
-      })
+      });
 
-      it("should deploy and fund the contract with `msg.value`", async () => {
+      it('should deploy and fund the contract with `msg.value`', async () => {
         const accounts = await ethers.getSigners();
 
         const deployParams = {
@@ -58,7 +58,7 @@ describe('ERC725', () => {
         });
 
         expect(await ethers.provider.getBalance(contract.address)).to.equal(deployParams.funding);
-      })
+      });
     });
   });
 
@@ -108,9 +108,9 @@ describe('ERC725', () => {
       it("should initialize the contract with the owner's address", async () => {
         await context.erc725['initialize(address)'](context.deployParams.newOwner);
         expect(await context.erc725.owner()).to.equal(context.deployParams.newOwner);
-      })
+      });
 
-      it("should initialize and fund the contract with `msg.value`", async () => {
+      it('should initialize and fund the contract with `msg.value`', async () => {
         const funding = ethers.utils.parseEther('10');
 
         await context.erc725['initialize(address)'](context.deployParams.newOwner, {
@@ -118,7 +118,7 @@ describe('ERC725', () => {
         });
 
         expect(await ethers.provider.getBalance(context.erc725.address)).to.equal(funding);
-      })
+      });
     });
   });
 });
