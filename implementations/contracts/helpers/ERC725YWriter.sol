@@ -16,7 +16,11 @@ contract ERC725YWriter {
         IERC725Y(to).setDataBatch(_keys, _values);
     }
 
-    function callSetData(address to, bytes32 _key, bytes calldata _value) public {
+    function callSetData(
+        address to,
+        bytes32 _key,
+        bytes calldata _value
+    ) public {
         IERC725Y(to).setData(_key, _value);
     }
 }

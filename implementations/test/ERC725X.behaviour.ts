@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
+import { BigNumber } from 'ethers';
 
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { AddressZero } from '@ethersproject/constants';
@@ -73,6 +74,7 @@ export const getNamedAccounts = async (): Promise<ERC725XTestAccounts> => {
 
 export type ERC725XDeployParams = {
   newOwner: string;
+  funding?: BigNumber;
 };
 
 export type ERC725XTestContext = {
@@ -166,12 +168,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                ),
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
             )
               .to.emit(context.erc725X, 'Executed')
               .withArgs(
@@ -198,12 +195,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.anyone)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                ),
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
             ).to.be.revertedWith('Ownable: caller is not the owner');
           });
         });
@@ -230,12 +222,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               await context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const balanceAfter = await provider.getBalance(receiveTester.address);
 
@@ -264,12 +251,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               await context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const balanceAfter = await provider.getBalance(payableFallbackContract.address);
 
@@ -297,12 +279,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('ERC725X: Unknown Error');
             });
           });
@@ -325,12 +302,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('ERC725X: Unknown Error');
             });
           });
@@ -354,12 +326,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.be.revertedWithCustomError(revertTester, 'MyCustomError')
                 .withArgs(context.erc725X.address, context.accounts.owner.address);
@@ -380,12 +347,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(txParams.Operation, txParams.to, txParams.value, '0x00000000');
@@ -410,12 +372,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -445,12 +402,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(txParams.Operation, txParams.to, txParams.value, txParams.data + '0000');
@@ -474,12 +426,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.be.revertedWithCustomError(context.erc725X, 'ERC725X_InsufficientBalance')
                 .withArgs(contractBalance, ethers.utils.parseEther('75'));
@@ -510,12 +457,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -553,12 +495,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -625,12 +562,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(returnTest, 'Bang');
             });
           });
@@ -643,7 +575,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             });
 
             it('should revert with string and bubble the error', async () => {
-              let errorString = 'Oh! I revert';
+              const errorString = 'Oh! I revert';
 
               const stringErrorFunctionABI = returnTest.interface.encodeFunctionData(
                 'functionThatRevertsWithErrorString',
@@ -660,12 +592,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith(errorString);
             });
           });
@@ -724,12 +651,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_NoContractBytecodeProvided',
@@ -748,12 +670,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -761,12 +678,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -798,12 +710,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -811,12 +718,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -843,12 +745,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -856,12 +753,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -892,12 +784,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ContractDeploymentFailed');
             });
           });
@@ -914,12 +801,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_CreateOperationsRequireEmptyRecipientAddress',
@@ -938,12 +820,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -951,12 +828,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -988,12 +860,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.be.revertedWithCustomError(context.erc725X, 'ERC725X_InsufficientBalance')
                 .withArgs(contractBalance, ethers.utils.parseEther('90'));
@@ -1012,12 +879,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ContractDeploymentFailed');
             });
           });
@@ -1039,12 +901,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -1052,12 +909,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -1092,12 +944,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -1105,12 +952,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -1139,12 +981,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -1152,12 +989,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -1189,12 +1021,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('Create2: Failed on deploy');
             });
           });
@@ -1216,12 +1043,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('Create2: Failed on deploy');
             });
           });
@@ -1240,12 +1062,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_CreateOperationsRequireEmptyRecipientAddress',
@@ -1266,12 +1083,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -1279,12 +1091,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -1316,12 +1123,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('Create2: insufficient balance');
             });
           });
@@ -1340,12 +1142,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('Create2: Failed on deploy');
             });
           });
@@ -1363,12 +1160,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const addressContractCreatedChecksumed =
                 ethers.utils.getAddress(addressContractCreated);
@@ -1376,12 +1168,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -1399,12 +1186,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('Create2: Failed on deploy');
             });
           });
@@ -1420,20 +1202,10 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               };
               const addressContractCreated = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
               await context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
               const destructableContract = await new ethers.Contract(
                 addressContractCreated,
                 DestructableContractABI,
@@ -1446,12 +1218,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               // re-creating
               await context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
               const codeRetreivedAfterReCreating = await provider.getCode(addressContractCreated);
               expect(codeRetreivedAfterReCreating).to.equal(codeRetreivedBeforeDestructing);
               expect(codeRetreivedAfterReCreating).to.equal(DestructableContractDeployedBytecode);
@@ -1474,12 +1241,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -1502,12 +1264,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_MsgValueDisallowedInStaticCall',
@@ -1536,12 +1293,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('ERC725X: Unknown Error');
             });
           });
@@ -1569,12 +1321,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               const result = await context.erc725X
                 .connect(context.accounts.owner)
-                .callStatic.execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .callStatic.execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               expect(result).to.equal(getValue);
             });
@@ -1601,12 +1348,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.be.revertedWithCustomError(revertTester, 'MyCustomError')
                 .withArgs(context.erc725X.address, context.accounts.owner.address);
@@ -1633,12 +1375,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('I reverted');
             });
           });
@@ -1659,12 +1396,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_MsgValueDisallowedInDelegateCall',
@@ -1694,12 +1426,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               )
                 .to.be.revertedWithCustomError(revertTester, 'MyCustomError')
                 .withArgs(context.erc725X.address, context.accounts.owner.address);
@@ -1727,12 +1454,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .execute(
-                    txParams.Operation,
-                    txParams.to,
-                    txParams.value,
-                    txParams.data,
-                  ),
+                  .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
               ).to.be.revertedWith('I reverted');
             });
           });
@@ -1757,12 +1479,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
               await context.erc725X
                 .connect(context.accounts.owner)
-                .execute(
-                  txParams.Operation,
-                  txParams.to,
-                  txParams.value,
-                  txParams.data,
-                );
+                .execute(txParams.Operation, txParams.to, txParams.value, txParams.data);
 
               const codeRetreived = await provider.getCode(context.erc725X.address);
 
@@ -1784,12 +1501,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           await expect(
             context.erc725X
               .connect(context.accounts.owner)
-              .execute(
-                txParams.Operation,
-                txParams.to,
-                txParams.value,
-                txParams.data,
-              ),
+              .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
           ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_UnknownOperationType');
         });
       });
@@ -1807,12 +1519,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
         await expect(
           context.erc725X
             .connect(context.accounts.owner)
-            .executeBatch(
-              txParams.operations,
-              txParams.targets,
-              txParams.values,
-              txParams.datas,
-            ),
+            .executeBatch(txParams.operations, txParams.targets, txParams.values, txParams.datas),
         ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
       });
 
@@ -1827,12 +1534,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
         await expect(
           context.erc725X
             .connect(context.accounts.owner)
-            .executeBatch(
-              txParams.operations,
-              txParams.targets,
-              txParams.values,
-              txParams.datas,
-            ),
+            .executeBatch(txParams.operations, txParams.targets, txParams.values, txParams.datas),
         ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersLengthMismatch');
       });
 
@@ -1848,12 +1550,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           await expect(
             context.erc725X
               .connect(context.accounts.owner)
-              .executeBatch(
-                txParams.operations,
-                txParams.targets,
-                txParams.values,
-                txParams.datas,
-              ),
+              .executeBatch(txParams.operations, txParams.targets, txParams.values, txParams.datas),
           ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_ExecuteParametersEmptyArray');
         });
 
@@ -1868,12 +1565,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           await expect(
             context.erc725X
               .connect(context.accounts.owner)
-              .executeBatch(
-                txParams.operations,
-                txParams.targets,
-                txParams.values,
-                txParams.datas,
-              ),
+              .executeBatch(txParams.operations, txParams.targets, txParams.values, txParams.datas),
           ).to.be.revertedWithCustomError(
             context.erc725X,
             'ERC725X_ExecuteParametersLengthMismatch',
@@ -1894,12 +1586,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                ),
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
             )
               .to.emit(context.erc725X, 'Executed')
               .withArgs(
@@ -1936,12 +1623,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.anyone)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                ),
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
             ).to.be.revertedWith('Ownable: caller is not the owner');
           });
         });
@@ -1977,12 +1659,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -2049,12 +1726,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWith('Revert please');
             });
           });
@@ -2080,12 +1752,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWith('Revert with one');
             });
           });
@@ -2120,12 +1787,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -2172,12 +1834,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               // real creation
               await context.erc725X
                 .connect(context.accounts.owner)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                );
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data);
 
               const returnValueOfCall = result[0];
               expect(returnValueOfCall).to.equal('0x');
@@ -2206,12 +1863,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWith('Revert please');
             });
           });
@@ -2239,12 +1891,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               )
                 .to.emit(context.erc725X, 'ContractCreated')
                 .withArgs(
@@ -2287,12 +1934,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_CreateOperationsRequireEmptyRecipientAddress',
@@ -2319,12 +1961,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               )
                 .to.emit(context.erc725X, 'Executed')
                 .withArgs(
@@ -2365,12 +2002,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                ),
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
             ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_UnknownOperationType');
           });
         });
@@ -2386,12 +2018,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                ),
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
             ).to.be.revertedWithCustomError(context.erc725X, 'ERC725X_UnknownOperationType');
           });
         });
@@ -2412,12 +2039,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
             await expect(
               context.erc725X
                 .connect(context.accounts.owner)
-                .executeBatch(
-                  txParams.Operations,
-                  txParams.to,
-                  txParams.values,
-                  txParams.data,
-                ),
+                .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
             )
               .to.be.revertedWithCustomError(context.erc725X, 'ERC725X_InsufficientBalance')
               .withArgs(contractBalance.sub(txParams.values[0]), txParams.values[1]);
@@ -2436,12 +2058,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_ExecuteParametersLengthMismatch',
@@ -2464,12 +2081,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_ExecuteParametersLengthMismatch',
@@ -2492,12 +2104,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_ExecuteParametersLengthMismatch',
@@ -2516,12 +2123,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_ExecuteParametersLengthMismatch',
@@ -2541,12 +2143,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               await expect(
                 context.erc725X
                   .connect(context.accounts.owner)
-                  .executeBatch(
-                    txParams.Operations,
-                    txParams.to,
-                    txParams.values,
-                    txParams.data,
-                  ),
+                  .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
               ).to.be.revertedWithCustomError(
                 context.erc725X,
                 'ERC725X_ExecuteParametersLengthMismatch',
@@ -2585,6 +2182,10 @@ export const shouldInitializeLikeERC725X = (
 
     it('should have set the correct owner', async () => {
       expect(await context.erc725X.callStatic.owner()).to.equal(context.deployParams.newOwner);
+    });
+
+    it('should have funded the contract with `msg.value` when `initialize(...)` was called', async () => {
+      expect();
     });
   });
 };

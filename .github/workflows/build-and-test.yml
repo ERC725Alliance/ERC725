@@ -29,7 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Solhint Linter
+      - name: Run Solidity Linter
+        run: npm run lint:solidity
+
+      - name: Run ESLint on JS/TS files
         run: npm run lint
 
       - name: Compile contracts

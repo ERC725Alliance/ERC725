@@ -23,7 +23,7 @@ contract ERC725XInit is ERC725XInitAbstract {
      * @notice Sets the owner of the contract
      * @param newOwner the owner of the contract
      */
-    function initialize(address newOwner) public virtual initializer {
+    function initialize(address newOwner) public payable virtual initializer {
         ERC725XInitAbstract._initialize(newOwner);
     }
 }

@@ -1,0 +1,4 @@
+{
+  "solc_remaps": "@=node_modules/@ solidity-bytes-utils=node_modules/solidity-bytes-utils",
+  "filter_paths": "node_modules/"
+}

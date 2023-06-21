@@ -2,18 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/ERC725Alliance/ERC725/compare/v5.0.0...v5.1.0) (2023-06-21)
+
+### Features
+
+- Allow to fund ERC725 contracts on deployment ([#213](https://github.com/ERC725Alliance/ERC725/pull/213))
+
+### Refactor
+
+- Remove deprecated constants for overloaded function selectors ([#219](https://github.com/ERC725Alliance/ERC725/pull/219))
+
+### Build
+
+- Upgrade to 0.8.17 for default solc compiler version ([#221](https://github.com/ERC725Alliance/ERC725/pull/221))
+
+- Upgrade `@openzeppelin/contracts` to 4.9.2  ([#224](https://github.com/ERC725Alliance/ERC725/pull/224))
+
 ## [5.0.0](https://github.com/ERC725Alliance/ERC725/compare/v4.2.0...v5.0.0) (2023-04-26)
 
 ### ⚠ BREAKING CHANGES
 
 - Remove function overloading and rename overloaded functions to add "Batch" keyword: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
-    - `setData(bytes32[],bytes[])` --> `setDataBatch(bytes32[],bytes[])`
-    - `getData(bytes32[])` --> `getDataBatch(bytes32[])`
-    - `execute(uint256[],address[],uint256[],bytes[])` --> `executeBatch(uint256[],address[],uint256[],bytes[])`
+
+  - `setData(bytes32[],bytes[])` --> `setDataBatch(bytes32[],bytes[])`
+  - `getData(bytes32[])` --> `getDataBatch(bytes32[])`
+  - `execute(uint256[],address[],uint256[],bytes[])` --> `executeBatch(uint256[],address[],uint256[],bytes[])`
 
 - Change interfaceId of ERC725X and ERC725Y: ([#209](https://github.com/ERC725Alliance/ERC725/pull/209))
-    - ERC725X from `0x570ef073` to `0x7545acac`
-    - ERC725Y from `0x714df77c` to `0x629aa694`
+  - ERC725X from `0x570ef073` to `0x7545acac`
+  - ERC725Y from `0x714df77c` to `0x629aa694`
 
 ### Refactor
 

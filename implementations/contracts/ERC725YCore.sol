@@ -95,11 +95,16 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         }
     }
 
-    function _getData(bytes32 dataKey) internal view virtual returns (bytes memory dataValue) {
+    function _getData(
+        bytes32 dataKey
+    ) internal view virtual returns (bytes memory dataValue) {
         return _store[dataKey];
     }
 
-    function _setData(bytes32 dataKey, bytes memory dataValue) internal virtual {
+    function _setData(
+        bytes32 dataKey,
+        bytes memory dataValue
+    ) internal virtual {
         _store[dataKey] = dataValue;
         emit DataChanged(dataKey, dataValue);
     }
@@ -110,6 +115,8 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     function supportsInterface(
         bytes4 interfaceId
     ) public view virtual override(IERC165, ERC165) returns (bool) {
-        return interfaceId == _INTERFACEID_ERC725Y || super.supportsInterface(interfaceId);
+        return
+            interfaceId == _INTERFACEID_ERC725Y ||
+            super.supportsInterface(interfaceId);
     }
 }

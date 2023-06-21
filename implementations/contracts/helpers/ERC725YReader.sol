@@ -15,7 +15,10 @@ contract ERC725YReader {
         return IERC725Y(to).getDataBatch(_keys);
     }
 
-    function callGetData(address to, bytes32 _key) public view returns (bytes memory) {
+    function callGetData(
+        address to,
+        bytes32 _key
+    ) public view returns (bytes memory) {
         return IERC725Y(to).getData(_key);
     }
 }

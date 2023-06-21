@@ -28,11 +28,36 @@ describe('ERC725', () => {
           newOwner: ethers.constants.AddressZero,
         };
 
-        const contract = await new ERC725__factory(accounts[0]).deploy(accounts[0].address);
-
         await expect(
           new ERC725__factory(accounts[0]).deploy(deployParams.newOwner),
         ).to.be.revertedWith('Ownable: new owner is the zero address');
+      });
+
+      it("should deploy the contract with the owner's address", async () => {
+        const accounts = await ethers.getSigners();
+
+        const deployParams = {
+          newOwner: accounts[0].address,
+        };
+
+        const contract = await new ERC725__factory(accounts[0]).deploy(deployParams.newOwner);
+
+        expect(await contract.owner()).to.equal(deployParams.newOwner);
+      });
+
+      it('should deploy and fund the contract with `msg.value`', async () => {
+        const accounts = await ethers.getSigners();
+
+        const deployParams = {
+          newOwner: accounts[0].address,
+          funding: ethers.utils.parseEther('10'),
+        };
+
+        const contract = await new ERC725__factory(accounts[0]).deploy(deployParams.newOwner, {
+          value: deployParams.funding,
+        });
+
+        expect(await ethers.provider.getBalance(contract.address)).to.equal(deployParams.funding);
       });
     });
   });
@@ -78,6 +103,21 @@ describe('ERC725', () => {
         await expect(
           context.erc725['initialize(address)'](ethers.constants.AddressZero),
         ).to.be.revertedWith('Ownable: new owner is the zero address');
+      });
+
+      it("should initialize the contract with the owner's address", async () => {
+        await context.erc725['initialize(address)'](context.deployParams.newOwner);
+        expect(await context.erc725.owner()).to.equal(context.deployParams.newOwner);
+      });
+
+      it('should initialize and fund the contract with `msg.value`', async () => {
+        const funding = ethers.utils.parseEther('10');
+
+        await context.erc725['initialize(address)'](context.deployParams.newOwner, {
+          value: funding,
+        });
+
+        expect(await ethers.provider.getBalance(context.erc725.address)).to.equal(funding);
       });
     });
   });

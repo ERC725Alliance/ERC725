@@ -1,3 +1,3 @@
 module.exports = {
-    skipFiles: ['helpers']
-  };
+  skipFiles: ['helpers'],
+};
