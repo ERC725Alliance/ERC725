@@ -61,12 +61,12 @@ npm run lint
 
 ### Interface IDs
 
-The table below contains a list of [ERC165]() interface IDs used by the [Solidity implementations of the ERC725 smart contracts]().
+The table below contains a list of [ERC165](https://eips.ethereum.org/EIPS/eip-165) interface IDs used by the [Solidity implementations of the ERC725 smart contracts](./contracts/).
 
 | Interface Name                                                         | Interface ID | Description                                |
 | :--------------------------------------------------------------------- | :----------- | :----------------------------------------- |
-| ERC725X                                                                | `0x44c028fe` | General executor                           |
-| ERC725Y                                                                | `0x714df77c` | General key-value store                    |
+| ERC725X                                                                | `0x7545acac` | General executor                           |
+| ERC725Y                                                                | `0x629aa694` | General key-value store                    |
 | [ERC165](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md) | `0x01ffc9a7` | Standard Interface Detection for Contracts |
 
 ### Solc Contract details
