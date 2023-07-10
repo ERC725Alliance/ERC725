@@ -8,7 +8,8 @@ import {ERC725InitAbstract} from "./ERC725InitAbstract.sol";
  * @title Deployable Proxy Implementation of ERC725 bundle.
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract.
- * This implementation does not have by default a `receive() external payable {}` or `fallback() external payable {}` function.
+ * 
+ * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 contract ERC725Init is ERC725InitAbstract {
     /**

@@ -14,7 +14,8 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @title ERC725 bundle.
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundle ERC725X and ERC725Y together into one smart contract.
- * This implementation does not have by default a `receive() external payable {}` or `fallback() external payable {}` function.
+ * 
+ * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 contract ERC725 is ERC725XCore, ERC725YCore {
      /**

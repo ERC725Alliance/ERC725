@@ -47,15 +47,6 @@ interface IERC725Y is IERC165 {
      * 
      * @param dataKey The data key for which to set a new value.
      * @param dataValue The new bytes value to set.
-     * 
-     * @custom:requirements
-     * - SHOULD only be callable by the {owner}.
-     * 
-     * @custom:warning 
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
-     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
-     *
-     * @custom:events {DataChanged} event.
      */
     function setData(bytes32 dataKey, bytes memory dataValue) external payable;
 
@@ -66,15 +57,6 @@ interface IERC725Y is IERC165 {
      * 
      * @param dataKeys An array of data keys to set bytes values for.
      * @param dataValues An array of bytes values to set for each `dataKeys`.
-     * 
-     * @custom:requirements
-     * - SHOULD only be callable by the {owner} of the contract.
-     *
-     * @custom:warning 
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
-     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
-     *
-     * @custom:events {DataChanged} event **for each data key/value pair set**.
      */
     function setDataBatch(
         bytes32[] memory dataKeys,

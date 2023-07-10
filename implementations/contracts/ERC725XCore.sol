@@ -36,6 +36,15 @@ import "./errors.sol";
 abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
      * @inheritdoc IERC725X
+     * @custom:requirements
+     * - SHOULD only be callable by the {owner} of the contract.
+     * - if a `value` is provided, the contract MUST have at least this amount to transfer to `target` from its balance and execute successfully.
+     * - if the operation type is `STATICCALL` (`3`) or `DELEGATECALL` (`4`), `value` transfer is disallowed and SHOULD be 0.
+     * - `target` SHOULD be `address(0)` when deploying a new contract via `operationType` `CREATE` (`1`), or `CREATE2` (`2`).
+     *
+     * @custom:events
+     * - {Executed} event when a call is made with `operationType` 0 (CALL), 3 (STATICCALL) or 4 (DELEGATECALL).
+     * - {ContractCreated} event when deploying a new contract with `operationType` 1 (CREATE) or 2 (CREATE2).
      */
     function execute(
         uint256 operationType,
@@ -48,6 +57,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
     /**
      * @inheritdoc IERC725X
+     * @custom:requirements
+     * - All the array parameters provided MUST be equal and have the same length.
+     * - SHOULD only be callable by the {owner} of the contract.
+     * - The contract MUST have in its balance **at least the sum of all the `values`** to transfer and execute successfully each calldata payloads.
+     *
+     * @custom:events
+     * - {Executed} event, when a call is made with `operationType` 0 (CALL), 3 (STATICCALL) or 4 (DELEGATECALL)
+     * - {ContractCreated} event, when deploying a contract with `operationType` 1 (CREATE) or 2 (CREATE2)
      */
     function executeBatch(
         uint256[] memory operationsType,

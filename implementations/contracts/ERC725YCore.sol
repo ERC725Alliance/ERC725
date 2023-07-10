@@ -57,6 +57,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @inheritdoc IERC725Y
+     * @custom:requirements
+     * - SHOULD only be callable by the {owner}.
+     * 
+     * @custom:warning 
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
+     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     *
+     * @custom:events {DataChanged} event.
      */
     function setData(
         bytes32 dataKey,
@@ -68,6 +76,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @inheritdoc IERC725Y
+     * @custom:requirements
+     * - SHOULD only be callable by the {owner} of the contract.
+     *
+     * @custom:warning 
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
+     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     *
+     * @custom:events {DataChanged} event **for each data key/value pair set**.
      */
     function setDataBatch(
         bytes32[] memory dataKeys,

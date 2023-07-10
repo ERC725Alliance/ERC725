@@ -17,7 +17,8 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
  * @title Inheritable Proxy Implementation of ERC725 bundle
  * @author Fabian Vogelsteller <fabian@lukso.network>
  * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract.
- * This implementation does not have by default a `receive() external payable {}` or `fallback() external payable {}` function.
+ * 
+ * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 abstract contract ERC725InitAbstract is
     Initializable,
