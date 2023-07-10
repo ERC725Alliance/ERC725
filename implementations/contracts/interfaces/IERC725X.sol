@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 /**
- * @title The interface for the ERC725X sub-standard, a generic executor
+ * @title The interface for the ERC725X sub-standard, a generic executor.
  * @dev ERC725X provides the ability to call arbitrary functions on any other smart contract (including itself).
  * It allows to use different type of message calls to interact with addresses such as `call`, `staticcall` and `delegatecall`.
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.

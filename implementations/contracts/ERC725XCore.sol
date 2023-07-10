@@ -27,11 +27,11 @@ import {
 import "./errors.sol";
 
 /**
- * @title Core implementation of ERC725X executor
+ * @title Core implementation of ERC725X sub-standard, a generic executor.
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
- * This is the basis for a smart contract based account system, but could also be used as a proxy account system
+ * It allows to use different type of message calls to interact with addresses such as `call`, `staticcall` and `delegatecall`.
+ * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
+ * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
 abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     /**
@@ -70,8 +70,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev check the `operationType` provided and perform the associated low-level opcode.
-     * see `IERC725X.execute(uint256,address,uint256,bytes)`.
+     * @dev check the `operationType` provided and perform the associated low-level opcode after checking for requirements (see {execute}).
      */
     function _execute(
         uint256 operationType,
@@ -125,8 +124,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev same as `_execute` but for batch execution
-     * see `IERC725X,execute(uint256[],address[],uint256[],bytes[])`
+     * @dev check each `operationType` provided in the batch and perform the associated low-level opcode after checking for requirements (see {executeBatch}).
      */
     function _executeBatch(
         uint256[] memory operationsType,
@@ -165,7 +163,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform low-level call (operation type = 0)
+     * @dev Perform low-level call (operation type = 0)
      * @param target The address on which call is executed
      * @param value The value to be sent with the call
      * @param data The data to be sent with the call
@@ -195,7 +193,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform low-level staticcall (operation type = 3)
+     * @dev Perform low-level staticcall (operation type = 3)
      * @param target The address on which staticcall is executed
      * @param data The data to be sent with the staticcall
      * @return result The data returned from the staticcall
@@ -217,7 +215,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev perform low-level delegatecall (operation type = 4)
+     * @dev Perform low-level delegatecall (operation type = 4)
      * @param target The address on which delegatecall is executed
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
@@ -239,7 +237,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev deploy a contract using the CREATE opcode (operation type = 1)
+     * @dev Deploy a contract using the `CREATE` opcode (operation type = 1)
      * @param value The value to be sent to the contract created
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s)
      * @return newContract The address of the contract created as bytes
@@ -280,7 +278,7 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @dev deploy a contract using the CREATE2 opcode (operation type = 2)
+     * @dev Deploy a contract using the `CREATE2` opcode (operation type = 2)
      * @param value The value to be sent to the contract created
      * @param creationCode The contract creation bytecode to deploy appended with the constructor argument(s) and a bytes32 salt
      * @return newContract The address of the contract created as bytes

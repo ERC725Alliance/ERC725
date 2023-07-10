@@ -16,22 +16,28 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 /**
  * @title Inheritable Proxy Implementation of ERC725 bundle
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract
+ * @dev Bundles ERC725XInit and ERC725YInit together into one smart contract.
+ * This implementation does not have by default a `receive() external payable {}` or `fallback() external payable {}` function.
  */
 abstract contract ERC725InitAbstract is
     Initializable,
     ERC725XCore,
     ERC725YCore
 {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
+    /**
+     * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
+     * @param initialOwner the owner of the contract.
+     * 
+     * @custom:requirements
+     * - `initialOwner` CANNOT be the zero address.
+     */
+    function _initialize(address initialOwner) internal virtual onlyInitializing {
         require(
-            newOwner != address(0),
+            initialOwner != address(0),
             "Ownable: new owner is the zero address"
         );
-        OwnableUnset._setOwner(newOwner);
+        OwnableUnset._setOwner(initialOwner);
     }
-
-    // NOTE this implementation has not by default: receive() external payable {}
 
     /**
      * @inheritdoc ERC165
