@@ -18,7 +18,7 @@ contract ERC725X is ERC725XCore {
      * @notice Deploying an ERC725X smart contract and setting address `initialOwner` as the contract owner.
      * @dev Deploy a new ERC725X contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
-     * 
+     *
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */

@@ -18,11 +18,13 @@ abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
     /**
      * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
-     * 
+     *
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
-    function _initialize(address initialOwner) internal virtual onlyInitializing {
+    function _initialize(
+        address initialOwner
+    ) internal virtual onlyInitializing {
         require(
             initialOwner != address(0),
             "Ownable: new owner is the zero address"

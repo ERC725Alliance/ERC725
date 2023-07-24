@@ -44,7 +44,7 @@ interface IERC725X is IERC165 {
 
     /**
      * @notice Calling address `target` using `operationType`, transferring `value` wei and data: `data`.
-     * 
+     *
      * @param operationType The operation type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4
      * @param target The address of the EOA or smart contract.  (unused if a contract is created via operation type 1 or 2)
      * @param value The amount of native tokens to transfer (in Wei)
@@ -65,9 +65,9 @@ interface IERC725X is IERC165 {
 
     /**
      * @notice Calling multiple addresses `targets` using `operationsType`, transferring `values` wei and data: `datas`.
-     * 
+     *
      * @dev Batch executor function that behaves the same as {execute} but allowing multiple operations in the same transaction.
-     * 
+     *
      * @param operationsType The list of operations type used: `CALL = 0`; `CREATE = 1`; `CREATE2 = 2`; `STATICCALL = 3`; `DELEGATECALL = 4`
      * @param targets The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).
      * @param values The list of native token amounts to transfer (in Wei).

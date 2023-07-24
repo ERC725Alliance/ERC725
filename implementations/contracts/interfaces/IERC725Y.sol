@@ -40,21 +40,21 @@ interface IERC725Y is IERC165 {
 
     /**
      * @notice Setting the following data key value pair in the ERC725Y storage. Data key: `dataKey`, data value: `dataValue`.
-     * 
+     *
      * @dev Sets a single bytes value `dataValue` in the ERC725Y storage for a specific data key `dataKey`.
      * The function is marked as payable to enable flexibility on child contracts. For instance to implement
      * a fee mechanism for setting specific data.
-     * 
+     *
      * @param dataKey The data key for which to set a new value.
      * @param dataValue The new bytes value to set.
      */
     function setData(bytes32 dataKey, bytes memory dataValue) external payable;
 
     /**
-     * @notice Setting the following data key value pairs in the ERC725Y storage. Data keys: `dataKeys`, data values: `dataValues`.    
-     * 
+     * @notice Setting the following data key value pairs in the ERC725Y storage. Data keys: `dataKeys`, data values: `dataValues`.
+     *
      * @dev Batch data setting function that behaves the same as {setData} but allowing to set multiple data key/value pairs in the ERC725Y storage in the same transaction.
-     * 
+     *
      * @param dataKeys An array of data keys to set bytes values for.
      * @param dataValues An array of bytes values to set for each `dataKeys`.
      */

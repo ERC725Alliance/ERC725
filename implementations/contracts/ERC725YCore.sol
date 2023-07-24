@@ -59,9 +59,9 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
      * @inheritdoc IERC725Y
      * @custom:requirements
      * - SHOULD only be callable by the {owner}.
-     * 
-     * @custom:warning 
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
+     *
+     * @custom:warning
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
      * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
      *
      * @custom:events {DataChanged} event.
@@ -79,8 +79,8 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
      * @custom:requirements
      * - SHOULD only be callable by the {owner} of the contract.
      *
-     * @custom:warning 
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value 
+     * @custom:warning
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
      * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
      *
      * @custom:events {DataChanged} event **for each data key/value pair set**.
@@ -112,12 +112,12 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @dev Read the value stored under a specific `dataKey` inside the underlying ERC725Y storage,
-     *  represented as a mapping of `bytes32` data keys mapped to their `bytes` data values. 
-     * 
+     *  represented as a mapping of `bytes32` data keys mapped to their `bytes` data values.
+     *
      * ```solidity
      * mapping(bytes32 => bytes) _store
      * ```
-     * 
+     *
      * @param dataKey A bytes32 data key to read the associated `bytes` value from the store.
      * @return dataValue The `bytes` value associated with the given `dataKey` in the ERC725Y storage.
      */
@@ -130,14 +130,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
      * @dev Write a `dataValue` to the underlying ERC725Y storage, represented as a mapping of
      * `bytes32` data keys mapped to their `bytes` data values.
-     * 
+     *
      * ```solidity
      * mapping(bytes32 => bytes) _store
      * ```
-     * 
+     *
      * @param dataKey A bytes32 data key to write the associated `bytes` value to the store.
      * @param dataValue The `bytes` value to associate with the given `dataKey` in the ERC725Y storage.
-     * 
+     *
      * @custom:events {DataChanged} event emitted after a successful `setData` call.
      */
     function _setData(

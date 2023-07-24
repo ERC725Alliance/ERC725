@@ -13,7 +13,7 @@ import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 contract ERC725YInit is ERC725YInitAbstract {
     /**
      * @notice Deploying an ERC725YInit smart contract to be used as base contract behind proxy.
-     * 
+     *
      * @dev Deploy + lock base contract on deployment, so that the base implementation contract is not owned and controlled by anyone.
      * (nobody can call the public {initialize} function.
      */
@@ -25,11 +25,13 @@ contract ERC725YInit is ERC725YInitAbstract {
      * @notice Initializing an ERC725YInit smart contract and setting address `initialOwner` as the contract owner.
      * @dev Initialize a new ERC725YInit contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
-     * 
+     *
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
-    function initialize(address initialOwner) public payable virtual initializer {
+    function initialize(
+        address initialOwner
+    ) public payable virtual initializer {
         ERC725YInitAbstract._initialize(initialOwner);
     }
 }

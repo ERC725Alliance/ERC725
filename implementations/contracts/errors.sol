@@ -46,7 +46,7 @@ error ERC725X_ContractDeploymentFailed();
 error ERC725X_NoContractBytecodeProvided();
 
 /**
- * @dev Reverts when there is not the same number of elements in the `operationTypes`, `targets` addresses, `values`, and `datas` 
+ * @dev Reverts when there is not the same number of elements in the `operationTypes`, `targets` addresses, `values`, and `datas`
  * array parameters provided when calling the {executeBatch} function.
  */
 error ERC725X_ExecuteParametersLengthMismatch();
@@ -57,7 +57,7 @@ error ERC725X_ExecuteParametersLengthMismatch();
 error ERC725X_ExecuteParametersEmptyArray();
 
 /**
- * @dev Reverts when there is not the same number of elements in the `datakeys` and `dataValues` 
+ * @dev Reverts when there is not the same number of elements in the `datakeys` and `dataValues`
  * array parameters provided when calling the {setDataBatch} function.
  */
 error ERC725Y_DataKeysValuesLengthMismatch();
