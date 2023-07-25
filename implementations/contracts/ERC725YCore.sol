@@ -15,15 +15,14 @@ import {_INTERFACEID_ERC725Y} from "./constants.sol";
 import "./errors.sol";
 
 /**
- * @title Core implementation of ERC725Y General data key/value store
+ * @title Core implementation of ERC725Y sub-standard, a general data key/value store.
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Contract module which provides the ability to set arbitrary data key/value pairs that can be changed over time
- * It is intended to standardise certain data key/value pairs to allow automated read and writes
- * from/to the contract storage
+ * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
+ * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
 abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     /**
-     * @dev Map the dataKeys to their dataValues
+     * @dev Map `bytes32` data keys to their `bytes` data values.
      */
     mapping(bytes32 => bytes) internal _store;
 
@@ -58,6 +57,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @inheritdoc IERC725Y
+     * @custom:requirements
+     * - SHOULD only be callable by the {owner}.
+     *
+     * @custom:warning
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
+     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     *
+     * @custom:events {DataChanged} event.
      */
     function setData(
         bytes32 dataKey,
@@ -69,6 +76,14 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
 
     /**
      * @inheritdoc IERC725Y
+     * @custom:requirements
+     * - SHOULD only be callable by the {owner} of the contract.
+     *
+     * @custom:warning
+     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
+     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     *
+     * @custom:events {DataChanged} event **for each data key/value pair set**.
      */
     function setDataBatch(
         bytes32[] memory dataKeys,
@@ -95,12 +110,36 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
         }
     }
 
+    /**
+     * @dev Read the value stored under a specific `dataKey` inside the underlying ERC725Y storage,
+     *  represented as a mapping of `bytes32` data keys mapped to their `bytes` data values.
+     *
+     * ```solidity
+     * mapping(bytes32 => bytes) _store
+     * ```
+     *
+     * @param dataKey A bytes32 data key to read the associated `bytes` value from the store.
+     * @return dataValue The `bytes` value associated with the given `dataKey` in the ERC725Y storage.
+     */
     function _getData(
         bytes32 dataKey
     ) internal view virtual returns (bytes memory dataValue) {
         return _store[dataKey];
     }
 
+    /**
+     * @dev Write a `dataValue` to the underlying ERC725Y storage, represented as a mapping of
+     * `bytes32` data keys mapped to their `bytes` data values.
+     *
+     * ```solidity
+     * mapping(bytes32 => bytes) _store
+     * ```
+     *
+     * @param dataKey A bytes32 data key to write the associated `bytes` value to the store.
+     * @param dataValue The `bytes` value to associate with the given `dataKey` in the ERC725Y storage.
+     *
+     * @custom:events {DataChanged} event emitted after a successful `setData` call.
+     */
     function _setData(
         bytes32 dataKey,
         bytes memory dataValue

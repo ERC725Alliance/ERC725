@@ -9,18 +9,28 @@ import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 
 /**
- * @title Inheritable Proxy Implementation of ERC725 X Executor
+ * @title Inheritable Proxy Implementation of ERC725X, a generic executor.
  * @author Fabian Vogelsteller <fabian@lukso.network>
- * @dev Implementation of a contract module which provides the ability to call arbitrary functions at any other smart contract and itself,
- * including using `delegatecall`, `staticcall` as well creating contracts using `create` and `create2`
- * This is the basis for a smart contract based account system, but could also be used as a proxy account system
+ * @dev ERC725X provides the ability to call arbitrary functions on any other smart contract (including itself).
+ * It allows to use different type of message calls to interact with addresses such as `call`, `staticcall` and `delegatecall`.
+ * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
+ * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
 abstract contract ERC725XInitAbstract is Initializable, ERC725XCore {
-    function _initialize(address newOwner) internal virtual onlyInitializing {
+    /**
+     * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
+     * @param initialOwner the owner of the contract.
+     *
+     * @custom:requirements
+     * - `initialOwner` CANNOT be the zero address.
+     */
+    function _initialize(
+        address initialOwner
+    ) internal virtual onlyInitializing {
         require(
-            newOwner != address(0),
+            initialOwner != address(0),
             "Ownable: new owner is the zero address"
         );
-        OwnableUnset._setOwner(newOwner);
+        OwnableUnset._setOwner(initialOwner);
     }
 }
