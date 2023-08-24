@@ -34,8 +34,8 @@
   "author": "Fabian Vogelsteller <fabian@lukso.network>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.2",
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {
