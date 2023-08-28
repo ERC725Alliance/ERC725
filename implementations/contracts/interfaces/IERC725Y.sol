@@ -5,30 +5,32 @@ pragma solidity ^0.8.0;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 /**
- * @title The interface for ERC725Y General data key/value store
- * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time
- * It is intended to standardise certain data key/value pairs to allow automated read and writes
- * from/to the contract storage
+ * @title The interface for ERC725Y sub-standard, a generic data key/value store.
+ * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
+ * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
 interface IERC725Y is IERC165 {
     /**
-     * @notice Emitted when data at a key is changed
-     * @param dataKey The data key which data value is set
-     * @param dataValue The data value to set
+     * @notice The following data key/value pair has been changed in the ERC725Y storage: Data key: `dataKey`, data value: `dataValue`.
+     * @dev Emitted when data at a specific `dataKey` was changed to a new value `dataValue`.
+     * @param dataKey The data key for which a bytes value is set.
+     * @param dataValue The value to set for the given data key.
      */
     event DataChanged(bytes32 indexed dataKey, bytes dataValue);
 
     /**
-     * @notice Gets singular data at a given `dataKey`
-     * @param dataKey The key which value to retrieve
-     * @return dataValue The data stored at the key
+     * @notice Reading the ERC725Y storage for data key `dataKey` returned the following value: `dataValue`.
+     * @dev Get in the ERC725Y storage the bytes data stored at a specific data key `dataKey`.
+     * @param dataKey The data key for which to retrieve the value.
+     * @return dataValue The bytes value stored under the specified data key.
      */
     function getData(
         bytes32 dataKey
     ) external view returns (bytes memory dataValue);
 
     /**
-     * @notice Gets array of data for multiple given keys
+     * @notice Reading the ERC725Y storage for data keys `dataKeys` returned the following values: `dataValues`.
+     * @dev Get in the ERC725Y storage the bytes data stored at multiple data keys `dataKeys`.
      * @param dataKeys The array of keys which values to retrieve
      * @return dataValues The array of data stored at multiple keys
      */
@@ -37,32 +39,24 @@ interface IERC725Y is IERC165 {
     ) external view returns (bytes[] memory dataValues);
 
     /**
-     * @notice Sets singular data for a given `dataKey`
-     * @param dataKey The key to retrieve stored value
-     * @param dataValue The value to set
-     * SHOULD only be callable by the owner of the contract set via ERC173
+     * @notice Setting the following data key value pair in the ERC725Y storage. Data key: `dataKey`, data value: `dataValue`.
      *
-     * The function is marked as payable to enable flexibility on child contracts
+     * @dev Sets a single bytes value `dataValue` in the ERC725Y storage for a specific data key `dataKey`.
+     * The function is marked as payable to enable flexibility on child contracts. For instance to implement
+     * a fee mechanism for setting specific data.
      *
-     * If the function is not intended to receive value, an additional check
-     * should be implemented to check that value equal 0.
-     *
-     * Emits a {DataChanged} event.
+     * @param dataKey The data key for which to set a new value.
+     * @param dataValue The new bytes value to set.
      */
     function setData(bytes32 dataKey, bytes memory dataValue) external payable;
 
     /**
-     * @param dataKeys The array of data keys for values to set
-     * @param dataValues The array of values to set
-     * @dev Sets array of data for multiple given `dataKeys`
-     * SHOULD only be callable by the owner of the contract set via ERC173
+     * @notice Setting the following data key value pairs in the ERC725Y storage. Data keys: `dataKeys`, data values: `dataValues`.
      *
-     * The function is marked as payable to enable flexibility on child contracts
+     * @dev Batch data setting function that behaves the same as {setData} but allowing to set multiple data key/value pairs in the ERC725Y storage in the same transaction.
      *
-     * If the function is not intended to receive value, an additional check
-     * should be implemented to check that value equal 0.
-     *
-     * Emits a {DataChanged} event.
+     * @param dataKeys An array of data keys to set bytes values for.
+     * @param dataValues An array of bytes values to set for each `dataKeys`.
      */
     function setDataBatch(
         bytes32[] memory dataKeys,

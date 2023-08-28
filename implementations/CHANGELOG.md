@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.2.0](https://github.com/ERC725Alliance/ERC725/compare/v5.1.0...v5.2.0) (2023-07-25)
+
+- Improve Natspec comments of smart contracts ([#229](https://github.com/ERC725Alliance/ERC725/pull/229))
+- Bump version of `@openzeppelin/contracts` dependency from `4.9.2` to `4.9.3`
+
 ## [5.1.0](https://github.com/ERC725Alliance/ERC725/compare/v5.0.0...v5.1.0) (2023-06-21)
 
 ### Features
@@ -16,7 +21,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - Upgrade to 0.8.17 for default solc compiler version ([#221](https://github.com/ERC725Alliance/ERC725/pull/221))
 
-- Upgrade `@openzeppelin/contracts` to 4.9.2  ([#224](https://github.com/ERC725Alliance/ERC725/pull/224))
+- Upgrade `@openzeppelin/contracts` to 4.9.2 ([#224](https://github.com/ERC725Alliance/ERC725/pull/224))
 
 ## [5.0.0](https://github.com/ERC725Alliance/ERC725/compare/v4.2.0...v5.0.0) (2023-04-26)
 
