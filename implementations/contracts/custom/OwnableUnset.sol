@@ -67,9 +67,8 @@ abstract contract OwnableUnset {
      */
     function _setOwner(address newOwner) internal virtual {
         if (newOwner != owner()) {
-            address oldOwner = _owner;
+            emit OwnershipTransferred(_owner, newOwner);
             _owner = newOwner;
-            emit OwnershipTransferred(oldOwner, newOwner);
         }
     }
 }
