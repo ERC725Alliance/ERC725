@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /**
- * @dev Reverts whn trying to set `address(0)` as the contract owner when deploying the contract, 
+ * @dev Reverts whn trying to set `address(0)` as the contract owner when deploying the contract,
  * initializing it or transferring ownership of the contract.
  */
 error OwnableCannotSetZeroAddressAsOwner();
