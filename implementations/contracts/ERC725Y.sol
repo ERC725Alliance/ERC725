@@ -2,7 +2,6 @@
 pragma solidity ^0.8.4;
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 

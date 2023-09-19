@@ -24,7 +24,17 @@ import {
     OPERATION_4_DELEGATECALL
 } from "./constants.sol";
 
-import "./errors.sol";
+import {
+    ERC725X_InsufficientBalance,
+    ERC725X_UnknownOperationType,
+    ERC725X_MsgValueDisallowedInStaticCall,
+    ERC725X_MsgValueDisallowedInDelegateCall,
+    ERC725X_CreateOperationsRequireEmptyRecipientAddress,
+    ERC725X_ContractDeploymentFailed,
+    ERC725X_NoContractBytecodeProvided,
+    ERC725X_ExecuteParametersLengthMismatch,
+    ERC725X_ExecuteParametersEmptyArray
+} from "./errors.sol";
 
 /**
  * @title Core implementation of ERC725X sub-standard, a generic executor.
@@ -105,21 +115,25 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
 
         // Deploy with CREATE
         if (operationType == OPERATION_1_CREATE) {
-            if (target != address(0))
+            if (target != address(0)) {
                 revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+            }
             return _deployCreate(value, data);
         }
 
         // Deploy with CREATE2
         if (operationType == OPERATION_2_CREATE2) {
-            if (target != address(0))
+            if (target != address(0)) {
                 revert ERC725X_CreateOperationsRequireEmptyRecipientAddress();
+            }
             return _deployCreate2(value, data);
         }
 
         // STATICCALL
         if (operationType == OPERATION_3_STATICCALL) {
-            if (value != 0) revert ERC725X_MsgValueDisallowedInStaticCall();
+            if (value != 0) {
+                revert ERC725X_MsgValueDisallowedInStaticCall();
+            }
             return _executeStaticCall(target, data);
         }
 
@@ -136,7 +150,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
         // - run selfdestruct in the context of this contract
         //
         if (operationType == OPERATION_4_DELEGATECALL) {
-            if (value != 0) revert ERC725X_MsgValueDisallowedInDelegateCall();
+            if (value != 0) {
+                revert ERC725X_MsgValueDisallowedInDelegateCall();
+            }
             return _executeDelegateCall(target, data);
         }
 
