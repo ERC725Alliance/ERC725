@@ -2,10 +2,16 @@
 pragma solidity ^0.8.0;
 
 /**
- * @dev Reverts whn trying to set `address(0)` as the contract owner when deploying the contract,
+ * @dev Reverts when trying to set `address(0)` as the contract owner when deploying the contract,
  * initializing it or transferring ownership of the contract.
  */
 error OwnableCannotSetZeroAddressAsOwner();
+
+/**
+ * @dev Reverts when the only the owner is allowed to call the function.
+ * @param callerAddress The address that tried to make the call.
+ */
+error OwnableCallerNotTheOwner(address callerAddress);
 
 /**
  * @dev Reverts when trying to send more native tokens `value` than available in current `balance`.

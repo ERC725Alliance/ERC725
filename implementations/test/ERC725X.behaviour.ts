@@ -126,7 +126,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           context.erc725X
             .connect(context.accounts.anyone)
             .transferOwnership(context.accounts.anyone.address),
-        ).to.be.revertedWith('Ownable: caller is not the owner');
+        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
       });
     });
 
@@ -146,7 +146,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
       it('should revert', async () => {
         await expect(
           context.erc725X.connect(context.accounts.anyone).renounceOwnership(),
-        ).to.be.revertedWith('Ownable: caller is not the owner');
+        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
       });
     });
   });
@@ -196,7 +196,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               context.erc725X
                 .connect(context.accounts.anyone)
                 .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
-            ).to.be.revertedWith('Ownable: caller is not the owner');
+            ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
           });
         });
       });
@@ -1624,7 +1624,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               context.erc725X
                 .connect(context.accounts.anyone)
                 .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
-            ).to.be.revertedWith('Ownable: caller is not the owner');
+            ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
           });
         });
       });

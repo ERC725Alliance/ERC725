@@ -2,7 +2,10 @@
 pragma solidity ^0.8.0;
 
 // errors
-import {OwnableCannotSetZeroAddressAsOwner} from "../errors.sol";
+import {
+    OwnableCannotSetZeroAddressAsOwner,
+    OwnableCallerNotTheOwner
+} from "../errors.sol";
 
 /**
  * @title OwnableUnset
@@ -60,7 +63,9 @@ abstract contract OwnableUnset {
      * @dev Throws if the sender is not the owner.
      */
     function _checkOwner() internal view virtual {
-        require(owner() == msg.sender, "Ownable: caller is not the owner");
+        if (owner() != msg.sender) {
+            revert OwnableCallerNotTheOwner(msg.sender);
+        }
     }
 
     /**
