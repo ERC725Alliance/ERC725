@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.5;
 
+// interfaces
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+
 // modules
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
@@ -36,7 +39,7 @@ contract ERC725 is ERC725XCore, ERC725YCore {
     }
 
     /**
-     * @inheritdoc ERC725XCore
+     * @inheritdoc IERC165
      */
     function supportsInterface(
         bytes4 interfaceId
@@ -44,6 +47,6 @@ contract ERC725 is ERC725XCore, ERC725YCore {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             interfaceId == _INTERFACEID_ERC725Y ||
-            super.supportsInterface(interfaceId);
+            interfaceId == type(IERC165).interfaceId;
     }
 }

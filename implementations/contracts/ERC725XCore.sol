@@ -11,7 +11,6 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 
 // constants
@@ -43,7 +42,7 @@ import {
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
-abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
+abstract contract ERC725XCore is OwnableUnset, IERC165, IERC725X {
     /**
      * @inheritdoc IERC725X
      * @custom:requirements
@@ -89,14 +88,14 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc IERC165
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
+    ) public view virtual override returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725X ||
-            super.supportsInterface(interfaceId);
+            interfaceId == type(IERC165).interfaceId;
     }
 
     /**
