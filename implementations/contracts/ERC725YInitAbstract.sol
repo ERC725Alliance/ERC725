@@ -8,6 +8,9 @@ import {
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
+// errors
+import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
+
 /**
  * @title Inheritable Proxy Implementation of ERC725Y, a generic data key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -25,10 +28,9 @@ abstract contract ERC725YInitAbstract is Initializable, ERC725YCore {
     function _initialize(
         address initialOwner
     ) internal virtual onlyInitializing {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         OwnableUnset._setOwner(initialOwner);
     }
 }

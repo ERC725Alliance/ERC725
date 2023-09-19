@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// errors
+import {OwnableCannotSetZeroAddressAsOwner} from "../errors.sol";
+
 /**
  * @title OwnableUnset
  * @dev modified version of OpenZeppelin implementation, where:
@@ -47,10 +50,9 @@ abstract contract OwnableUnset {
      * Can only be called by the current owner.
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(
-            newOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (newOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         _setOwner(newOwner);
     }
 

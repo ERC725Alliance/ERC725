@@ -10,6 +10,9 @@ import {ERC725YCore} from "./ERC725YCore.sol";
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 
+// errors
+import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
+
 /**
  * @title ERC725 bundle.
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -27,10 +30,9 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         OwnableUnset._setOwner(initialOwner);
     }
 
