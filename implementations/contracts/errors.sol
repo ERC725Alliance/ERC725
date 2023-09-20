@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 /**
  * @dev Reverts when trying to set `address(0)` as the contract owner when deploying the contract,
