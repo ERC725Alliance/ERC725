@@ -8,7 +8,7 @@ pragma solidity ^0.8.4;
 error OwnableCannotSetZeroAddressAsOwner();
 
 /**
- * @dev Reverts when the only the owner is allowed to call the function.
+ * @dev Reverts when only the owner is allowed to call the function.
  * @param callerAddress The address that tried to make the call.
  */
 error OwnableCallerNotTheOwner(address callerAddress);

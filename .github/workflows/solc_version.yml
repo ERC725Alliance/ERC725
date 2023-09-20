@@ -29,7 +29,7 @@ jobs:
             "0.8.14",
             "0.8.15",
             "0.8.16",
-            # "0.8.17", # skipped as default in hardhat.config.
+            # "0.8.17", # skipped as default in hardhat.config.ts
             "0.8.18",
             "0.8.19",
             "0.8.20",
@@ -58,6 +58,7 @@ jobs:
 
       - name: Compile Smart Contracts
         run: |
-          solc contracts/**/*.sol \
-              @openzeppelin/=node_modules/@openzeppelin/ --allow-paths $(pwd)/node_modules/ \
-              solidity-bytes-utils/=node_modules/solidity-bytes-utils/
+          solc contracts/**/*.sol --allow-paths $(pwd)/node_modules/ \
+              @openzeppelin/=$(pwd)/node_modules/@openzeppelin/ \
+              solidity-bytes-utils/=$(pwd)/node_modules/solidity-bytes-utils/ \
+              ../=$(pwd)/contracts/
