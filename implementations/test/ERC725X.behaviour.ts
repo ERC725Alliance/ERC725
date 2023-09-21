@@ -118,6 +118,14 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
 
         expect(accountOwner).to.equal(context.accounts.anyone.address);
       });
+
+      it('should revert when transferring ownership to `address(0)`', async () => {
+        await expect(
+          context.erc725X
+            .connect(context.accounts.owner)
+            .transferOwnership(ethers.constants.AddressZero),
+        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCannotSetZeroAddressAsOwner');
+      });
     });
 
     describe('When non-owner is transferring ownership', () => {
