@@ -62,6 +62,9 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * - SHOULD only be callable by the {owner} of the contract.
      * - The contract MUST have in its balance **at least the sum of all the `values`** to transfer and execute successfully each calldata payloads.
      *
+     * @custom:warning
+     * - The `msg.value` should not be trusted for any method called with `operationType`: `DELEGATECALL` (4).
+     *
      * @custom:events
      * - {Executed} event, when a call is made with `operationType` 0 (CALL), 3 (STATICCALL) or 4 (DELEGATECALL)
      * - {ContractCreated} event, when deploying a contract with `operationType` 1 (CREATE) or 2 (CREATE2)

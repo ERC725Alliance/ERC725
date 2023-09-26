@@ -6,6 +6,8 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 // types
 import { ERC725, ERC725__factory, ERC725Init__factory } from '../types';
 
+import { INTERFACE_ID } from '../constants';
+
 import { deployProxy } from './fixtures';
 
 type ERC725DeployParams = {
@@ -97,6 +99,10 @@ describe('ERC725', () => {
 
       beforeEach(async () => {
         context = await buildTestContext();
+      });
+
+      it('should have registered the ERC725X interface', async () => {
+        expect(await context.erc725.supportsInterface(INTERFACE_ID.ERC725X));
       });
 
       it('should revert when initializing with address(0) as owner', async () => {
