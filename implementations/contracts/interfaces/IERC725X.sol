@@ -55,6 +55,8 @@ interface IERC725X is IERC165 {
      * - send native tokens to any address.
      * - interact with any contract by passing an abi-encoded function call in the `data` parameter.
      * - deploy a contract by providing its creation bytecode in the `data` parameter.
+     *
+     * @custom:warning Be aware that `msg.value` is persisting between the caller and the callee when using `DELEGATECALL` (`4`) as `operationType`.
      */
     function execute(
         uint256 operationType,
@@ -72,6 +74,8 @@ interface IERC725X is IERC165 {
      * @param targets The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).
      * @param values The list of native token amounts to transfer (in Wei).
      * @param datas The list of calldata, or the creation bytecode of the contract to deploy if `operationType` is `1` or `2`.
+     *
+     * @custom:warning The `msg.value` should not be trusted for any method called with the batch with `operationType`: `DELEGATECALL` (4).
      */
     function executeBatch(
         uint256[] memory operationsType,
