@@ -239,6 +239,8 @@ abstract contract ERC725XCore is OwnableUnset, ERC165, IERC725X {
      * @param target The address on which delegatecall is executed
      * @param data The data to be sent with the delegatecall
      * @return result The data returned from the delegatecall
+     *
+     * @custom:warning The `msg.value` should not be trusted for any method called with `operationType`: `DELEGATECALL` (4).
      */
     function _executeDelegateCall(
         address target,
