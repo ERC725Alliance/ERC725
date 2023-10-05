@@ -2,7 +2,6 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {
     Initializable
 } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -45,7 +44,7 @@ abstract contract ERC725InitAbstract is
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC725XCore
      */
     function supportsInterface(
         bytes4 interfaceId
