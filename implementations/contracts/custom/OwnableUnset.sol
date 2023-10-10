@@ -1,5 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
+
+// errors
+import {
+    OwnableCannotSetZeroAddressAsOwner,
+    OwnableCallerNotTheOwner
+} from "../errors.sol";
 
 /**
  * @title OwnableUnset
@@ -47,10 +53,9 @@ abstract contract OwnableUnset {
      * Can only be called by the current owner.
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(
-            newOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (newOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         _setOwner(newOwner);
     }
 
@@ -58,7 +63,9 @@ abstract contract OwnableUnset {
      * @dev Throws if the sender is not the owner.
      */
     function _checkOwner() internal view virtual {
-        require(owner() == msg.sender, "Ownable: caller is not the owner");
+        if (owner() != msg.sender) {
+            revert OwnableCallerNotTheOwner(msg.sender);
+        }
     }
 
     /**
@@ -67,9 +74,8 @@ abstract contract OwnableUnset {
      */
     function _setOwner(address newOwner) internal virtual {
         if (newOwner != owner()) {
-            address oldOwner = _owner;
+            emit OwnershipTransferred(_owner, newOwner);
             _owner = newOwner;
-            emit OwnershipTransferred(oldOwner, newOwner);
         }
     }
 }

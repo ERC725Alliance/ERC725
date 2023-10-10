@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.5;
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUnset} from "./custom/OwnableUnset.sol";
 import {ERC725XCore} from "./ERC725XCore.sol";
 import {ERC725YCore} from "./ERC725YCore.sol";
 
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
+
+// errors
+import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
 
 /**
  * @title ERC725 bundle.
@@ -27,15 +29,14 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         OwnableUnset._setOwner(initialOwner);
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC725XCore
      */
     function supportsInterface(
         bytes4 interfaceId

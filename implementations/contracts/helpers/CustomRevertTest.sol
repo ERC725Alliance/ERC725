@@ -13,10 +13,12 @@ contract RevertTester {
     }
 
     function revertMeWithStringView() public pure {
+        // solhint-disable-next-line custom-errors
         revert("I reverted");
     }
 
     function revertMeWithStringErrorNotView() public pure {
+        // solhint-disable-next-line custom-errors
         revert("I reverted");
     }
 

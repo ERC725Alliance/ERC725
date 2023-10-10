@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 // interfaces
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
@@ -12,7 +12,11 @@ import {OwnableUnset} from "./custom/OwnableUnset.sol";
 // constants
 import {_INTERFACEID_ERC725Y} from "./constants.sol";
 
-import "./errors.sol";
+import {
+    ERC725Y_MsgValueDisallowed,
+    ERC725Y_DataKeysValuesLengthMismatch,
+    ERC725Y_DataKeysValuesEmptyArray
+} from "./errors.sol";
 
 /**
  * @title Core implementation of ERC725Y sub-standard, a general data key/value store.
