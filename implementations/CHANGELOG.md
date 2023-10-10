@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/ERC725Alliance/ERC725/compare/v5.2.0...v6.0.0) (2023-10-10)
+
+### ⚠ BREAKING CHANGES
+
+- Replace revert reason strings by custom `error` in `OwnableUnset` and inside `constructor` / `initialize(...)` functions for `address(0)` checks ([#236](https://github.com/ERC725Alliance/ERC725/pull/236))
+
+### Perf
+
+- Implement Gas Optimisations & QA from Code4Rena audit contest ([#235](https://github.com/ERC725Alliance/ERC725/pull/235))
+
+### Bug Fixes
+
+- fix minimum pragma `solc` version required to `0.8.4` for ERC725Y and `0.8.5` for ERC725X and ERC725 ([1afd0dd](https://github.com/ERC725Alliance/ERC725/pull/236/commits/1afd0dd1af4d7008907c0fd74cf0ad3fdf3ddbe5) and [dbc0f61](https://github.com/ERC725Alliance/ERC725/pull/236/commits/dbc0f61027b81a2a583cf25f1e2af4da4897b955))
+
 ### [5.2.0](https://github.com/ERC725Alliance/ERC725/compare/v5.1.0...v5.2.0) (2023-07-25)
 
 - Improve Natspec comments of smart contracts ([#229](https://github.com/ERC725Alliance/ERC725/pull/229))
