@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/ERC725Alliance/ERC725/compare/v6.0.0...v7.0.0) (2023-11-27)
+
+### ⚠ BREAKING CHANGES
+
+### Refactor
+
+- Update `Executed` event in ERC725X to index `selector` instead of `value` ([#246](https://github.com/ERC725Alliance/ERC725/pull/246))
+- Update `ContractCreated` event in ERC725X to index `salt` instead of `value` ([#246](https://github.com/ERC725Alliance/ERC725/pull/246))
+
 ## [6.0.0](https://github.com/ERC725Alliance/ERC725/compare/v5.2.0...v6.0.0) (2023-10-10)
 
 ### ⚠ BREAKING CHANGES
