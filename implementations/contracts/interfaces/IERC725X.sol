@@ -23,8 +23,8 @@ interface IERC725X is IERC165 {
     event ContractCreated(
         uint256 indexed operationType,
         address indexed contractAddress,
-        uint256 indexed value,
-        bytes32 salt
+        uint256 value,
+        bytes32 indexed salt
     );
 
     /**
@@ -38,8 +38,8 @@ interface IERC725X is IERC165 {
     event Executed(
         uint256 indexed operationType,
         address indexed target,
-        uint256 indexed value,
-        bytes4 selector
+        uint256 value,
+        bytes4 indexed selector
     );
 
     /**
