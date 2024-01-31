@@ -36,7 +36,7 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     function getData(
         bytes32 dataKey
     ) public view virtual override returns (bytes memory dataValue) {
-        dataValue = _getData(dataKey);
+        return _getData(dataKey);
     }
 
     /**
@@ -65,8 +65,9 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
      * - SHOULD only be callable by the {owner}.
      *
      * @custom:warning
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
-     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
+     * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
      *
      * @custom:events {DataChanged} event.
      */
@@ -84,8 +85,9 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
      * - SHOULD only be callable by the {owner} of the contract.
      *
      * @custom:warning
-     * **Note for developers:** despite the fact that this function is set as `payable`, if the function is not intended to receive value
-     * (= native tokens), **an additional check should be implemented to ensure that `msg.value` sent was equal to 0**.
+     * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
+     * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
      *
      * @custom:events {DataChanged} event **for each data key/value pair set**.
      */
@@ -95,28 +97,12 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     ) public payable virtual override onlyOwner {
         /// @dev do not allow to send value by default when setting data in ERC725Y
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
-
-        if (dataKeys.length != dataValues.length) {
-            revert ERC725Y_DataKeysValuesLengthMismatch();
-        }
-
-        if (dataKeys.length == 0) {
-            revert ERC725Y_DataKeysValuesEmptyArray();
-        }
-
-        for (uint256 i = 0; i < dataKeys.length; ) {
-            _setData(dataKeys[i], dataValues[i]);
-
-            // Increment the iterator in unchecked block to save gas
-            unchecked {
-                ++i;
-            }
-        }
+        _setDataBatch(dataKeys, dataValues);
     }
 
     /**
      * @dev Read the value stored under a specific `dataKey` inside the underlying ERC725Y storage,
-     *  represented as a mapping of `bytes32` data keys mapped to their `bytes` data values.
+     * represented as a mapping of `bytes32` data keys mapped to their `bytes` data values.
      *
      * ```solidity
      * mapping(bytes32 => bytes) _store
@@ -150,6 +136,41 @@ abstract contract ERC725YCore is OwnableUnset, ERC165, IERC725Y {
     ) internal virtual {
         _store[dataKey] = dataValue;
         emit DataChanged(dataKey, dataValue);
+    }
+
+    /**
+     * @dev Write a set of `dataValues` to the underlying ERC725Y storage for each associated `dataKeys`. The ERC725Y storage is
+     * represented as a mapping of `bytes32` data keys mapped to their `bytes` data values.
+     *
+     * ```solidity
+     * mapping(bytes32 => bytes) _store
+     * ```
+     *
+     * @param dataKeys A bytes32 array of data keys to write the associated `bytes` value to the store.
+     * @param dataValues The `bytes` values to associate with each given `dataKeys` in the ERC725Y storage.
+     *
+     * @custom:events {DataChanged} event emitted for each successful data key-value pairs set.
+     */
+    function _setDataBatch(
+        bytes32[] memory dataKeys,
+        bytes[] memory dataValues
+    ) internal virtual {
+        if (dataKeys.length != dataValues.length) {
+            revert ERC725Y_DataKeysValuesLengthMismatch();
+        }
+
+        if (dataKeys.length == 0) {
+            revert ERC725Y_DataKeysValuesEmptyArray();
+        }
+
+        for (uint256 i = 0; i < dataKeys.length; ) {
+            _setData(dataKeys[i], dataValues[i]);
+
+            // Increment the iterator in unchecked block to save gas
+            unchecked {
+                ++i;
+            }
+        }
     }
 
     /**
