@@ -1,9 +1,6 @@
 Projects, please list your use cases for ERC725 below!
 You can make a pull request to update the table.
 
-NOTE: some implementation use the old version [ERC725v1](https://github.com/ethereum/EIPs/blob/ede8c26a77eb1ac8fa2d01d8743a8cf259d8d45b/EIPS/eip-725.md).
-
-
 | Project | Use case description |
 | --- | --- |
 | [Universal Page](https://universal.page/) | The first marketplace and profile page editor for LUKSO. Almost every token drop is distributed and announced on this platform. The service comes with a feed, showing the latest news of transactions, sales, and listings, and even metrics. It also comes with metrics and stats for all assets, that people can browse through. To see owned assets, the platform has its own customizable page system where people can design a webpage containing all their Universal Profile information. |
