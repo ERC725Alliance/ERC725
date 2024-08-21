@@ -7,9 +7,12 @@ import { AddressZero } from '@ethersproject/constants';
 import type { TransactionResponse } from '@ethersproject/abstract-provider';
 
 // types
-import { ERC725Y, ERC725YWriter__factory, ERC725YReader__factory } from '../types';
-
-import { bytecode as ERC725Bytecode } from '../artifacts/contracts/ERC725.sol/ERC725.json';
+import {
+  ERC725Y,
+  ERC725Y__factory,
+  ERC725YWriter__factory,
+  ERC725YReader__factory,
+} from '../types';
 
 // constants
 import { INTERFACE_ID } from '../constants';
@@ -312,7 +315,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           it('should pass and emit DataChanged event', async () => {
             const txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['BytecodeOfMyFavoriteContract']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await expect(
@@ -522,7 +525,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           it('should pass and emit DataChanged event', async () => {
             const txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['BytecodeOfMyFavoriteContract']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await expect(
@@ -651,7 +654,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           beforeEach(async () => {
             txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await context.erc725Y
@@ -759,7 +762,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           beforeEach(async () => {
             txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await context.erc725Y

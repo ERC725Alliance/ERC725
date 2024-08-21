@@ -6,7 +6,7 @@ import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
 /**
  * @title Deployable Proxy Implementation of ERC725Y, a generic data key/value store.
- * @author Fabian Vogelsteller <fabian@lukso.network>
+ * @author Fabian Vogelsteller <fabian@lukso.network> and <CJ42>, <YamenMerhi>, <B00ste>, <SkimaHarvey>
  * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
  * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
