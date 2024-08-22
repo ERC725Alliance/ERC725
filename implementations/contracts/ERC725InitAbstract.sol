@@ -3,17 +3,13 @@ pragma solidity ^0.8.5;
 
 // modules
 import {
-    Initializable
-} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
 import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
-
-// errors
-import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
 
 /**
  * @title Inheritable Proxy Implementation of ERC725 bundle
@@ -23,7 +19,7 @@ import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
  * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 abstract contract ERC725InitAbstract is
-    Initializable,
+    OwnableUpgradeable,
     ERC725XInitAbstract,
     ERC725YInitAbstract
 {
@@ -45,10 +41,11 @@ abstract contract ERC725InitAbstract is
         override(ERC725XInitAbstract, ERC725YInitAbstract)
         onlyInitializing
     {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
+        require(
+            initialOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
+        OwnableUpgradeable._transferOwnership(initialOwner);
     }
 
     /**

@@ -11,7 +11,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 // constants
@@ -26,7 +26,6 @@ import {
 
 // errors
 import {
-    OwnableCannotSetZeroAddressAsOwner,
     ERC725X_InsufficientBalance,
     ERC725X_UnknownOperationType,
     ERC725X_MsgValueDisallowedInStaticCall,
@@ -38,7 +37,6 @@ import {
     ERC725X_ExecuteParametersEmptyArray
 } from "./errors.sol";
 
-
 /**
  * @title Deployable implementation with `constructor` of ERC725X sub-standard, a generic executor.
  * @author Fabian Vogelsteller <fabian@lukso.network> and <CJ42>, <YamenMerhi>, <B00ste>, <SkimaHarvey>
@@ -47,7 +45,8 @@ import {
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
-contract ERC725X is OwnableUnset, ERC165, IERC725X {
+// TODO: replace by Ownable from OpenZeppelin
+contract ERC725X is Ownable, ERC165, IERC725X {
     /**
      * @notice Deploying an ERC725X smart contract and setting address `initialOwner` as the contract owner.
      * @dev Deploy a new ERC725X contract with the provided `initialOwner` as the contract {owner}.
@@ -57,11 +56,12 @@ contract ERC725X is OwnableUnset, ERC165, IERC725X {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
-    }   
+        require(
+            initialOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
+        Ownable._transferOwnership(initialOwner);
+    }
 
     /**
      * @inheritdoc ERC165

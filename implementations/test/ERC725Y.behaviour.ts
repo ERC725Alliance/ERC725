@@ -73,7 +73,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           context.erc725Y
             .connect(context.accounts.owner)
             .transferOwnership(ethers.constants.AddressZero),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCannotSetZeroAddressAsOwner');
+        ).to.be.revertedWith('Ownable: new owner is the zero address');
       });
     });
 
@@ -83,7 +83,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           context.erc725Y
             .connect(context.accounts.anyone)
             .transferOwnership(context.accounts.anyone.address),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
     });
 
@@ -103,7 +103,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
       it('should revert', async () => {
         await expect(
           context.erc725Y.connect(context.accounts.anyone).renounceOwnership(),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
     });
   });
@@ -176,7 +176,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             context.erc725Y
               .connect(context.accounts.anyone)
               .setData(txParams.dataKey, txParams.dataValue),
-          ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+          ).to.be.revertedWith("Ownable: caller is not the owner");
 
           const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
@@ -388,7 +388,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             context.erc725Y
               .connect(context.accounts.anyone)
               .setDataBatch([txParams.dataKey], [txParams.dataValue]),
-          ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+          ).to.be.revertedWith("Ownable: caller is not the owner");
 
           const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 

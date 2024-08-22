@@ -11,12 +11,11 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
-import {
-    Initializable
-} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // TODO: is there an Upgradable version? Is it needed? Double check in OZ package
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {
+    OwnableUpgradeable
+} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 // constants
 import {
@@ -30,7 +29,6 @@ import {
 
 // errors
 import {
-    OwnableCannotSetZeroAddressAsOwner,
     ERC725X_InsufficientBalance,
     ERC725X_UnknownOperationType,
     ERC725X_MsgValueDisallowedInStaticCall,
@@ -42,9 +40,6 @@ import {
     ERC725X_ExecuteParametersEmptyArray
 } from "./errors.sol";
 
-
-
-
 /**
  * @title Inheritable Proxy Implementation of ERC725X sub-standard, a generic executor.
  * @author Fabian Vogelsteller <fabian@lukso.network> and <CJ42>, <YamenMerhi>, <B00ste>, <SkimaHarvey>
@@ -53,7 +48,7 @@ import {
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
-abstract contract ERC725XInitAbstract is Initializable, OwnableUnset, ERC165, IERC725X {
+abstract contract ERC725XInitAbstract is OwnableUpgradeable, ERC165, IERC725X {
     /**
      * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
@@ -64,10 +59,11 @@ abstract contract ERC725XInitAbstract is Initializable, OwnableUnset, ERC165, IE
     function _initialize(
         address initialOwner
     ) internal virtual onlyInitializing {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
+        require(
+            initialOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
+        OwnableUpgradeable._transferOwnership(initialOwner);
     }
 
     /**

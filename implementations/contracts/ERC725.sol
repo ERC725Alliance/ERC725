@@ -2,15 +2,12 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC725X} from "./ERC725X.sol";
 import {ERC725Y} from "./ERC725Y.sol";
 
 // constants
 import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
-
-// errors
-import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
 
 /**
  * @title ERC725 bundle.
@@ -30,12 +27,7 @@ contract ERC725 is ERC725X, ERC725Y {
      */
     constructor(
         address initialOwner
-    ) payable ERC725X(initialOwner) ERC725Y(initialOwner) {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
-    }
+    ) payable ERC725X(initialOwner) ERC725Y(initialOwner) {}
 
     /**
      * @inheritdoc ERC725X

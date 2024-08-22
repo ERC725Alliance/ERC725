@@ -7,14 +7,13 @@ import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // modules
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 // constants
 import {_INTERFACEID_ERC725Y} from "./constants.sol";
 
 // errors
 import {
-    OwnableCannotSetZeroAddressAsOwner,
     ERC725Y_MsgValueDisallowed,
     ERC725Y_DataKeysValuesLengthMismatch,
     ERC725Y_DataKeysValuesEmptyArray
@@ -26,8 +25,8 @@ import {
  * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
  * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
-contract ERC725Y is OwnableUnset, ERC165, IERC725Y {
-        /**
+contract ERC725Y is Ownable, ERC165, IERC725Y {
+    /**
      * @dev Map `bytes32` data keys to their `bytes` data values.
      */
     mapping(bytes32 => bytes) internal _store;
@@ -41,10 +40,11 @@ contract ERC725Y is OwnableUnset, ERC165, IERC725Y {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
+        require(
+            initialOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
+        Ownable._transferOwnership(initialOwner);
     }
 
     /**

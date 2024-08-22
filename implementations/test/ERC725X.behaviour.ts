@@ -124,7 +124,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           context.erc725X
             .connect(context.accounts.owner)
             .transferOwnership(ethers.constants.AddressZero),
-        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCannotSetZeroAddressAsOwner');
+        ).to.be.revertedWith('Ownable: new owner is the zero address');
       });
     });
 
@@ -134,7 +134,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
           context.erc725X
             .connect(context.accounts.anyone)
             .transferOwnership(context.accounts.anyone.address),
-        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
     });
 
@@ -154,7 +154,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
       it('should revert', async () => {
         await expect(
           context.erc725X.connect(context.accounts.anyone).renounceOwnership(),
-        ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
     });
   });
@@ -204,7 +204,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               context.erc725X
                 .connect(context.accounts.anyone)
                 .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
-            ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
+            ).to.be.revertedWith("Ownable: caller is not the owner");
           });
         });
       });
@@ -1632,7 +1632,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
               context.erc725X
                 .connect(context.accounts.anyone)
                 .executeBatch(txParams.Operations, txParams.to, txParams.values, txParams.data),
-            ).to.be.revertedWithCustomError(context.erc725X, 'OwnableCallerNotTheOwner');
+            ).to.be.revertedWith("Ownable: caller is not the owner");
           });
         });
       });
