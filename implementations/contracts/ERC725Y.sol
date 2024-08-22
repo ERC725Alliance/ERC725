@@ -2,7 +2,6 @@
 pragma solidity ^0.8.4;
 
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // modules
@@ -195,7 +194,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
+    ) public view virtual override returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725Y ||
             super.supportsInterface(interfaceId);

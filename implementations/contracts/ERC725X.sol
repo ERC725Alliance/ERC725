@@ -2,7 +2,6 @@
 pragma solidity ^0.8.5;
 
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
@@ -45,7 +44,6 @@ import {
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
-// TODO: replace by Ownable from OpenZeppelin
 contract ERC725X is Ownable, ERC165, IERC725X {
     /**
      * @notice Deploying an ERC725X smart contract and setting address `initialOwner` as the contract owner.
@@ -68,7 +66,7 @@ contract ERC725X is Ownable, ERC165, IERC725X {
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
+    ) public view virtual override returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             super.supportsInterface(interfaceId);

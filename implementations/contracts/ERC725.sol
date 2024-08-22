@@ -2,12 +2,8 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC725X} from "./ERC725X.sol";
 import {ERC725Y} from "./ERC725Y.sol";
-
-// constants
-import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
 
 /**
  * @title ERC725 bundle.

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.5;
 
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725X} from "./interfaces/IERC725X.sol";
 
 // libraries
@@ -11,8 +10,9 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
-// TODO: is there an Upgradable version? Is it needed? Double check in OZ package
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {
+    ERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {
     OwnableUpgradeable
 } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -48,7 +48,11 @@ import {
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
  * This is the basis for a smart contract based account system, but could also be used as a proxy account system.
  */
-abstract contract ERC725XInitAbstract is OwnableUpgradeable, ERC165, IERC725X {
+abstract contract ERC725XInitAbstract is
+    OwnableUpgradeable,
+    ERC165Upgradeable,
+    IERC725X
+{
     /**
      * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
@@ -67,11 +71,11 @@ abstract contract ERC725XInitAbstract is OwnableUpgradeable, ERC165, IERC725X {
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC165Upgradeable
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
+    ) public view virtual override returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725X ||
             super.supportsInterface(interfaceId);

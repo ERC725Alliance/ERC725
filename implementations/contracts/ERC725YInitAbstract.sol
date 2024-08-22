@@ -2,11 +2,12 @@
 pragma solidity ^0.8.4;
 
 // interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC725Y} from "./interfaces/IERC725Y.sol";
 
 // modules
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {
+    ERC165Upgradeable
+} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {
     OwnableUpgradeable
 } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -27,7 +28,11 @@ import {
  * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
  * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
-abstract contract ERC725YInitAbstract is OwnableUpgradeable, ERC165, IERC725Y {
+abstract contract ERC725YInitAbstract is
+    OwnableUpgradeable,
+    ERC165Upgradeable,
+    IERC725Y
+{
     /**
      * @dev Map `bytes32` data keys to their `bytes` data values.
      */
@@ -194,11 +199,11 @@ abstract contract ERC725YInitAbstract is OwnableUpgradeable, ERC165, IERC725Y {
     }
 
     /**
-     * @inheritdoc ERC165
+     * @inheritdoc ERC165Upgradeable
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(IERC165, ERC165) returns (bool) {
+    ) public view virtual override returns (bool) {
         return
             interfaceId == _INTERFACEID_ERC725Y ||
             super.supportsInterface(interfaceId);
