@@ -13,7 +13,7 @@ import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "../constants.sol";
  */
 contract ConstantsChecker {
     function getERC725XInterfaceID() public pure returns (bytes4) {
-        // solhint-disable-next-line custom-errors
+        // solhint-disable-next-line gas-custom-errors
         require(
             _INTERFACEID_ERC725X == type(IERC725X).interfaceId,
             "hardcoded _INTERFACEID_ERC725X in `constants.sol` does not match `type(IERC725X).interfaceId`"
@@ -22,7 +22,7 @@ contract ConstantsChecker {
     }
 
     function getERC725YInterfaceID() public pure returns (bytes4) {
-        // solhint-disable-next-line custom-errors
+        // solhint-disable-next-line gas-custom-errors
         require(
             _INTERFACEID_ERC725Y == type(IERC725Y).interfaceId,
             "hardcoded _INTERFACEID_ERC725Y in `constants.sol` does not match `type(IERC725Y).interfaceId`"
