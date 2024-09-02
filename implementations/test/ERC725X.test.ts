@@ -35,7 +35,10 @@ describe('ERC725X', () => {
 
         const contractToDeploy = new ERC725X__factory(accounts.owner);
 
-        await expect(contractToDeploy.deploy(deployParams.newOwner)).to.be.revertedWithCustomError(contractToDeploy, 'OwnableCannotSetZeroAddressAsOwner');
+        await expect(contractToDeploy.deploy(deployParams.newOwner)).to.be.revertedWithCustomError(
+          contractToDeploy,
+          'OwnableCannotSetZeroAddressAsOwner',
+        );
       });
 
       it('should deploy and fund the contract with `msg.value`', async () => {
