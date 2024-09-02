@@ -2,9 +2,6 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {
-    OwnableUpgradeable
-} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
 import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
@@ -16,7 +13,6 @@ import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
  * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 abstract contract ERC725InitAbstract is
-    OwnableUpgradeable,
     ERC725XInitAbstract,
     ERC725YInitAbstract
 {
@@ -42,7 +38,7 @@ abstract contract ERC725InitAbstract is
             initialOwner != address(0),
             "Ownable: new owner is the zero address"
         );
-        OwnableUpgradeable._transferOwnership(initialOwner);
+        _transferOwnership(initialOwner);
     }
 
     /**
