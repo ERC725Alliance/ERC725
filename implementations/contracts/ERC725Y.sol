@@ -15,7 +15,8 @@ import {_INTERFACEID_ERC725Y} from "./constants.sol";
 import {
     ERC725Y_MsgValueDisallowed,
     ERC725Y_DataKeysValuesLengthMismatch,
-    ERC725Y_DataKeysValuesEmptyArray
+    ERC725Y_DataKeysValuesEmptyArray,
+    OwnableCannotSetZeroAddressAsOwner
 } from "./errors.sol";
 
 /**
@@ -39,10 +40,9 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         Ownable._transferOwnership(initialOwner);
     }
 

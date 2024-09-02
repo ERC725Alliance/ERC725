@@ -37,7 +37,8 @@ import {
     ERC725X_ContractDeploymentFailed,
     ERC725X_NoContractBytecodeProvided,
     ERC725X_ExecuteParametersLengthMismatch,
-    ERC725X_ExecuteParametersEmptyArray
+    ERC725X_ExecuteParametersEmptyArray,
+    OwnableCannotSetZeroAddressAsOwner
 } from "./errors.sol";
 
 /**
@@ -63,10 +64,9 @@ abstract contract ERC725XInitAbstract is
     function _initialize(
         address initialOwner
     ) internal virtual onlyInitializing {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         OwnableUpgradeable._transferOwnership(initialOwner);
     }
 

@@ -71,3 +71,8 @@ error ERC725Y_DataKeysValuesEmptyArray();
  * @dev Reverts when sending value to the {setData} or {setDataBatch} function.
  */
 error ERC725Y_MsgValueDisallowed();
+
+/**
+ * @dev Reverts when trying to set `address(0)` as the contract owner when deploying the contract or initializing it.
+ */
+error OwnableCannotSetZeroAddressAsOwner();

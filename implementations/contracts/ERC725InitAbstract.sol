@@ -5,6 +5,9 @@ pragma solidity ^0.8.5;
 import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
 import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
+// errors
+import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
+
 /**
  * @title Inheritable Proxy Implementation of ERC725 bundle
  * @author Fabian Vogelsteller <fabian@lukso.network>
@@ -34,10 +37,9 @@ abstract contract ERC725InitAbstract is
         override(ERC725XInitAbstract, ERC725YInitAbstract)
         onlyInitializing
     {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         _transferOwnership(initialOwner);
     }
 

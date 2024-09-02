@@ -33,7 +33,8 @@ import {
     ERC725X_ContractDeploymentFailed,
     ERC725X_NoContractBytecodeProvided,
     ERC725X_ExecuteParametersLengthMismatch,
-    ERC725X_ExecuteParametersEmptyArray
+    ERC725X_ExecuteParametersEmptyArray,
+    OwnableCannotSetZeroAddressAsOwner
 } from "./errors.sol";
 
 /**
@@ -54,10 +55,9 @@ contract ERC725X is Ownable, ERC165, IERC725X {
      * - `initialOwner` CANNOT be the zero address.
      */
     constructor(address initialOwner) payable {
-        require(
-            initialOwner != address(0),
-            "Ownable: new owner is the zero address"
-        );
+        if (initialOwner == address(0)) {
+            revert OwnableCannotSetZeroAddressAsOwner();
+        }
         Ownable._transferOwnership(initialOwner);
     }
 
