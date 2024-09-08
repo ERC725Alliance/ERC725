@@ -2185,7 +2185,7 @@ export const shouldInitializeLikeERC725X = (
     });
 
     it('should have registered the ERC725X interface', async () => {
-      expect(await context.erc725X.supportsInterface(INTERFACE_ID.ERC725X));
+      expect(await context.erc725X.supportsInterface(INTERFACE_ID.ERC725X)).to.be.true;
     });
 
     it('should have set the correct owner', async () => {
