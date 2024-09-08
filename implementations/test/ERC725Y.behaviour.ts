@@ -840,7 +840,7 @@ export const shouldInitializeLikeERC725Y = (
     });
 
     it('should have registered the ERC725Y interface', async () => {
-      expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC725Y));
+      expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC725Y)).to.be.true;
     });
   });
 };
