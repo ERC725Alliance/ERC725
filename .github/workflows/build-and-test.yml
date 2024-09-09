@@ -7,8 +7,7 @@ on:
     branches:
       - "develop"
   pull_request:
-    branches:
-      - "*"
+    branches: ["*"]
 
 jobs:
   build:
@@ -18,11 +17,11 @@ jobs:
         working-directory: implementations
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Setup Node.js v20
+        uses: actions/setup-node@v4
         with:
-          node-version: "16" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+          node-version: "20.x" # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
           cache: "npm"
           cache-dependency-path: implementations/package-lock.json
 
@@ -42,7 +41,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload to Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           path-to-lcov: ./implementations/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
