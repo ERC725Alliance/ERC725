@@ -288,7 +288,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
                 context.erc725X
                   .connect(context.accounts.owner)
                   .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
-              ).to.be.revertedWith('ERC725X: Unknown Error');
+              ).to.be.revertedWithCustomError(context.erc725X, 'FailedInnerCall');
             });
           });
 
@@ -311,7 +311,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
                 context.erc725X
                   .connect(context.accounts.owner)
                   .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
-              ).to.be.revertedWith('ERC725X: Unknown Error');
+              ).to.be.revertedWithCustomError(context.erc725X, 'FailedInnerCall');
             });
           });
 
@@ -1302,7 +1302,7 @@ export const shouldBehaveLikeERC725X = (buildContext: () => Promise<ERC725XTestC
                 context.erc725X
                   .connect(context.accounts.owner)
                   .execute(txParams.Operation, txParams.to, txParams.value, txParams.data),
-              ).to.be.revertedWith('ERC725X: Unknown Error');
+              ).to.be.revertedWithCustomError(context.erc725X, 'FailedInnerCall');
             });
           });
 

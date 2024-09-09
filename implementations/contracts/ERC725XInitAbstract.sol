@@ -246,12 +246,7 @@ abstract contract ERC725XInitAbstract is
         (bool success, bytes memory returnData) = target.call{value: value}(
             data
         );
-        return
-            Address.verifyCallResult(
-                success,
-                returnData,
-                "ERC725X: Unknown Error"
-            );
+        return Address.verifyCallResult(success, returnData);
     }
 
     /**
@@ -268,12 +263,7 @@ abstract contract ERC725XInitAbstract is
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.staticcall(data);
-        return
-            Address.verifyCallResult(
-                success,
-                returnData,
-                "ERC725X: Unknown Error"
-            );
+        return Address.verifyCallResult(success, returnData);
     }
 
     /**
@@ -292,12 +282,7 @@ abstract contract ERC725XInitAbstract is
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = target.delegatecall(data);
-        return
-            Address.verifyCallResult(
-                success,
-                returnData,
-                "ERC725X: Unknown Error"
-            );
+        return Address.verifyCallResult(success, returnData);
     }
 
     /**
