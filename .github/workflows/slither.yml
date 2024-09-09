@@ -4,7 +4,7 @@ name: Slither Analysis
 
 on:
   pull_request:
-    types: [opened]
+    branches: ["*"]
 
     # Run Slither only when editing the Solidity code of the smart contracts
     paths:
@@ -13,6 +13,9 @@ on:
 jobs:
   slither:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: implementations
 
     steps:
       - name: Checkout repository
@@ -23,6 +26,7 @@ jobs:
         with:
           node-version: "20.x"
           cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
 
       - name: 📦 Install Node Modules
         run: npm ci

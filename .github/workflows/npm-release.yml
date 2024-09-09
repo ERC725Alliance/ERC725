@@ -25,15 +25,15 @@ jobs:
           exit 1
 
       # step 1: checkout to the correct branch
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       # step 2: setup Node.js to version 16
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v2
+      - name: Setup Node.js v20
+        uses: actions/setup-node@v4
         with:
-          node-version: "16.x"
+          node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
           cache-dependency-path: implementations/package-lock.json
