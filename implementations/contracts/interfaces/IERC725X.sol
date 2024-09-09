@@ -49,10 +49,12 @@ interface IERC725X {
      *
      * @dev Generic executor function to:
      *
-     * - send native tokens to any address.
+     * - send native tokens to any address (including sending native tokens to EOA with some arbitrary bytes)
      * - interact with any contract by passing an abi-encoded function call in the `data` parameter.
      * - deploy a contract by providing its creation bytecode in the `data` parameter.
      *
+     * @custom:info The standard behaviour when making message calls to EOAs with calldata bytes is to revert (since the EVM treat the bytes as making a function call to a smart contract).
+     * This function allows to send native tokens to EOA with some arbitrary bytes without reverting.
      * @custom:warning Be aware that `msg.value` is persisting between the caller and the callee when using `DELEGATECALL` (`4`) as `operationType`.
      */
     function execute(
