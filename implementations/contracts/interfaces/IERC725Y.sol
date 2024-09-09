@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 /**
  * @title The interface for ERC725Y sub-standard, a generic data key/value store.

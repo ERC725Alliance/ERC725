@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 /**
  * @dev Reverts when trying to send more native tokens `value` than available in current `balance`.

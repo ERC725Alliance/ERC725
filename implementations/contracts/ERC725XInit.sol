@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.5;
+pragma solidity ^0.8.20;
 
 // modules
 import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";

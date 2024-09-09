@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.5;
+pragma solidity ^0.8.20;
 
 // modules
 import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
 import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
 // errors
+// TODO: probably can remove this custom error?
 import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
 
 /**
