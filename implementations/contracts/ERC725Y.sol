@@ -51,7 +51,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      */
     function getData(
         bytes32 dataKey
-    ) public view virtual override returns (bytes memory dataValue) {
+    ) public view virtual returns (bytes memory dataValue) {
         return _getData(dataKey);
     }
 
@@ -60,7 +60,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      */
     function getDataBatch(
         bytes32[] memory dataKeys
-    ) public view virtual override returns (bytes[] memory dataValues) {
+    ) public view virtual returns (bytes[] memory dataValues) {
         dataValues = new bytes[](dataKeys.length);
 
         for (uint256 i = 0; i < dataKeys.length; ) {
@@ -90,7 +90,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
     function setData(
         bytes32 dataKey,
         bytes memory dataValue
-    ) public payable virtual override onlyOwner {
+    ) public payable virtual onlyOwner {
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
         _setData(dataKey, dataValue);
     }
@@ -110,7 +110,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
     function setDataBatch(
         bytes32[] memory dataKeys,
         bytes[] memory dataValues
-    ) public payable virtual override onlyOwner {
+    ) public payable virtual onlyOwner {
         /// @dev do not allow to send value by default when setting data in ERC725Y
         if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
         _setDataBatch(dataKeys, dataValues);

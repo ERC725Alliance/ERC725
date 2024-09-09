@@ -98,7 +98,7 @@ abstract contract ERC725XInitAbstract is
         address target,
         uint256 value,
         bytes memory data
-    ) public payable virtual override onlyOwner returns (bytes memory) {
+    ) public payable virtual onlyOwner returns (bytes memory) {
         return _execute(operationType, target, value, data);
     }
 
@@ -121,7 +121,7 @@ abstract contract ERC725XInitAbstract is
         address[] memory targets,
         uint256[] memory values,
         bytes[] memory datas
-    ) public payable virtual override onlyOwner returns (bytes[] memory) {
+    ) public payable virtual onlyOwner returns (bytes[] memory) {
         return _executeBatch(operationsType, targets, values, datas);
     }
 
