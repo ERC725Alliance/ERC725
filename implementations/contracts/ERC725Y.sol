@@ -39,12 +39,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
-    constructor(address initialOwner) payable {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        Ownable._transferOwnership(initialOwner);
-    }
+    constructor(address initialOwner) payable Ownable(initialOwner) {}
 
     /**
      * @inheritdoc IERC725Y
