@@ -26,6 +26,9 @@ abstract contract ERC725InitAbstract is
      * NOTE: we can safely override this function and not call the parent `_initialize(...)` functions from `ERC725XInitAbstract` and `ERC725YInitAbstract`
      * as the code logic from this `_initialize(...)` is the exactly the same.
      *
+     * @custom:warning If a child contract that inherits `ERC725InitAbstract` needs to override the logic of the `_initialize` function, make sure it calls
+     * also this function inside this logic via `super._initialize(initialOwner)` or `ERC725InitAbstract._initialize(initialOwner)`.
+     *
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
