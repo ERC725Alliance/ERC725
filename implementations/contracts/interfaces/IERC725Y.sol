@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.0;
 
-// interfaces
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-
 /**
  * @title The interface for ERC725Y sub-standard, a generic data key/value store.
  * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
  * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
-interface IERC725Y is IERC165 {
+interface IERC725Y {
     /**
      * @notice The following data key/value pair has been changed in the ERC725Y storage: Data key: `dataKey`, data value: `dataValue`.
      * @dev Emitted when data at a specific `dataKey` was changed to a new value `dataValue`.
