@@ -7,9 +7,12 @@ import { AddressZero } from '@ethersproject/constants';
 import type { TransactionResponse } from '@ethersproject/abstract-provider';
 
 // types
-import { ERC725Y, ERC725YWriter__factory, ERC725YReader__factory } from '../types';
-
-import { bytecode as ERC725Bytecode } from '../artifacts/contracts/ERC725.sol/ERC725.json';
+import {
+  ERC725Y,
+  ERC725Y__factory,
+  ERC725YWriter__factory,
+  ERC725YReader__factory,
+} from '../types';
 
 // constants
 import { INTERFACE_ID } from '../constants';
@@ -70,7 +73,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           context.erc725Y
             .connect(context.accounts.owner)
             .transferOwnership(ethers.constants.AddressZero),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCannotSetZeroAddressAsOwner');
+        ).to.be.revertedWith('Ownable: new owner is the zero address');
       });
     });
 
@@ -80,7 +83,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           context.erc725Y
             .connect(context.accounts.anyone)
             .transferOwnership(context.accounts.anyone.address),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith('Ownable: caller is not the owner');
       });
     });
 
@@ -100,7 +103,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
       it('should revert', async () => {
         await expect(
           context.erc725Y.connect(context.accounts.anyone).renounceOwnership(),
-        ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+        ).to.be.revertedWith('Ownable: caller is not the owner');
       });
     });
   });
@@ -173,7 +176,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             context.erc725Y
               .connect(context.accounts.anyone)
               .setData(txParams.dataKey, txParams.dataValue),
-          ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+          ).to.be.revertedWith('Ownable: caller is not the owner');
 
           const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
@@ -312,7 +315,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           it('should pass and emit DataChanged event', async () => {
             const txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['BytecodeOfMyFavoriteContract']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await expect(
@@ -385,7 +388,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
             context.erc725Y
               .connect(context.accounts.anyone)
               .setDataBatch([txParams.dataKey], [txParams.dataValue]),
-          ).to.be.revertedWithCustomError(context.erc725Y, 'OwnableCallerNotTheOwner');
+          ).to.be.revertedWith('Ownable: caller is not the owner');
 
           const fetchedData = await context.erc725Y.getData(txParams.dataKey);
 
@@ -522,7 +525,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           it('should pass and emit DataChanged event', async () => {
             const txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['BytecodeOfMyFavoriteContract']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await expect(
@@ -651,7 +654,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           beforeEach(async () => {
             txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await context.erc725Y
@@ -759,7 +762,7 @@ export const shouldBehaveLikeERC725Y = (buildContext: () => Promise<ERC725YTestC
           beforeEach(async () => {
             txParams = {
               dataKey: ethers.utils.solidityKeccak256(['string'], ['FirstDataKey']),
-              dataValue: ERC725Bytecode,
+              dataValue: ERC725Y__factory.bytecode,
             };
 
             await context.erc725Y
@@ -837,7 +840,7 @@ export const shouldInitializeLikeERC725Y = (
     });
 
     it('should have registered the ERC725Y interface', async () => {
-      expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC725Y));
+      expect(await context.erc725Y.supportsInterface(INTERFACE_ID.ERC725Y)).to.be.true;
     });
   });
 };

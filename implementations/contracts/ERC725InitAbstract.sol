@@ -2,15 +2,8 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {
-    Initializable
-} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
-import {ERC725XCore} from "./ERC725XCore.sol";
-import {ERC725YCore} from "./ERC725YCore.sol";
-
-// constants
-import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
+import {ERC725XInitAbstract} from "./ERC725XInitAbstract.sol";
+import {ERC725YInitAbstract} from "./ERC725YInitAbstract.sol";
 
 // errors
 import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
@@ -23,35 +16,48 @@ import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
  * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
 abstract contract ERC725InitAbstract is
-    Initializable,
-    ERC725XCore,
-    ERC725YCore
+    ERC725XInitAbstract,
+    ERC725YInitAbstract
 {
     /**
      * @dev Internal function to initialize the contract with the provided `initialOwner` as the contract {owner}.
      * @param initialOwner the owner of the contract.
+     *
+     * NOTE: we can safely override this function and not call the parent `_initialize(...)` functions from `ERC725XInitAbstract` and `ERC725YInitAbstract`
+     * as the code logic from this `_initialize(...)` is the exactly the same.
+     *
+     * @custom:warning If a child contract that inherits `ERC725InitAbstract` needs to override the logic of the `_initialize` function, make sure it calls
+     * also this function inside this logic via `super._initialize(initialOwner)` or `ERC725InitAbstract._initialize(initialOwner)`.
      *
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
     function _initialize(
         address initialOwner
-    ) internal virtual onlyInitializing {
+    )
+        internal
+        virtual
+        override(ERC725XInitAbstract, ERC725YInitAbstract)
+        onlyInitializing
+    {
         if (initialOwner == address(0)) {
             revert OwnableCannotSetZeroAddressAsOwner();
         }
-        OwnableUnset._setOwner(initialOwner);
+        _transferOwnership(initialOwner);
     }
 
     /**
-     * @inheritdoc ERC725XCore
+     * @inheritdoc ERC725XInitAbstract
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(ERC725XCore, ERC725YCore) returns (bool) {
-        return
-            interfaceId == _INTERFACEID_ERC725X ||
-            interfaceId == _INTERFACEID_ERC725Y ||
-            super.supportsInterface(interfaceId);
+    )
+        public
+        view
+        virtual
+        override(ERC725XInitAbstract, ERC725YInitAbstract)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }

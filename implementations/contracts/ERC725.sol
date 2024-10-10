@@ -2,15 +2,8 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {OwnableUnset} from "./custom/OwnableUnset.sol";
-import {ERC725XCore} from "./ERC725XCore.sol";
-import {ERC725YCore} from "./ERC725YCore.sol";
-
-// constants
-import {_INTERFACEID_ERC725X, _INTERFACEID_ERC725Y} from "./constants.sol";
-
-// errors
-import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
+import {ERC725X} from "./ERC725X.sol";
+import {ERC725Y} from "./ERC725Y.sol";
 
 /**
  * @title ERC725 bundle.
@@ -19,7 +12,7 @@ import {OwnableCannotSetZeroAddressAsOwner} from "./errors.sol";
  *
  * @custom:warning This implementation does not have by default a `receive()` or `fallback()` function.
  */
-contract ERC725 is ERC725XCore, ERC725YCore {
+contract ERC725 is ERC725X, ERC725Y {
     /**
      * @notice Deploying an ERC725 smart contract and setting address `initialOwner` as the contract owner.
      * @dev Deploy a new ERC725 contract with the provided `initialOwner` as the contract {owner}.
@@ -28,22 +21,16 @@ contract ERC725 is ERC725XCore, ERC725YCore {
      * @custom:requirements
      * - `initialOwner` CANNOT be the zero address.
      */
-    constructor(address initialOwner) payable {
-        if (initialOwner == address(0)) {
-            revert OwnableCannotSetZeroAddressAsOwner();
-        }
-        OwnableUnset._setOwner(initialOwner);
-    }
+    constructor(
+        address initialOwner
+    ) payable ERC725X(initialOwner) ERC725Y(initialOwner) {}
 
     /**
-     * @inheritdoc ERC725XCore
+     * @inheritdoc ERC725X
      */
     function supportsInterface(
         bytes4 interfaceId
-    ) public view virtual override(ERC725XCore, ERC725YCore) returns (bool) {
-        return
-            interfaceId == _INTERFACEID_ERC725X ||
-            interfaceId == _INTERFACEID_ERC725Y ||
-            super.supportsInterface(interfaceId);
+    ) public view virtual override(ERC725X, ERC725Y) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 }

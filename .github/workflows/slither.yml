@@ -1,0 +1,59 @@
+# this workflow run Slither static analysis tool on the Solidity code
+# of the Migration Deposit contract and the Migration Universal Profile
+name: Slither Analysis
+
+on:
+  pull_request:
+    branches: ["*"]
+
+    # Run Slither only when editing the Solidity code of the smart contracts
+    paths:
+      - "contracts/**/*.sol"
+
+jobs:
+  slither:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: implementations
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js v20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          cache-dependency-path: implementations/package-lock.json
+
+      - name: 📦 Install Node Modules
+        run: npm ci
+
+      - name: 📥 Install Slither
+        run: |
+          pip3 install slither-analyzer solc-select
+          solc-select install 0.8.17
+          solc-select use 0.8.17
+
+      - name: 🐍 Run Slither
+        id: slither_report
+        run: |
+          echo "# 🐍📄 Slither Analysis" > slither_report.md
+
+          slither . \
+            --checklist \
+            --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/ \
+            --no-fail-pedantic \
+            --show-ignored-findings \
+            >> slither_report.md
+
+      - name: 📄 Add Slither report in comment
+        uses: peter-evans/create-or-update-comment@v2
+        env:
+          REPORT: ${{ steps.slither_report.outputs.stdout }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: slither_report.md

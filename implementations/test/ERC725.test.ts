@@ -64,6 +64,22 @@ describe('ERC725', () => {
 
         expect(await ethers.provider.getBalance(contract.address)).to.equal(deployParams.funding);
       });
+
+      it('should have registered the ERC725X & ERC725Y interfaces', async () => {
+        const accounts = await ethers.getSigners();
+
+        const deployParams = {
+          newOwner: accounts[0].address,
+          funding: ethers.utils.parseEther('10'),
+        };
+
+        const contract = await new ERC725__factory(accounts[0]).deploy(deployParams.newOwner, {
+          value: deployParams.funding,
+        });
+
+        expect(await contract.supportsInterface(INTERFACE_ID.ERC725X)).to.be.true;
+        expect(await contract.supportsInterface(INTERFACE_ID.ERC725Y)).to.be.true;
+      });
     });
   });
 
@@ -105,7 +121,11 @@ describe('ERC725', () => {
       });
 
       it('should have registered the ERC725X interface', async () => {
-        expect(await context.erc725.supportsInterface(INTERFACE_ID.ERC725X));
+        expect(await context.erc725.supportsInterface(INTERFACE_ID.ERC725X)).to.be.true;
+      });
+
+      it('should have registered the ERC725Y interface', async () => {
+        expect(await context.erc725.supportsInterface(INTERFACE_ID.ERC725Y)).to.be.true;
       });
 
       it('should revert when initializing with address(0) as owner', async () => {
