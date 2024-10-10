@@ -78,7 +78,7 @@ describe('ERC725', () => {
         });
 
         expect(await contract.supportsInterface(INTERFACE_ID.ERC725X)).to.be.true;
-        expect(await contract.supportsInterface(INTERFACE_ID.ERC725X)).to.be.true;
+        expect(await contract.supportsInterface(INTERFACE_ID.ERC725Y)).to.be.true;
       });
     });
   });
