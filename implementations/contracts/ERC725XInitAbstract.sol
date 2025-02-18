@@ -7,7 +7,6 @@ import {IERC725X} from "./interfaces/IERC725X.sol";
 // libraries
 import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
 
 // modules
 import {

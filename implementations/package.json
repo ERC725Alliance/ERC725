@@ -35,8 +35,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6",
-    "@openzeppelin/contracts-upgradeable": "^4.9.6",
-    "solidity-bytes-utils": "0.8.0"
+    "@openzeppelin/contracts-upgradeable": "^4.9.6"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
