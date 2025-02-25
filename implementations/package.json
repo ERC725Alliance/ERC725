@@ -36,7 +36,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.6",
-    "solidity-bytes-utils": "0.8.0"
+    "solidity-bytes-utils": "~0.8.3"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
