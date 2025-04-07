@@ -44,6 +44,7 @@ import {
 /**
  * @title Inheritable Proxy Implementation of ERC725X sub-standard, a generic executor.
  * @author Fabian Vogelsteller <fabian@lukso.network> and <CJ42>, <YamenMerhi>, <B00ste>, <SkimaHarvey>
+ *
  * @dev ERC725X provides the ability to call arbitrary functions on any other smart contract (including itself).
  * It allows to use different type of message calls to interact with addresses such as `call`, `staticcall` and `delegatecall`.
  * It also allows to deploy and create new contracts via both the `create` and `create2` opcodes.
