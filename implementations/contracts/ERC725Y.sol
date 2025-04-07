@@ -94,7 +94,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      * @custom:warning
      * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
      * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
-     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overridden to remove this check.
      *
      * @custom:events {DataChanged} event.
      */
@@ -114,7 +114,7 @@ contract ERC725Y is Ownable, ERC165, IERC725Y {
      * @custom:warning
      * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
      * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
-     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overridden to remove this check.
      *
      * @custom:events {DataChanged} event **for each data key/value pair set**.
      */
