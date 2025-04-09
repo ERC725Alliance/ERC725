@@ -2,6 +2,8 @@
   "name": "@erc725/smart-contracts",
   "version": "8.0.0",
   "description": "ERC725 contract implementations",
+  "author": "Fabian Vogelsteller <fabian@lukso.network>",
+  "license": "Apache-2.0",
   "homepage": "https://erc725alliance.org",
   "repository": {
     "type": "git",
@@ -31,8 +33,6 @@
     "analyse": "sh solc.sh",
     "format": "prettier --write ."
   },
-  "author": "Fabian Vogelsteller <fabian@lukso.network>",
-  "license": "Apache-2.0",
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.6",
