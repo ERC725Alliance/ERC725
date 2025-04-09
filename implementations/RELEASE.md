@@ -2,7 +2,7 @@
 
 Releases are published when a commit including an increase in the `package.json` version number is merged to the `main` branch.
 
-This command will increases the version automatically using [standard-version](https://github.com/conventional-changelog/standard-version):
+This command will **increase** the version automatically using [standard-version](https://github.com/conventional-changelog/standard-version):
 
 ```bash
 $ npm run release
@@ -42,7 +42,7 @@ npm run release -- --release-as minor
 npm run release -- --release-as 1.1.0
 ```
 
-## Prerelease versions
+## Pre-release versions
 
 To create a pre-release run:
 
@@ -50,7 +50,7 @@ To create a pre-release run:
 npm run release -- --prerelease
 ```
 
-If the lastest version is 1.0.0, the pre-release command will change the version to: `1.0.1-0`
+If the latest version is 1.0.0, the pre-release command will change the version to: `1.0.1-0`
 
 To name the pre-release, set the name by adding `--prerelease <name>`
 
