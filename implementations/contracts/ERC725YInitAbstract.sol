@@ -26,6 +26,7 @@ import {
 /**
  * @title Inheritable Proxy Implementation of ERC725Y sub-standard, a generic data key/value store
  * @author Fabian Vogelsteller <fabian@lukso.network> and <CJ42>, <YamenMerhi>, <B00ste>, <SkimaHarvey>
+ *
  * @dev ERC725Y provides the ability to set arbitrary data key/value pairs that can be changed over time.
  * It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage.
  */
@@ -92,7 +93,7 @@ abstract contract ERC725YInitAbstract is
      * @custom:warning
      * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
      * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
-     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overridden to remove this check.
      *
      * @custom:events {DataChanged} event.
      */
@@ -112,7 +113,7 @@ abstract contract ERC725YInitAbstract is
      * @custom:warning
      * **Note for developers:** despite the fact that this function is set as `payable`, the function is not intended to receive value
      * (= native tokens). **An additional check has been implemented to ensure that `msg.value` sent was equal to 0**.
-     * If you want to allow this function to receive value in your inheriting contract, this function can be overriden to remove this check.
+     * If you want to allow this function to receive value in your inheriting contract, this function can be overridden to remove this check.
      *
      * @custom:events {DataChanged} event **for each data key/value pair set**.
      */

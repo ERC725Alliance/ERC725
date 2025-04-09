@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.0.1](https://github.com/ERC725Alliance/ERC725/compare/v8.0.0...v8.0.1) (2025-04-09)
+
+### Bug Fixes
+
+* add warning comments about `constructor` / `initialize(...)` function being `payable` despite not other way to receive native tokens ([0062905](https://github.com/ERC725Alliance/ERC725/commit/00629058e85ead3ad8e4f4af45d9c8a1176e66ac))
+* Upgrade `solidity-bytes-utils` dependency to patch release v0.8.3 to not pull in dependencies truffle-hdwallet ([206bfc6](https://github.com/ERC725Alliance/ERC725/pull/269/commits/206bfc6a0921fb21f65bf608f88624089e70b04b))
+
+### [8.0.0](https://github.com/ERC725Alliance/ERC725/compare/v7.0.0...v8.0.0) (2024-10-11)
+
+### ⚠ BREAKING CHANGES
+
+* remove and deprecate `OwnableUnset` in favour of OZ `Ownable` and `OwnableUpgradeable`
+* remove `ERC725YCore` and duplicate logic across Standard and Init version
+* remove `ERC725XCore` and share logic across Standard and Init version.
+
+### Features
+
+* add internal `_setDataBatch` function without owner modifier ([ee0948a](https://github.com/ERC725Alliance/ERC725/commit/ee0948af85ce4d233e8f1effaafa7331a63bc257))
+
 ## [7.0.0](https://github.com/ERC725Alliance/ERC725/compare/v6.0.0...v7.0.0) (2023-11-27)
 
 ### ⚠ BREAKING CHANGES
