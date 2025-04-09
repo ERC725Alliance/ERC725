@@ -2,51 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [8.0.1](https://github.com/ERC725Alliance/ERC725/compare/v3.2.0...v8.0.1) (2025-04-09)
-
-
-### ⚠ BREAKING CHANGES
-
-* use `ERC165Upgradeable` for the Init version
-* remove and deprecate `OwnableUnset` in favour of OZ
-* inheritance of `ERC725` of standard and init version
-* remove `ERC725YCore` and duplicate logic across Standard and Init version
-* remove `ERC725XCore` and share logic across Standard and Init version.
-* remove deprecated constants for overloaded function selectors (#219)
-* remove function overloading (#209)
-* mark `setData(..)` as payable (#197)
-* add `salt` parameter to the `ContractCreated` event in ERC725X (#183)
-* replace error strings by custom errors + use `enum` for `OPERATION_TYPE` (#175)
-* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y (#163)
-
-### Features
-
-* add `bytes dataValue` parameter to `DataChanged` event in ERC725Y ([#163](https://github.com/ERC725Alliance/ERC725/issues/163)) ([93447de](https://github.com/ERC725Alliance/ERC725/commit/93447def047abab2ad81b365b9e8c1441507f9ae))
-* add execute batch function to ERC725X ([a0b08fa](https://github.com/ERC725Alliance/ERC725/commit/a0b08fafccd1f009a497ca400efd50933a478457))
-* add internal `_setDataBatch` function without owner modifier ([ee0948a](https://github.com/ERC725Alliance/ERC725/commit/ee0948af85ce4d233e8f1effaafa7331a63bc257))
-* allow to fund ERC725 contracts on deployment via `constructor` or `initialize(...)` function ([#213](https://github.com/ERC725Alliance/ERC725/issues/213)) ([39339e0](https://github.com/ERC725Alliance/ERC725/commit/39339e0b219af4025dc99e60faabbafae3d09df5))
-
+### [8.0.1](https://github.com/ERC725Alliance/ERC725/compare/v8.0.0...v8.0.1) (2025-04-09)
 
 ### Bug Fixes
 
-* [QSP-4] prevent `address(0)` to be set as contract owner on deployment ([#159](https://github.com/ERC725Alliance/ERC725/issues/159)) ([29123ea](https://github.com/ERC725Alliance/ERC725/commit/29123ea3ad1bc0e173f608b42737af18a0694a89))
-* add check for empty array parameters in batch `ERC725X.execute(uint256[],address[],uint256[],bytes[])` / `ERC725Y.setData(bytes32[],bytes[])` ([#204](https://github.com/ERC725Alliance/ERC725/issues/204)) ([eb4bc11](https://github.com/ERC725Alliance/ERC725/commit/eb4bc11f19879db528c54b781d394b961ced3bab))
 * add warning comments about `constructor` / `initialize(...)` function being `payable` despite not other way to receive native tokens ([0062905](https://github.com/ERC725Alliance/ERC725/commit/00629058e85ead3ad8e4f4af45d9c8a1176e66ac))
-* emit `Executed` event before the external call ([#173](https://github.com/ERC725Alliance/ERC725/issues/173)) ([13743ae](https://github.com/ERC725Alliance/ERC725/commit/13743aedc1d6dce3e50cd8dd3b82b0e51fbd6827))
-* ignores return value by ErrorHandlerLib.revertWithParsedError(result) ([#133](https://github.com/ERC725Alliance/ERC725/issues/133)) ([6ef9cdc](https://github.com/ERC725Alliance/ERC725/commit/6ef9cdc4739c43c550defa62b025767911998733))
-* link to implementations folder; ([8c77fef](https://github.com/ERC725Alliance/ERC725/commit/8c77fef3ddfe4295b2d86a2b56e92850972ca0e7))
+* Upgrade `solidity-bytes-utils` dependency to patch release v0.8.3 to not pull in dependencies truffle-hdwallet ([206bfc6](https://github.com/ERC725Alliance/ERC725/pull/269/commits/206bfc6a0921fb21f65bf608f88624089e70b04b))
 
+### [8.0.0](https://github.com/ERC725Alliance/ERC725/compare/v7.0.0...v8.0.0) (2024-10-11)
 
-* add `salt` parameter to the `ContractCreated` event in ERC725X ([#183](https://github.com/ERC725Alliance/ERC725/issues/183)) ([4a6ca14](https://github.com/ERC725Alliance/ERC725/commit/4a6ca140b35f1d78f6fefedb11ddc3981f71acb6))
-* inheritance of `ERC725` of standard and init version ([c1c5e2f](https://github.com/ERC725Alliance/ERC725/commit/c1c5e2f614620593df05d5d7efc99b5854038f4f))
-* mark `setData(..)` as payable ([#197](https://github.com/ERC725Alliance/ERC725/issues/197)) ([1beae99](https://github.com/ERC725Alliance/ERC725/commit/1beae99f222574b7a67444e9dc4accde651ed957))
-* remove `ERC725XCore` and share logic across Standard and Init version. ([01e5c00](https://github.com/ERC725Alliance/ERC725/commit/01e5c008a71b85e5f3e45a597f0212b97c070aba))
-* remove `ERC725YCore` and duplicate logic across Standard and Init version ([c60aedb](https://github.com/ERC725Alliance/ERC725/commit/c60aedb6a859c12ae4aaebdc51c5815af908599e))
-* remove and deprecate `OwnableUnset` in favour of OZ ([fc8377b](https://github.com/ERC725Alliance/ERC725/commit/fc8377baada07e2956a30c9257b1ef94ada7f800))
-* remove deprecated constants for overloaded function selectors ([#219](https://github.com/ERC725Alliance/ERC725/issues/219)) ([fd43f3b](https://github.com/ERC725Alliance/ERC725/commit/fd43f3b5a268d63ef5baaf1c56e9d32be720a4f0))
-* remove function overloading ([#209](https://github.com/ERC725Alliance/ERC725/issues/209)) ([5e33d36](https://github.com/ERC725Alliance/ERC725/commit/5e33d36cd4c92026730ea5cf1dd476b4017fbf2f))
-* replace error strings by custom errors + use `enum` for `OPERATION_TYPE` ([#175](https://github.com/ERC725Alliance/ERC725/issues/175)) ([9d5008b](https://github.com/ERC725Alliance/ERC725/commit/9d5008bd4e91f6a8c09a22f0b491fe6db3249cf7))
-* use `ERC165Upgradeable` for the Init version ([f77f9a2](https://github.com/ERC725Alliance/ERC725/commit/f77f9a2c3beec7aa15d27dff69252e0a5901918b))
+### ⚠ BREAKING CHANGES
+
+* remove and deprecate `OwnableUnset` in favour of OZ `Ownable` and `OwnableUpgradeable`
+* remove `ERC725YCore` and duplicate logic across Standard and Init version
+* remove `ERC725XCore` and share logic across Standard and Init version.
+
+### Features
+
+* add internal `_setDataBatch` function without owner modifier ([ee0948a](https://github.com/ERC725Alliance/ERC725/commit/ee0948af85ce4d233e8f1effaafa7331a63bc257))
 
 ## [7.0.0](https://github.com/ERC725Alliance/ERC725/compare/v6.0.0...v7.0.0) (2023-11-27)
 
